@@ -1,21 +1,23 @@
 <><><><><><><><><><><><>
-new recipe (farina, 50) (uova, 10) (zucchero, 20) 
-new recipe (farina, 20) (uova, 5) (burro, 2) 
-new recipe (farina, 10) (uova, 2) (latte, 3) (zucchero, 3) (cioccolato, 4) 
+new recipe 
 remove recipe
-new batch
-(courier) new order
-new order
+rimossa
+new recipe 
+new recipe 
 remove recipe
-new recipe (farina, 1) (zucchero, 1) (uova, 1) 
+non presente
+(courier) new batch
+new order
+new order
+new recipe 
 new order
 (courier) new order
 new batch
 new batch
 new order
 new order
+(courier) remove recipe
+rimossa
 
-torta: zucchero 20, uova 10, farina 50, 
 ciambella: burro 2, uova 5, farina 20, 
-profiterole: cioccolato 4, zucchero 3, latte 3, uova 2, farina 10, 
-pane_dolce: uova 1, zucchero 1, farina 1, 
+pane_dolce: zucchero 100, 100 10, profiterole 3, uova 1, zucchero 1, farina 1, 

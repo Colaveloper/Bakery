@@ -67,12 +67,69 @@ int newRecipe() {
       ptr++;
       while (*ptr != ' ')
          ptr++;
-
-      printf("(%s, %d) ", ingredient, quantity);
    }
 
    newRecipe->ingredientList = lastPair;
    return 1; // added to the end
+}
+
+int removeRecipe() {
+   char name[MAX_LEN];
+   if (scanf("%s", name) == 0) {
+      return -1; // no name error
+   }
+
+   Recipe *pre = NULL;
+   Recipe *cur = cookbook;
+
+   if (cur != NULL && !strcmp(cur->name, name)) {
+      // TODO check for in sospeso:
+      //    if name exists in pendingOrders
+      //       Print "ordine in attesa"
+      //    else
+      cookbook = cur->nextRecipe;
+      free(cur);
+      printf("rimossa");      
+      return 1;
+   }
+
+   while (cur != NULL && strcmp(cur->name, name)) {
+      pre = cur;
+      cur = cur->nextRecipe;
+   }
+
+   if (cur == NULL) {
+      printf("non presente");
+      return 0; // nothing to do
+   } else {
+      pre->nextRecipe = cur->nextRecipe;
+      free(cur);
+      printf("rimossa");
+      return 1;
+   }
+
+   // if (pre != NULL) {
+   //    if (!strcmp(pre->name, name)) {
+   //       cookbook = pre->nextRecipe;
+   //       free(pre);
+   //       printf("rimossa");
+   //       // TODO check for in sospeso
+   //       return 1;
+   //    } else {
+   //       cur = pre->nextRecipe;
+   //       while (cur != NULL) {
+   //          if (!strcmp(cur->name, name)) {
+   //             // printf(" removing %s ", name);
+   //             pre->nextRecipe = cur->nextRecipe;
+   //             free(cur);
+   //             printf("rimossa");
+   //             return 1;
+   //          }
+   //          pre = cur;
+   //          cur = cur->nextRecipe;
+   //       }
+   //    }
+   // }
 }
 
 int printCookbook() {
@@ -110,9 +167,8 @@ int main() {
          printf("\n");
       } else if (!strcmp(command, "rimuovi_ricetta")) {
          printf("remove recipe\n");
-         if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-            return -1; // empty command argument error
-         }
+         removeRecipe();
+         printf("\n");
       } else if (!strcmp(command, "rifornimento")) {
          printf("new batch\n");
          if (fgets(commandLine, MAX_LEN, stdin) == 0) {
