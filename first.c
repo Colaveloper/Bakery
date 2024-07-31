@@ -4,25 +4,49 @@
 #include <string.h>
 #define MAX_LEN 255
 
-typedef struct IngredientAndQuantity {
+// ingredient, amount ∈ Ingredient ∈ Recipe ∈ cookbook
+typedef struct Ingredient {
    char ingredient[MAX_LEN];
-   int quantity;
-   struct IngredientAndQuantity *nextIngredient;
-} IngredientAndQuantity;
-
+   int amount;
+   struct Ingredient *nextIngredient;
+} Ingredient;
 typedef struct Recipe {
    char name[MAX_LEN];
-   IngredientAndQuantity *ingredientList;
+   Ingredient *ingredientList;
    struct Recipe *nextRecipe;
 } Recipe;
 
-int courierPeriod, maxPayload, time = 0;
-Recipe *cookbook = NULL;
+// expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
+typedef struct Bunch {
+   int expiration;
+   int amount;
+   struct Bunch *nextBunch;
+} Bunch;
+typedef struct Shelf {
+   char name[MAX_LEN];
+   Bunch *bunchList;
+   struct Shelf *nextShelf;
+} Shelf;
 
-int newRecipe() {
+void printCookbook(Recipe *cookbook) {
+   Recipe *curRec = cookbook;
+   while (curRec != NULL) {
+      printf("%s: ", curRec->name);
+      Ingredient *curIng = curRec->ingredientList;
+      while (curIng != NULL) {
+         printf("%s %d, ", curIng->ingredient, curIng->amount);
+         curIng = curIng->nextIngredient;
+      }
+      curRec = curRec->nextRecipe;
+      printf("\n");
+   }
+}
+
+Recipe *newRecipe(Recipe *cookbook) {
    char name[MAX_LEN];
    if (scanf("%s", name) == 0) {
-      return -1; // no name error
+      printf("MUST HAVE A RECIPE TO REMOVE");
+      return cookbook;
    }
 
    Recipe *cur, *pre = cookbook;
@@ -36,8 +60,8 @@ int newRecipe() {
       cur = pre->nextRecipe;
       while (cur != NULL) {
          if (!strcmp(pre->name, name)) {
-            printf("ignorato");
-            return 0; // nothing to do
+            printf("ignorato\n");
+            return cookbook; // nothing to do
          }
          pre = cur;
          cur = cur->nextRecipe;
@@ -46,19 +70,21 @@ int newRecipe() {
    }
 
    char commandLine[MAX_LEN];
+   // TODO allow for longer commands
    if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-      return -1; // empty command argument error
+      printf("NEW RECIPE MUST SPECIFY A RECIPE");
+      return cookbook;
    }
 
-   IngredientAndQuantity *lastPair = NULL;
+   Ingredient *lastPair = NULL;
    char ingredient[MAX_LEN];
-   int quantity;
+   int amount;
    char *ptr = commandLine;
 
-   while (sscanf(ptr, "%s %d", ingredient, &quantity) == 2) {
-      IngredientAndQuantity *newPair = (IngredientAndQuantity *)malloc(sizeof(IngredientAndQuantity));
+   while (sscanf(ptr, "%s %d", ingredient, &amount) == 2) {
+      Ingredient *newPair = (Ingredient *)malloc(sizeof(Ingredient));
       strcpy(newPair->ingredient, ingredient);
-      newPair->quantity = quantity;
+      newPair->amount = amount;
       newPair->nextIngredient = lastPair;
       lastPair = newPair;
       ptr++;
@@ -70,13 +96,14 @@ int newRecipe() {
    }
 
    newRecipe->ingredientList = lastPair;
-   return 1; // added to the end
+   printf("aggiunta\n");
+   return cookbook; // added to the end
 }
 
-int removeRecipe() {
+Recipe *removeRecipe(Recipe *cookbook) {
    char name[MAX_LEN];
    if (scanf("%s", name) == 0) {
-      return -1; // no name error
+      printf("MUST NAME A RECIPE TO REMOVE");
    }
 
    Recipe *pre = NULL;
@@ -89,70 +116,131 @@ int removeRecipe() {
       //    else
       cookbook = cur->nextRecipe;
       free(cur);
-      printf("rimossa");      
-      return 1;
-   }
-
-   while (cur != NULL && strcmp(cur->name, name)) {
-      pre = cur;
-      cur = cur->nextRecipe;
-   }
-
-   if (cur == NULL) {
-      printf("non presente");
-      return 0; // nothing to do
+      printf("rimossa\n");
    } else {
-      pre->nextRecipe = cur->nextRecipe;
-      free(cur);
-      printf("rimossa");
-      return 1;
+      while (cur != NULL && strcmp(cur->name, name)) {
+         pre = cur;
+         cur = cur->nextRecipe;
+      }
+
+      if (cur == NULL) {
+         printf("non presente\n");
+      } else {
+         pre->nextRecipe = cur->nextRecipe;
+         free(cur);
+         printf("rimossa\n");
+      }
    }
 
-   // if (pre != NULL) {
-   //    if (!strcmp(pre->name, name)) {
-   //       cookbook = pre->nextRecipe;
-   //       free(pre);
-   //       printf("rimossa");
-   //       // TODO check for in sospeso
-   //       return 1;
-   //    } else {
-   //       cur = pre->nextRecipe;
-   //       while (cur != NULL) {
-   //          if (!strcmp(cur->name, name)) {
-   //             // printf(" removing %s ", name);
-   //             pre->nextRecipe = cur->nextRecipe;
-   //             free(cur);
-   //             printf("rimossa");
-   //             return 1;
-   //          }
-   //          pre = cur;
-   //          cur = cur->nextRecipe;
-   //       }
-   //    }
-   // }
+   return cookbook;
 }
 
-int printCookbook() {
-   Recipe *curRec = cookbook;
-   while (curRec != NULL) {
-      printf("\n%s: ", curRec->name);
-      IngredientAndQuantity *curIAQ = curRec->ingredientList;
-      while (curIAQ != NULL) {
-         printf("%s %d, ", curIAQ->ingredient, curIAQ->quantity);
-         curIAQ = curIAQ->nextIngredient;
+void printWarehouse(Shelf *warehouse) {
+
+   printf("\n");
+   Shelf *curShe = warehouse;
+   while (curShe != NULL) {
+      printf("%s: ", curShe->name);
+      Bunch *curBun = curShe->bunchList;
+      while (curBun != NULL) {
+         printf("(%d %d), ", curBun->expiration, curBun->amount);
+         curBun = curBun->nextBunch;
       }
-      curRec = curRec->nextRecipe;
+      curShe = curShe->nextShelf;
+      printf("\n");
    }
-   return 0;
+}
+
+Bunch *newBunch(Bunch *bunch, int expiration, int amount) {
+   // ASSUMING BUNCH IS NOT EMPTY
+   // LOWEST EXPIRATION IN HEAD
+   Bunch *pre = NULL, *cur = bunch;
+   while (cur != NULL) {
+      if (expiration == cur->expiration) {
+         cur->amount += amount;
+         break; // exit
+      } else if (expiration < cur->expiration) {
+         break;
+      } else {
+         pre = cur;
+         cur = cur->nextBunch;
+      }
+   }
+   if (expiration != cur->expiration) {
+      Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+      newBunch->expiration = expiration;
+      newBunch->amount = amount;
+      newBunch->nextBunch = cur;
+      if (pre == NULL) {
+         bunch = newBunch;
+      } else {
+         pre->nextBunch = newBunch;
+      }
+   }
+   return bunch;
+}
+
+Shelf *newBatch(Shelf *warehouse) {
+   char commandLine[MAX_LEN];
+   if (fgets(commandLine, MAX_LEN, stdin) == 0) {
+      printf("BATCH ANNOUNCED BUT NOT DELIVERED");
+   }
+
+   int expiration, amount;
+   char name[MAX_LEN], *ptr = commandLine;
+
+   while (sscanf(ptr, "%s %d %d", name, &expiration, &amount) == 3) {
+      Shelf *pre, *cur = warehouse;
+      if (cur == NULL) {
+      }
+      while (cur != NULL) {
+         if (!strcmp(cur->name, name)) {
+            cur->bunchList = newBunch(cur->bunchList, expiration, amount);
+            break;
+         } else {
+            pre = cur;
+            cur = cur->nextShelf;
+         }
+      }
+      if (cur == NULL) {
+         Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
+         strcpy(newShelf->name, name);
+         newShelf->nextShelf = NULL;
+         Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+         newShelf->bunchList = newBunch;
+         newShelf->bunchList->expiration = expiration;
+         newShelf->bunchList->amount = amount;
+         newShelf->bunchList->nextBunch = NULL;
+         if (warehouse == NULL) {
+            warehouse = newShelf;
+         } else {
+            pre->nextShelf = newShelf;
+         }
+      }
+      ptr++;
+      while (*ptr != ' ')
+         ptr++;
+      ptr++;
+      while (*ptr != ' ')
+         ptr++;
+      ptr++;
+      while (*ptr != ' ')
+         ptr++;
+   }
+
+   printf("rifornito\n");
+   return warehouse;
 }
 
 int main() {
+   int courierPeriod, maxPayload, time = 0;
+   Recipe *cookbook = NULL;
+   Shelf *warehouse = NULL;
    char command[MAX_LEN], commandLine[MAX_LEN];
 
-   printf("<><><><><><><><><><><><>\n");
-
    if (scanf("%d", &courierPeriod) == 0 || scanf("%d", &maxPayload) == 0) {
-      return -1; // missing initialization error
+      printf("MUST SPECIFY COURIER PERIOD AND MAX PAYLOAD");
+      return -1;
    }
 
    while (scanf("%s", command) > 0) {
@@ -162,29 +250,28 @@ int main() {
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
-         printf("new recipe ");
-         newRecipe();
-         printf("\n");
+
+         cookbook = newRecipe(cookbook);
+
       } else if (!strcmp(command, "rimuovi_ricetta")) {
-         printf("remove recipe\n");
-         removeRecipe();
-         printf("\n");
+
+         cookbook = removeRecipe(cookbook);
+
       } else if (!strcmp(command, "rifornimento")) {
-         printf("new batch\n");
-         if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-            return -1; // empty command argument error
-         }
+
+         warehouse = newBatch(warehouse);
+
       } else if (!strcmp(command, "ordine")) {
+
          printf("new order\n");
          if (fgets(commandLine, MAX_LEN, stdin) == 0) {
             return -1; // empty command argument error
          }
-      } else {
-         return -1; // unknown command error
       }
 
       time++;
    }
-
-   printCookbook();
+   printf("\n");
+   printCookbook(cookbook);
+   printWarehouse(warehouse);
 }
