@@ -6,7 +6,7 @@
 
 // ingredient, amount ∈ Ingredient ∈ Recipe ∈ cookbook
 typedef struct Ingredient {
-   char ingredient[MAX_LEN];
+   char name[MAX_LEN];
    int amount;
    struct Ingredient *nextIngredient;
 } Ingredient;
@@ -24,20 +24,69 @@ typedef struct Bunch {
 } Bunch;
 typedef struct Shelf {
    char name[MAX_LEN];
+   int total;
    Bunch *bunchList;
    struct Shelf *nextShelf;
 } Shelf;
 
+// name, amount ∈ Order ∈ pendingOrders
+typedef struct Order {
+   int time;
+   char name[MAX_LEN];
+   int amount;
+   struct Order *nextOrder;
+} Order;
+typedef struct Pending {
+   Order *head;
+   Order *tail;
+} Pending;
+
+// pendingOrders, warehouse ∈ state
+typedef struct State {
+
+   // basically supply and demand
+
+   Pending pendingOrders;
+   Shelf *warehouse;
+} State;
+
 void printCookbook(Recipe *cookbook) {
+   printf("\n");
    Recipe *curRec = cookbook;
    while (curRec != NULL) {
-      printf("%s: ", curRec->name);
+      printf("%10s:\t", curRec->name);
       Ingredient *curIng = curRec->ingredientList;
       while (curIng != NULL) {
-         printf("%s %d, ", curIng->ingredient, curIng->amount);
+         printf("%10s:%*d\t", curIng->name, 5, curIng->amount);
          curIng = curIng->nextIngredient;
       }
       curRec = curRec->nextRecipe;
+      printf("\n");
+   }
+}
+
+void printWarehouse(Shelf *warehouse) {
+
+   printf("\n");
+   Shelf *curShe = warehouse;
+   while (curShe != NULL) {
+      printf("%10s:\t%*d:\t", curShe->name, 5, curShe->total);
+      Bunch *curBun = curShe->bunchList;
+      while (curBun != NULL) {
+         printf("%*d:%*d\t\t", 5, curBun->expiration, 5, curBun->amount);
+         curBun = curBun->nextBunch;
+      }
+      curShe = curShe->nextShelf;
+      printf("\n");
+   }
+}
+
+void printPending(Pending pendingOrders) {
+   printf("\n");
+   Order *cur = pendingOrders.head;
+   while (cur != NULL) {
+      printf("%*d\t%10s:\t%*d\t", 5, cur->time, cur->name, 5, cur->amount);
+      cur = cur->nextOrder;
       printf("\n");
    }
 }
@@ -83,7 +132,7 @@ Recipe *newRecipe(Recipe *cookbook) {
 
    while (sscanf(ptr, "%s %d", ingredient, &amount) == 2) {
       Ingredient *newPair = (Ingredient *)malloc(sizeof(Ingredient));
-      strcpy(newPair->ingredient, ingredient);
+      strcpy(newPair->name, ingredient);
       newPair->amount = amount;
       newPair->nextIngredient = lastPair;
       lastPair = newPair;
@@ -135,22 +184,6 @@ Recipe *removeRecipe(Recipe *cookbook) {
    return cookbook;
 }
 
-void printWarehouse(Shelf *warehouse) {
-
-   printf("\n");
-   Shelf *curShe = warehouse;
-   while (curShe != NULL) {
-      printf("%s: ", curShe->name);
-      Bunch *curBun = curShe->bunchList;
-      while (curBun != NULL) {
-         printf("(%d %d), ", curBun->expiration, curBun->amount);
-         curBun = curBun->nextBunch;
-      }
-      curShe = curShe->nextShelf;
-      printf("\n");
-   }
-}
-
 Bunch *newBunch(Bunch *bunch, int expiration, int amount) {
    // ASSUMING BUNCH IS NOT EMPTY
    // LOWEST EXPIRATION IN HEAD
@@ -196,6 +229,7 @@ Shelf *newBatch(Shelf *warehouse) {
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
             cur->bunchList = newBunch(cur->bunchList, expiration, amount);
+            cur->total += amount;
             break;
          } else {
             pre = cur;
@@ -205,6 +239,7 @@ Shelf *newBatch(Shelf *warehouse) {
       if (cur == NULL) {
          Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
          strcpy(newShelf->name, name);
+         newShelf->total = amount;
          newShelf->nextShelf = NULL;
          Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
          newShelf->bunchList = newBunch;
@@ -232,11 +267,82 @@ Shelf *newBatch(Shelf *warehouse) {
    return warehouse;
 }
 
+Pending appendOrder(Order *order, Pending pendingOrders) {
+
+   if (pendingOrders.tail != NULL) {
+      pendingOrders.tail->nextOrder = order;
+      pendingOrders.tail = pendingOrders.tail->nextOrder;
+   } else {
+      pendingOrders.head = order;
+      pendingOrders.tail = order;
+   }
+   return pendingOrders;
+}
+
+State tryBaking(Order *order, Recipe *cookbook, State state) {
+
+   Recipe *recipe = cookbook;
+   while (recipe != NULL) {
+      if (!strcmp(recipe->name, order->name)) {
+         break;
+      }
+      recipe = recipe->nextRecipe;
+   }
+
+   if (recipe == NULL) {
+      printf("rifiutato\n");
+      return state;
+   }
+      // printf(" ATTEMPTING TO BAKE : %dx%s :", order->amount, order->name);
+
+   // cleanWarehouse
+
+   Shelf *curShe;
+   Ingredient *curIng = recipe->ingredientList;
+   while (curIng != NULL) {
+      curShe = state.warehouse;
+      while (curShe != NULL) {
+         if (!strcmp(curIng->name, curShe->name)) {
+            if (curIng->amount <= curShe->total) {
+               break; // Enough, check next ingredient
+            }
+            printf("not enough %s to bake %s\n", curShe->name, order->name);
+            state.pendingOrders = appendOrder(order, state.pendingOrders);
+            return state;
+         }
+         curShe = curShe->nextShelf;
+      }
+      if (curShe == NULL) {
+         printf("%s not present at all\n", curIng->name);
+         state.pendingOrders = appendOrder(order, state.pendingOrders);
+         return state;
+      }
+      curIng = curIng->nextIngredient;
+   }
+
+   printf("ready to bake %s\n", order->name);
+   return state;
+};
+
+State newOrder(Recipe *cookbook, State state, int time) {
+
+   Order *newOrder = (Order *)malloc(sizeof(Order));
+   if (scanf("%s %d", newOrder->name, &newOrder->amount) == 0) {
+      printf("EXPECTED ORDER NAME AND AMOUNT");
+      return state;
+   }
+   newOrder->nextOrder = NULL;
+   newOrder->time = time;
+
+   return tryBaking(newOrder, cookbook, state);
+}
+
 int main() {
+
    int courierPeriod, maxPayload, time = 0;
+   char command[MAX_LEN];
    Recipe *cookbook = NULL;
-   Shelf *warehouse = NULL;
-   char command[MAX_LEN], commandLine[MAX_LEN];
+   State state = {{NULL, NULL}, NULL};
 
    if (scanf("%d", &courierPeriod) == 0 || scanf("%d", &maxPayload) == 0) {
       printf("MUST SPECIFY COURIER PERIOD AND MAX PAYLOAD");
@@ -244,6 +350,7 @@ int main() {
    }
 
    while (scanf("%s", command) > 0) {
+      printf("\n(%d) ",time);
 
       if (time && time % courierPeriod == 0) {
          printf("(courier) ");
@@ -256,22 +363,24 @@ int main() {
       } else if (!strcmp(command, "rimuovi_ricetta")) {
 
          cookbook = removeRecipe(cookbook);
+         // TODO check for in sospeso
 
       } else if (!strcmp(command, "rifornimento")) {
 
-         warehouse = newBatch(warehouse);
+         state.warehouse = newBatch(state.warehouse);
+
+         // Go through pendingOrders
+         // If any order can be prepared
+         // bake(that order)
 
       } else if (!strcmp(command, "ordine")) {
-
-         printf("new order\n");
-         if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-            return -1; // empty command argument error
-         }
+         state = newOrder(cookbook, state, time);
       }
 
       time++;
    }
    printf("\n");
    printCookbook(cookbook);
-   printWarehouse(warehouse);
+   printWarehouse(state.warehouse);
+   printPending(state.pendingOrders);
 }
