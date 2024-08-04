@@ -11,21 +11,21 @@
 
 (5) (courier) not enough farina to bake ciambella
 
-(6) ready to bake profiterole
+(6) baking profiterole
 
 (7) rimossa
 
 (8) aggiunta
 
-(9) not enough farina to bake ciambella
- APPENDING : 3xciambella to tail 6xciambella:
+(9) uova not present at all
+
 (10) (courier) not enough zucchero to bake torta
- APPENDING : 1xtorta to tail 3xciambella:
+
 (11) rifornito
 
 (12) rifornito
 
-(13) ready to bake torta
+(13) not enough farina to bake torta
 
 (14) rifiutato
 
@@ -34,13 +34,16 @@
  ciambella:	     burro:    2	      uova:    5	    farina:   20	
 pane_dolce:	      uova:    1	  zucchero:    1	    farina:    1	
 
-    farina:	   53:	   50:   13		  100:   40		
-      uova:	   45:	    7:   15		   45:   20		  100:   10		
-  zucchero:	   45:	   20:   20		   25:   15		  100:   10		
+  zucchero:	   37:	   20:   20		   25:   15		  100:    2		
      burro:	   30:	   15:   20		  100:   10		
-     latte:	   25:	    5:   15		  100:   10		
-cioccolato:	   25:	    5:   15		  100:   10		
+     latte:	   18:	    5:   15		  100:    3		
+cioccolato:	   19:	    5:   15		  100:    4		
+    farina:	   43:	   50:   13		  100:   30		
+      uova:	   35:	    7:   15		   45:   20		
 
     5	 ciambella:	    6	
     9	 ciambella:	    3	
    10	     torta:	    1	
+   13	     torta:	    1	
+
+    6	profiterole:	    3	
