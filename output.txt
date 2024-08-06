@@ -1,49 +1,93 @@
 
-(0) aggiunta
+[0] aggiunta
 
-(1) aggiunta
+[1] aggiunta
 
-(2) aggiunta
+[2] aggiunta
 
-(3) non presente
+[3] non presente
 
-(4) rifornito
+[4] rifornito
 
-(5) (courier) not enough farina to bake ciambella
+[5] campionicino vuoto
+Reciving order of ciambella; 
+    farina:	   10:	  100:   10		
+      uova:	   10:	  100:   10		
+  zucchero:	   10:	  100:   10		
+     burro:	   10:	  100:   10		
+     latte:	   10:	  100:   10		
+cioccolato:	   10:	  100:   10		
+not enough farina to bake ciambella
 
-(6) baking profiterole
+[6] Reciving order of profiterole; 
+    farina:	   10:	  100:   10		
+      uova:	   10:	  100:   10		
+  zucchero:	   10:	  100:   10		
+     burro:	   10:	  100:   10		
+     latte:	   10:	  100:   10		
+cioccolato:	   10:	  100:   10		
+accettato (baking profiterole)
 
-(7) rimossa
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
 
-(8) aggiunta
+[7] rimossa
 
-(9) uova not present at all
+[8] aggiunta
 
-(10) (courier) not enough zucchero to bake torta
+[9] Reciving order of ciambella; 
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
+farina not present at all
 
-(11) rifornito
+[10] 6 profiterole 3
+Reciving order of torta; 
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
+not enough zucchero to bake torta
 
-(12) rifornito
+[11] Reciving order of torta; 
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
+not enough zucchero to bake torta
 
-(13) not enough farina to bake torta
+[12] Reciving order of profiterole; 
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
+rifiutato
 
-(14) rifiutato
 
-
+COOKBOOK
      torta:	  zucchero:   20	      uova:   10	    farina:   50	
  ciambella:	     burro:    2	      uova:    5	    farina:   20	
 pane_dolce:	      uova:    1	  zucchero:    1	    farina:    1	
 
-  zucchero:	   37:	   20:   20		   25:   15		  100:    2		
-     burro:	   30:	   15:   20		  100:   10		
-     latte:	   18:	    5:   15		  100:    3		
-cioccolato:	   19:	    5:   15		  100:    4		
-    farina:	   43:	   50:   13		  100:   30		
-      uova:	   35:	    7:   15		   45:   20		
+WAREHOUSE
+      uova:	    8:	  100:    8		
+  zucchero:	    7:	  100:    7		
+     burro:	   10:	  100:   10		
+     latte:	    7:	  100:    7		
+cioccolato:	    6:	  100:    6		
 
-    5	 ciambella:	    6	
-    9	 ciambella:	    3	
-   10	     torta:	    1	
-   13	     torta:	    1	
+PENDING ORDERS
+at     5	 ciambella:	    6	 tot:   -1
+at     9	 ciambella:	    3	 tot:   -1
+at    10	     torta:	    1	 tot:   -1
+at    11	     torta:	    1	 tot:   -1
 
-    6	profiterole:	    3	
+READY ORDERS
