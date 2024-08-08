@@ -230,6 +230,7 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
 }
 
 State tryBaking(Order *order, Recipe *cookbook, State state) {
+   // DOES NOT HANDLE PENDING LIST
 
    state.baking = 0;
 
@@ -247,7 +248,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
    }
 
    // cleanWarehouse
-
+   // checking if baking is possible
    Shelf *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
@@ -258,14 +259,12 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
                break; // Enough curIng, check next ingredient
             }
             printf("not enough %s to bake %s\n", curShe->name, order->name);
-            state.pendingOrders = appendOrder(order, state.pendingOrders);
             return state;
          }
          curShe = curShe->nextShelf;
       }
       if (curShe == NULL) {
          printf("%s not present at all\n", curIng->name);
-         state.pendingOrders = appendOrder(order, state.pendingOrders);
          return state;
       }
       curIng = curIng->nextIngredient;
@@ -285,7 +284,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
 
       // this "while" should terminate only thorugh "break"
       // since it's guaranteed to have all the required ingredients
-      while (curShe != NULL) { 
+      while (curShe != NULL) {
          if (!strcmp(curIng->name, curShe->name)) {
             // Removing used ingredients
             required = curIng->amount;
@@ -296,7 +295,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
                   curShe->total -= delta;
                   ////
                   delBun = curShe->bunchList;
-                  curShe->bunchList = curShe->bunchList->nextBunch; 
+                  curShe->bunchList = curShe->bunchList->nextBunch;
                   free(delBun);
                   // curShe->bunchList can become NULL
                   // but we don't want empty shelves
@@ -305,6 +304,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
                      if (preShe == NULL) {
                         // First shelf
                         state.warehouse = curShe->nextShelf;
+                        // DANGER
                      } else {
                         preShe->nextShelf = curShe->nextShelf;
                      }
@@ -330,7 +330,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
    order->weight = weight;
 
    // Adding to tail of readyOrders
-
+   
    if (state.readyOrders.tail == NULL) {
       state.readyOrders.head = order;
       state.readyOrders.tail = order;
@@ -353,8 +353,9 @@ State newBatch(State state, Recipe *cookbook) {
 
    while (sscanf(ptr, "%s %d %d", name, &expiration, &amount) == 3) {
       Shelf *pre, *cur = state.warehouse;
-      if (cur == NULL) {
-      }
+      // if (cur == NULL) {
+
+      // }
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
             cur->bunchList = newBunch(cur->bunchList, expiration, amount);
@@ -377,6 +378,7 @@ State newBatch(State state, Recipe *cookbook) {
          newShelf->bunchList->nextBunch = NULL;
          if (state.warehouse == NULL) {
             state.warehouse = newShelf;
+            // DANGER
          } else {
             pre->nextShelf = newShelf;
          }
@@ -450,8 +452,9 @@ State newOrder(Recipe *cookbook, State state, int time) {
    printf("Reciving order of %s; ", newOrder->name);
    printWarehouse(state.warehouse);
    state = tryBaking(newOrder, cookbook, state);
-   if (state.baking)
-      printWarehouse(state.warehouse);
+   if (!state.baking) {
+      state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
+   }
    return state;
 }
 
@@ -467,7 +470,7 @@ State loadOrders(State state, int payloadLeft) {
          if (payloadLeft < 0) {
             break;
          }
-         state.readyOrders.head = curRea->nextOrder;
+         state.readyOrders.head = state.readyOrders.head->nextOrder;
          curLoa = loadingOrders;
          preLoa = NULL;
          while (curLoa != NULL) {

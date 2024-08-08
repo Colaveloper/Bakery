@@ -28,12 +28,6 @@ not enough farina to bake ciambella
 cioccolato:	   10:	  100:   10		
 accettato (baking profiterole)
 
-      uova:	    8:	  100:    8		
-  zucchero:	    7:	  100:    7		
-     burro:	   10:	  100:   10		
-     latte:	    7:	  100:    7		
-cioccolato:	    6:	  100:    6		
-
 [7] rimossa
 
 [8] aggiunta
@@ -55,20 +49,29 @@ Reciving order of torta;
 cioccolato:	    6:	  100:    6		
 not enough zucchero to bake torta
 
-[11] Reciving order of torta; 
-      uova:	    8:	  100:    8		
-  zucchero:	    7:	  100:    7		
-     burro:	   10:	  100:   10		
-     latte:	    7:	  100:    7		
-cioccolato:	    6:	  100:    6		
-not enough zucchero to bake torta
+[11] accettato (baking ciambella)
+not enough farina to bake ciambella
+not enough farina to bake torta
+rifornito
 
-[12] Reciving order of profiterole; 
-      uova:	    8:	  100:    8		
-  zucchero:	    7:	  100:    7		
-     burro:	   10:	  100:   10		
-     latte:	    7:	  100:    7		
-cioccolato:	    6:	  100:    6		
+[12] accettato (baking ciambella)
+farina not present at all
+rifornito
+
+[13] Reciving order of torta; 
+      uova:	   33:	    7:   10		   45:   15		  100:    8		
+  zucchero:	   42:	   20:   20		   25:   15		  100:    7		
+     burro:	   26:	   15:   16		  100:   10		
+     latte:	   22:	    5:   15		  100:    7		
+cioccolato:	   21:	    5:   15		  100:    6		
+farina not present at all
+
+[14] Reciving order of profiterole; 
+      uova:	   33:	    7:   10		   45:   15		  100:    8		
+  zucchero:	   42:	   20:   20		   25:   15		  100:    7		
+     burro:	   26:	   15:   16		  100:   10		
+     latte:	   22:	    5:   15		  100:    7		
+cioccolato:	   21:	    5:   15		  100:    6		
 rifiutato
 
 
@@ -78,16 +81,20 @@ COOKBOOK
 pane_dolce:	      uova:    1	  zucchero:    1	    farina:    1	
 
 WAREHOUSE
-      uova:	    8:	  100:    8		
-  zucchero:	    7:	  100:    7		
-     burro:	   10:	  100:   10		
-     latte:	    7:	  100:    7		
-cioccolato:	    6:	  100:    6		
+      uova:	   33:	    7:   10		   45:   15		  100:    8		
+  zucchero:	   42:	   20:   20		   25:   15		  100:    7		
+     burro:	   26:	   15:   16		  100:   10		
+     latte:	   22:	    5:   15		  100:    7		
+cioccolato:	   21:	    5:   15		  100:    6		
 
 PENDING ORDERS
-at     5	 ciambella:	    6	 tot:   -1
-at     9	 ciambella:	    3	 tot:   -1
 at    10	     torta:	    1	 tot:   -1
-at    11	     torta:	    1	 tot:   -1
+at    13	     torta:	    1	 tot:   -1
+at    14	profiterole:	    1	 tot:   -1
 
 READY ORDERS
+at     5	 ciambella:	    6	 tot:  162
+at     9	 ciambella:	    3	 tot:   81
+at    10	     torta:	    1	 tot:   -1
+at    13	     torta:	    1	 tot:   -1
+at    14	profiterole:	    1	 tot:   -1
