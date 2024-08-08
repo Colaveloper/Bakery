@@ -52,6 +52,11 @@ typedef struct State {
    Shelf *warehouse;
    int baking;
 
+   // baking semantics:
+   // // -1 rifiutato
+   // // 0  not satysfiable (will be in pendingOrders)
+   // // 1  satysfying (will be in readyOrders)
+
 } State;
 
 void printCookbook(Recipe *cookbook) {
@@ -232,6 +237,9 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
 State tryBaking(Order *order, Recipe *cookbook, State state) {
    // DOES NOT HANDLE PENDING LIST
 
+   printf("trying to bake %s with:", order->name);
+   printWarehouse(state.warehouse);
+
    state.baking = 0;
 
    Recipe *recipe = cookbook;
@@ -244,6 +252,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
 
    if (recipe == NULL) {
       printf("rifiutato\n");
+      state.baking = -1;
       return state;
    }
 
@@ -264,7 +273,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
          curShe = curShe->nextShelf;
       }
       if (curShe == NULL) {
-         printf("%s not present at all\n", curIng->name);
+         printf("%s not present at all to bake %s\n", curIng->name, order->name);
          return state;
       }
       curIng = curIng->nextIngredient;
@@ -276,7 +285,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
    curIng = recipe->ingredientList;
    Shelf *preShe;
    Bunch *delBun;
-   int required, delta, weight = 0;
+   int required, weight = 0;
    while (curIng != NULL) {
       curShe = state.warehouse;
       preShe = NULL;
@@ -290,9 +299,8 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
             required = curIng->amount;
             while (required != 0) {
                if (curShe->bunchList->amount <= required) {
-                  delta = required - curShe->bunchList->amount;
-                  required -= delta;
-                  curShe->total -= delta;
+                  required -= curShe->bunchList->amount;
+                  curShe->total -= curShe->bunchList->amount;
                   ////
                   delBun = curShe->bunchList;
                   curShe->bunchList = curShe->bunchList->nextBunch;
@@ -339,6 +347,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
       state.readyOrders.tail = state.readyOrders.tail->nextOrder;
    }
 
+   printWarehouse(state.warehouse);
    return state;
 };
 
@@ -354,7 +363,6 @@ State newBatch(State state, Recipe *cookbook) {
    while (sscanf(ptr, "%s %d %d", name, &expiration, &amount) == 3) {
       Shelf *pre, *cur = state.warehouse;
       // if (cur == NULL) {
-
       // }
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
@@ -398,7 +406,8 @@ State newBatch(State state, Recipe *cookbook) {
    Order *preRea = NULL, *curRea = state.readyOrders.head;
    while (curPen != NULL) {
       state = tryBaking(curPen, cookbook, state);
-      if (state.baking) {
+      int baking = state.baking;
+      if (baking) {
          // removing curPen from pending
          if (prePen == NULL) {
             state.pendingOrders.head = curPen->nextOrder;
@@ -407,9 +416,10 @@ State newBatch(State state, Recipe *cookbook) {
          }
          // adding curPen in ready
          if (curRea == NULL) {
+            curPen->nextOrder = NULL;
             state.readyOrders.head = curPen;
             state.readyOrders.tail = curPen;
-         } else {
+         } else { //// ISSUE: MOVING FOLLOWING OF CURPEN TOO
 
             while (curRea != NULL) {
                if (curRea->time > curPen->time) {
@@ -452,7 +462,8 @@ State newOrder(Recipe *cookbook, State state, int time) {
    printf("Reciving order of %s; ", newOrder->name);
    printWarehouse(state.warehouse);
    state = tryBaking(newOrder, cookbook, state);
-   if (!state.baking) {
+   int baking = state.baking; 
+   if (baking == 0) {
       state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
    }
    return state;
