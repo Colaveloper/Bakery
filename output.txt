@@ -1,256 +1,43 @@
-
-[0] aggiunta
-
-[1] aggiunta
-
-[2] aggiunta
-
-[3] non presente
-
-[4] 
-PENDING ORDERS
-
-READY ORDERS
+aggiunta
+aggiunta
+aggiunta
+non presente
 rifornito
-
-[5] campionicino vuoto
-Receiving order of ciambella; 
-    farina:	  100:	   10:  100		
-      uova:	  100:	   10:  100		
-  zucchero:	  100:	   10:  100		
-     burro:	  100:	   10:  100		
-     latte:	  100:	   10:  100		
-cioccolato:	  100:	   10:  100		
-trying to bake ciambella with:
-    farina:	  100:	   10:  100		
-      uova:	  100:	   10:  100		
-  zucchero:	  100:	   10:  100		
-     burro:	  100:	   10:  100		
-     latte:	  100:	   10:  100		
-cioccolato:	  100:	   10:  100		
-
-PENDING ORDERS
-
-READY ORDERS
+campionicino vuoto
 accettato
-(baking ciambella)
-
-    farina:	   80:	   10:   80		
-      uova:	   95:	   10:   95		
-  zucchero:	  100:	   10:  100		
-     burro:	   98:	   10:   98		
-     latte:	  100:	   10:  100		
-cioccolato:	  100:	   10:  100		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
-
-[6] Receiving order of profiterole; 
-    farina:	   80:	   10:   80		
-      uova:	   95:	   10:   95		
-  zucchero:	  100:	   10:  100		
-     burro:	   98:	   10:   98		
-     latte:	  100:	   10:  100		
-cioccolato:	  100:	   10:  100		
-trying to bake profiterole with:
-    farina:	   80:	   10:   80		
-      uova:	   95:	   10:   95		
-  zucchero:	  100:	   10:  100		
-     burro:	   98:	   10:   98		
-     latte:	  100:	   10:  100		
-cioccolato:	  100:	   10:  100		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
 accettato
-(baking profiterole)
-
-    farina:	   70:	   10:   70		
-      uova:	   93:	   10:   93		
-  zucchero:	   97:	   10:   97		
-     burro:	   98:	   10:   98		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
-at     6	profiterole:	    3	 tot:   66
-
-[7] rimossa
-
-[8] aggiunta
-
-[9] Receiving order of ciambella; 
-    farina:	   70:	   10:   70		
-      uova:	   93:	   10:   93		
-  zucchero:	   97:	   10:   97		
-     burro:	   98:	   10:   98		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-trying to bake ciambella with:
-    farina:	   70:	   10:   70		
-      uova:	   93:	   10:   93		
-  zucchero:	   97:	   10:   97		
-     burro:	   98:	   10:   98		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
-at     6	profiterole:	    3	 tot:   66
+ordini in attesa
+aggiunta
 accettato
-(baking ciambella)
-
-    farina:	   50:	   10:   50		
-      uova:	   88:	   10:   88		
-  zucchero:	   97:	   10:   97		
-     burro:	   96:	   10:   96		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
-at     6	profiterole:	    3	 tot:   66
-at     9	 ciambella:	    3	 tot:   81
-
-[10] 5 ciambella 6
 9 ciambella 3
 6 profiterole 3
-Receiving order of torta; 
-    farina:	   50:	   10:   50		
-      uova:	   88:	   10:   88		
-  zucchero:	   97:	   10:   97		
-     burro:	   96:	   10:   96		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-trying to bake torta with:
-    farina:	   50:	   10:   50		
-      uova:	   88:	   10:   88		
-  zucchero:	   97:	   10:   97		
-     burro:	   96:	   10:   96		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-
-PENDING ORDERS
-
-READY ORDERS
 accettato
-(baking torta)
-
-      uova:	   78:	   10:   78		
-  zucchero:	   77:	   10:   77		
-     burro:	   96:	   10:   96		
-     latte:	   97:	   10:   97		
-cioccolato:	   96:	   10:   96		
-
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
-
-[11] 
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
 rifornito
-
-[12] 
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
 rifornito
-
-[13] Receiving order of torta; 
-      uova:	  130:	   10:   78		   15:    7		   20:   45		
-  zucchero:	  122:	   10:   77		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  250:	   13:   50		   15:  200		
-trying to bake torta with:
-      uova:	  130:	   10:   78		   15:    7		   20:   45		
-  zucchero:	  122:	   10:   77		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  250:	   13:   50		   15:  200		
-
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
 accettato
-(baking torta)
-
-      uova:	  120:	   10:   68		   15:    7		   20:   45		
-  zucchero:	  102:	   10:   57		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  200:	   15:  200		
-
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
-at    13	     torta:	    1	 tot:   80
-
-[14] Receiving order of profiterole; 
-      uova:	  120:	   10:   68		   15:    7		   20:   45		
-  zucchero:	  102:	   10:   57		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  200:	   15:  200		
-trying to bake profiterole with:
-      uova:	  120:	   10:   68		   15:    7		   20:   45		
-  zucchero:	  102:	   10:   57		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  200:	   15:  200		
-
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
-at    13	     torta:	    1	 tot:   80
-rifiutato
-
-PENDING ORDERS
-
-READY ORDERS
-at    10	     torta:	    1	 tot:   80
-at    13	     torta:	    1	 tot:   80
+accettato
+5 ciambella 6
+10 torta 1
+13 torta 1
 
 
 COOKBOOK
      torta:	  zucchero:   20	      uova:   10	    farina:   50	
  ciambella:	     burro:    2	      uova:    5	    farina:   20	
+profiterole:	cioccolato:    4	  zucchero:    3	     latte:    3	      uova:    2	    farina:   10	
 pane_dolce:	      uova:    1	  zucchero:    1	    farina:    1	
 
 WAREHOUSE
-      uova:	  120:	   10:   68		   15:    7		   20:   45		
-  zucchero:	  102:	   10:   57		   15:   25		   20:   20		
-     burro:	  111:	   10:   96		   20:   15		
-     latte:	  102:	   10:   97		   15:    5		
-cioccolato:	  101:	   10:   96		   15:    5		
-    farina:	  200:	   15:  200		
+    farina:	   30:	   15:   30		
+      uova:	   79:	   10:   27		   15:    7		   20:   45		
+  zucchero:	   93:	   10:   48		   15:   25		   20:   20		
+     burro:	   97:	   10:   82		   20:   15		
+     latte:	   93:	   10:   88		   15:    5		
+cioccolato:	   89:	   10:   84		   15:    5		
 
 PENDING ORDERS
 
 READY ORDERS
+at     5	 ciambella:	    6	 tot:  162
 at    10	     torta:	    1	 tot:   80
 at    13	     torta:	    1	 tot:   80
