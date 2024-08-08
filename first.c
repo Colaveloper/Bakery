@@ -520,6 +520,9 @@ State loadOrders(State state, int payloadLeft) {
          }
          curRea = state.readyOrders.head;
       }
+      if (curRea==NULL) {
+         state.readyOrders.tail = NULL;
+      }
       while (loadingOrders != NULL) {
          printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
          loadingOrders = loadingOrders->nextOrder;

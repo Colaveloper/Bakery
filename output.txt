@@ -156,17 +156,20 @@ cioccolato:	   96:	   10:   96
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
 
 [11] 
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
 rifornito
 
 [12] 
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
 rifornito
 
 [13] Receiving order of torta; 
@@ -187,6 +190,7 @@ cioccolato:	  101:	   10:   96		   15:    5
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
 accettato
 (baking torta)
 
@@ -200,6 +204,8 @@ cioccolato:	  101:	   10:   96		   15:    5
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
+at    13	     torta:	    1	 tot:   80
 
 [14] Receiving order of profiterole; 
       uova:	  120:	   10:   68		   15:    7		   20:   45		
@@ -219,11 +225,15 @@ cioccolato:	  101:	   10:   96		   15:    5
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
+at    13	     torta:	    1	 tot:   80
 rifiutato
 
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
+at    13	     torta:	    1	 tot:   80
 
 
 COOKBOOK
@@ -242,3 +252,5 @@ cioccolato:	  101:	   10:   96		   15:    5
 PENDING ORDERS
 
 READY ORDERS
+at    10	     torta:	    1	 tot:   80
+at    13	     torta:	    1	 tot:   80
