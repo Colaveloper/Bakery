@@ -198,27 +198,27 @@ Bunch *newBunch(Bunch *bunch, int expiration, int amount) {
    // LOWEST EXPIRATION IN HEAD
    Bunch *pre = NULL, *cur = bunch;
    while (cur != NULL) {
-      if (expiration == cur->expiration) {
+      if (expiration == cur->expiration) { // can return
          cur->amount += amount;
-         break; // exit
-      } else if (expiration < cur->expiration) {
+         return bunch;
+      } else if (expiration < cur->expiration) { // must add bunch before cur
          break;
-      } else {
+      } else { // go on until cur is NULL, then add bunch before cur
          pre = cur;
          cur = cur->nextBunch;
       }
    }
-   if (expiration != cur->expiration) {
-      Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
-      newBunch->expiration = expiration;
-      newBunch->amount = amount;
-      newBunch->nextBunch = cur;
-      if (pre == NULL) {
-         bunch = newBunch;
-      } else {
-         pre->nextBunch = newBunch;
-      }
+
+   Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+   newBunch->expiration = expiration;
+   newBunch->amount = amount;
+   newBunch->nextBunch = cur;
+   if (pre == NULL) {
+      bunch = newBunch;
+   } else {
+      pre->nextBunch = newBunch;
    }
+
    return bunch;
 }
 
@@ -235,10 +235,15 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
 }
 
 State tryBaking(Order *order, Recipe *cookbook, State state) {
-   // DOES NOT HANDLE PENDING LIST
+   // DOES NOT MODIFY PENDING LIST NOR READY LIST
+   // ONLY MODIFIES WAREHOUSE
 
    printf("trying to bake %s with:", order->name);
    printWarehouse(state.warehouse);
+   printf("\nPENDING ORDERS");
+   printOrderList(state.pendingOrders);
+   printf("\nREADY ORDERS");
+   printOrderList(state.readyOrders);
 
    state.baking = 0;
 
@@ -255,6 +260,8 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
       state.baking = -1;
       return state;
    }
+
+   printf("accettato\n");
 
    // cleanWarehouse
    // checking if baking is possible
@@ -279,7 +286,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
       curIng = curIng->nextIngredient;
    }
 
-   printf("accettato (baking %s)\n", order->name);
+   printf("(baking %s)\n", order->name);
    state.baking = 1;
 
    curIng = recipe->ingredientList;
@@ -337,16 +344,6 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
 
    order->weight = weight;
 
-   // Adding to tail of readyOrders
-   
-   if (state.readyOrders.tail == NULL) {
-      state.readyOrders.head = order;
-      state.readyOrders.tail = order;
-   } else {
-      state.readyOrders.tail = order;
-      state.readyOrders.tail = state.readyOrders.tail->nextOrder;
-   }
-
    printWarehouse(state.warehouse);
    return state;
 };
@@ -360,7 +357,7 @@ State newBatch(State state, Recipe *cookbook) {
    int expiration, amount;
    char name[MAX_LEN], *ptr = commandLine;
 
-   while (sscanf(ptr, "%s %d %d", name, &expiration, &amount) == 3) {
+   while (sscanf(ptr, "%s %d %d", name, &amount, &expiration) == 3) {
       Shelf *pre, *cur = state.warehouse;
       // if (cur == NULL) {
       // }
@@ -404,9 +401,11 @@ State newBatch(State state, Recipe *cookbook) {
 
    Order *prePen = NULL, *curPen = state.pendingOrders.head;
    Order *preRea = NULL, *curRea = state.readyOrders.head;
+   Order *nexPen;
    while (curPen != NULL) {
       state = tryBaking(curPen, cookbook, state);
       int baking = state.baking;
+      nexPen = curPen->nextOrder;
       if (baking) {
          // removing curPen from pending
          if (prePen == NULL) {
@@ -419,8 +418,7 @@ State newBatch(State state, Recipe *cookbook) {
             curPen->nextOrder = NULL;
             state.readyOrders.head = curPen;
             state.readyOrders.tail = curPen;
-         } else { //// ISSUE: MOVING FOLLOWING OF CURPEN TOO
-
+         } else {
             while (curRea != NULL) {
                if (curRea->time > curPen->time) {
                   break;
@@ -437,11 +435,16 @@ State newBatch(State state, Recipe *cookbook) {
                curPen->nextOrder = curRea;
             }
          }
+         // prePen unchanged
+      } else {
+         prePen = curPen;
       }
-      prePen = curPen;
-      curPen = curPen->nextOrder;
+      curPen = nexPen;
    }
-
+   printf("\nPENDING ORDERS");
+   printOrderList(state.pendingOrders);
+   printf("\nREADY ORDERS");
+   printOrderList(state.readyOrders);
    printf("rifornito\n");
    return state;
 }
@@ -459,13 +462,26 @@ State newOrder(Recipe *cookbook, State state, int time) {
    newOrder->time = time;
    newOrder->weight = -1;
 
-   printf("Reciving order of %s; ", newOrder->name);
+   printf("Receiving order of %s; ", newOrder->name);
    printWarehouse(state.warehouse);
    state = tryBaking(newOrder, cookbook, state);
-   int baking = state.baking; 
+   int baking = state.baking;
    if (baking == 0) {
       state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
+   } else if (baking == 1) {
+      if (state.readyOrders.tail == NULL) {
+         state.readyOrders.head = newOrder;
+         state.readyOrders.tail = newOrder;
+      } else {
+         // newOrder has the least priority
+         state.readyOrders.tail->nextOrder = newOrder;
+         state.readyOrders.tail = newOrder;
+      }
    }
+   printf("\nPENDING ORDERS");
+   printOrderList(state.pendingOrders);
+   printf("\nREADY ORDERS");
+   printOrderList(state.readyOrders);
    return state;
 }
 
