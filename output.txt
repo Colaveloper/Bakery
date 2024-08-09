@@ -1,43 +1,303 @@
 aggiunta
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+rifiutato
+accettato
+accettato
+accettato
+rifornito
+10 k91ztT0f80YkrVS 9
+6 k91ztT0f80YkrVS 6
+accettato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+aggiunta
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+20 k91ztT0f80YkrVS 13
+17 k91ztT0f80YkrVS 2
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rimossa
+rifiutato
+rimossa
+rifiutato
+rifiutato
+rifiutato
+accettato
+rifiutato
+rifiutato
+rifornito
+accettato
+rifornito
+accettato
+57 Kj8cfb01WZAyPsH9Adt8_RLR 10
+33 Kj8cfb01WZAyPsH9Adt8_RLR 7
+26 Kj8cfb01WZAyPsH9Adt8_RLR 5
+23 Kj8cfb01WZAyPsH9Adt8_RLR 4
+rifiutato
+rifiutato
+non presente
+rifiutato
+rifiutato
+rifiutato
+rifiutato
+accettato
+accettato
+rifornito
+accettato
+rifiutato
+rifiutato
+accettato
+rifiutato
+rifiutato
+accettato
+accettato
+rifiutato
+accettato
+59 Kj8cfb01WZAyPsH9Adt8_RLR 15
+68 Kj8cfb01WZAyPsH9Adt8_RLR 7
 aggiunta
 aggiunta
+rimossa
 non presente
 rifornito
-campionicino vuoto
+accettato
+rifiutato
+rifiutato
 accettato
 accettato
-ordini in attesa
+rifornito
+rifornito
+accettato
+accettato
+accettato
+rifiutato
+aggiunta
+rifiutato
+accettato
+rifiutato
+70 Kj8cfb01WZAyPsH9Adt8_RLR 15
+85 Kj8cfb01WuJYWnhdFI 3
+rifiutato
 aggiunta
 accettato
-9 ciambella 3
-6 profiterole 3
+accettato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+ignorato
+89 Kj8cfb01WZAyPsH9Adt8_RLR 5
+92 Kj8cfb01WuJYWnhdFI 1
+accettato
+non presente
+rifiutato
+rifiutato
+aggiunta
+accettato
+accettato
+rifiutato
 accettato
 rifornito
+accettato
+rifiutato
+rifiutato
+accettato
+aggiunta
+accettato
+accettato
+102 k91ztT0fKnERew7EteSsXg4PIx2 9
+accettato
+rifiutato
+ignorato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
 rifornito
 accettato
 accettato
-5 ciambella 6
-10 torta 1
-13 torta 1
-
-
-COOKBOOK
-     torta:	  zucchero:   20	      uova:   10	    farina:   50	
- ciambella:	     burro:    2	      uova:    5	    farina:   20	
-profiterole:	cioccolato:    4	  zucchero:    3	     latte:    3	      uova:    2	    farina:   10	
-pane_dolce:	      uova:    1	  zucchero:    1	    farina:    1	
-
-WAREHOUSE
-    farina:	   30:	   15:   30		
-      uova:	   79:	   10:   27		   15:    7		   20:   45		
-  zucchero:	   93:	   10:   48		   15:   25		   20:   20		
-     burro:	   97:	   10:   82		   20:   15		
-     latte:	   93:	   10:   88		   15:    5		
-cioccolato:	   89:	   10:   84		   15:    5		
-
-PENDING ORDERS
-
-READY ORDERS
-at     5	 ciambella:	    6	 tot:  162
-at    10	     torta:	    1	 tot:   80
-at    13	     torta:	    1	 tot:   80
+103 Kj8cfb01WZAyPsH9Adt8_RLR 7
+105 Kj8cfb01WZAyPsH9Adt8_RLR 5
+rifiutato
+accettato
+rifiutato
+accettato
+aggiunta
+accettato
+ordini in sospeso
+accettato
+accettato
+aggiunta
+accettato
+aggiunta
+aggiunta
+accettato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+accettato
+106 k91ztT0fKnERew7EteSsXg4PIx2 9
+aggiunta
+accettato
+accettato
+rifiutato
+accettato
+accettato
+rimossa
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rimossa
+aggiunta
+rifiutato
+accettato
+accettato
+ordini in sospeso
+accettato
+111 k91ztT0fKnERew7EteSsXg4PIx2 2
+107 nO5aUROrGLw4Nz7Fdsvs_We3pf 17
+108 Kj8cfb01WZAyPsH9Adt8_RLR 2
+accettato
+rifornito
+accettato
+accettato
+accettato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+accettato
+accettato
+rifornito
+accettato
+rifornito
+accettato
+rifiutato
+rifiutato
+accettato
+113 k91ztT0fKnERew7EteSsXg4PIx2 6
+114 Kj8cfb01WZAyPsH9Adt8_RLR 8
+rifiutato
+accettato
+rifiutato
+rimossa
+rifiutato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+rifiutato
+rimossa
+accettato
+accettato
+rifiutato
+accettato
+aggiunta
+rifiutato
+rifiutato
+rimossa
+133 Kj8cfb01WZAyPsH9Adt8_RLR 13
+115 Kj8cfb01WZAyPsH9Adt8_RLR 6
+140 Kj8cfb01WZAyPsH9Adt8_RLR 4
+accettato
+rifornito
+aggiunta
+aggiunta
+accettato
+rifornito
+accettato
+non presente
+rifiutato
+accettato
+accettato
+accettato
+non presente
+ordini in sospeso
+accettato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+161 Kj8cfb01WuJYWnhdFI 2
+151 k91ztT0fKnERew7EteSsXg4PIx2 2
+149 Kj8cfb01WZAyPsH9Adt8_RLR 5
+168 k91ztT0fKnERew7EteSsXg4PIx2 1
+167 dk8BmNQd7IowK 1
+accettato
+rifornito
+aggiunta
+accettato
+aggiunta
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+rifiutato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+accettato
+177 Kj8cfb01WZAyPsH9Adt8_RLR 19
+173 k91ztT0frpdsex1azodLSVSaaK 11
+accettato
+aggiunta

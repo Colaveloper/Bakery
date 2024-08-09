@@ -103,7 +103,7 @@ void printOrderList(OrderList pendingOrders) {
 Recipe *newRecipe(Recipe *cookbook) {
    char name[MAX_LEN];
    if (scanf("%s", name) == 0) {
-      printf("MUST HAVE A RECIPE TO REMOVE");
+      printf("MUST HAVE A RECIPE TO ADD");
       return cookbook;
    }
 
@@ -127,30 +127,20 @@ Recipe *newRecipe(Recipe *cookbook) {
       pre->nextRecipe = newRecipe;
    }
 
-   char commandLine[MAX_LEN];
-   // TODO allow for longer commands
-   if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-      printf("NEW RECIPE MUST SPECIFY A RECIPE");
-      return cookbook;
-   }
-
    Ingredient *lastPair = NULL;
    char ingredient[MAX_LEN];
    int amount;
-   char *ptr = commandLine;
 
-   while (sscanf(ptr, "%s %d", ingredient, &amount) == 2) {
+   while (scanf("%s %d", ingredient, &amount)) {
       Ingredient *newPair = (Ingredient *)malloc(sizeof(Ingredient));
       strcpy(newPair->name, ingredient);
       newPair->amount = amount;
       newPair->nextIngredient = lastPair;
       lastPair = newPair;
-      ptr++;
-      while (*ptr != ' ')
-         ptr++;
-      ptr++;
-      while (*ptr != ' ')
-         ptr++;
+      char c = getchar();
+      if (c == '\n' || c == EOF) {
+         break;
+      }
    }
 
    newRecipe->ingredientList = lastPair;
@@ -165,17 +155,17 @@ Recipe *removeRecipe(Recipe *cookbook, State state) {
    }
 
    Order *curOrd = state.pendingOrders.head;
-   while (curOrd!=NULL) {
+   while (curOrd != NULL) {
       if (!strcmp(curOrd->name, name)) {
-         printf("ordini in attesa\n");
+         printf("ordini in sospeso\n");
          return cookbook;
       }
       curOrd = curOrd->nextOrder;
    }
    curOrd = state.readyOrders.head;
-   while (curOrd!=NULL) {
+   while (curOrd != NULL) {
       if (!strcmp(curOrd->name, name)) {
-         printf("ordini in attesa\n");
+         printf("ordini in sospeso\n");
          return cookbook;
       }
       curOrd = curOrd->nextOrder;
@@ -184,10 +174,6 @@ Recipe *removeRecipe(Recipe *cookbook, State state) {
    Recipe *pre = NULL;
    Recipe *cur = cookbook;
    if (cur != NULL && !strcmp(cur->name, name)) {
-      // TODO check for in sospeso:
-      //    if name exists in pendingOrders
-      //       Print "ordini in attesa"
-      //    else
       cookbook = cur->nextRecipe;
       free(cur);
       printf("rimossa\n");
@@ -362,18 +348,14 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
 };
 
 State newBatch(State state, Recipe *cookbook) {
-   char commandLine[MAX_LEN];
-   if (fgets(commandLine, MAX_LEN, stdin) == 0) {
-      printf("BATCH ANNOUNCED BUT NOT DELIVERED");
-   }
 
    int expiration, amount;
-   char name[MAX_LEN], *ptr = commandLine;
+   char name[MAX_LEN];
 
-   while (sscanf(ptr, "%s %d %d", name, &amount, &expiration) == 3) {
+   while (scanf("%s %d %d", name, &amount, &expiration)) {
       Shelf *pre, *cur = state.warehouse;
       // if (cur == NULL) {
-      // C'MON THIS DOESNT HAPPEN, RIGHT?
+      // CMON THIS DOESNT HAPPEN, RIGHT?
       // }
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
@@ -402,15 +384,10 @@ State newBatch(State state, Recipe *cookbook) {
             pre->nextShelf = newShelf;
          }
       }
-      ptr++;
-      while (*ptr != ' ')
-         ptr++;
-      ptr++;
-      while (*ptr != ' ')
-         ptr++;
-      ptr++;
-      while (*ptr != ' ')
-         ptr++;
+      char c = getchar();
+      if (c == '\n' || c == EOF) {
+         break;
+      }
    }
 
    Order *prePen = NULL, *curPen = state.pendingOrders.head;
@@ -483,31 +460,29 @@ State newOrder(Recipe *cookbook, State state, int time) {
    // printf("Receiving order of %s; ", newOrder->name);
    state = tryBaking(newOrder, cookbook, state);
    int baking = state.baking;
-   if (baking == 0 || baking == 1) {
 
-      switch (baking) {
-      case -1:
-         printf("rifiutato\n");
-         break;
-      case 0: // baking newOrder in the future
-         printf("accettato\n");
-         state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
-         break;
-      case 1: // baked immediately!
-         printf("accettato\n");
-         if (state.readyOrders.tail == NULL) {
-            state.readyOrders.head = newOrder;
-            state.readyOrders.tail = newOrder;
-         } else {
-            // newOrder has the least priority
-            state.readyOrders.tail->nextOrder = newOrder;
-            state.readyOrders.tail = newOrder;
-         }
-         break;
-      default:
-         printf("UNKNOWN BAKING CODE");
-         break;
+   switch (baking) {
+   case -1:
+      printf("rifiutato\n");
+      break;
+   case 0: // baking newOrder in the future
+      printf("accettato\n");
+      state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
+      break;
+   case 1: // baked immediately!
+      printf("accettato\n");
+      if (state.readyOrders.tail == NULL) {
+         state.readyOrders.head = newOrder;
+         state.readyOrders.tail = newOrder;
+      } else {
+         // newOrder has the least priority
+         state.readyOrders.tail->nextOrder = newOrder;
+         state.readyOrders.tail = newOrder;
       }
+      break;
+   default:
+      printf("UNKNOWN BAKING CODE");
+      break;
    }
 
    // printf("\nPENDING ORDERS");
@@ -590,7 +565,6 @@ int main() {
       } else if (!strcmp(command, "rimuovi_ricetta")) {
 
          cookbook = removeRecipe(cookbook, state);
-         // TODO check for in sospeso
 
       } else if (!strcmp(command, "rifornimento")) {
 
@@ -603,14 +577,16 @@ int main() {
 
       time++;
    }
-   loadOrders(state, maxPayload);
-   printf("\n");
-   printf("\nCOOKBOOK");
-   printCookbook(cookbook);
-   printf("\nWAREHOUSE");
-   printWarehouse(state.warehouse);
-   printf("\nPENDING ORDERS");
-   printOrderList(state.pendingOrders);
-   printf("\nREADY ORDERS");
-   printOrderList(state.readyOrders);
+   if (time && time % courierPeriod == 0) {
+      state = loadOrders(state, maxPayload);
+   }
+   // printf("\n");
+   // printf("\nCOOKBOOK");
+   // printCookbook(cookbook);
+   // printf("\nWAREHOUSE");
+   // printWarehouse(state.warehouse);
+   // printf("\nPENDING ORDERS");
+   // printOrderList(state.pendingOrders);
+   // printf("\nREADY ORDERS");
+   // printOrderList(state.readyOrders);
 }
