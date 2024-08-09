@@ -1,39 +1,78 @@
 aggiunta
 accettato
+accettato
+aggiunta
+aggiunta
+accettato
+aggiunta
 rifornito
 accettato
 accettato
-accettato
-accettato
-rifornito
-accettato
+ordini in sospeso
 rifornito
 accettato
 accettato
 accettato
 accettato
 ordini in sospeso
-rifiutato
 accettato
 accettato
 accettato
+2 HbRZdF7TduF30aqkRgle0uL7lSqD 79
+5 sUqU3y8_2pUnZVC 1
+1 HbRZdF7TduF30aqkRgle0uL7lSqD 15
 rifornito
-10 k91ztT0f80YkrVS 9
-6 k91ztT0f80YkrVS 6
-accettato
-accettato
 aggiunta
 accettato
 accettato
+rifornito
+ordini in sospeso
 accettato
 accettato
 accettato
 ignorato
+ignorato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+accettato
+8 HbRZdF7TduF30aqkRgle0uL7lSqD 107
+accettato
+aggiunta
 ordini in sospeso
 accettato
 accettato
-20 k91ztT0f80YkrVS 13
-17 k91ztT0f80YkrVS 2
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+aggiunta
+accettato
+rifornito
+accettato
+ordini in sospeso
+accettato
+accettato
+aggiunta
+accettato
+13 sUqU39x2VEq9rrLx7e 35
+12 sUqU3EO8T90CHH4 2
+9 sUqU39x2VEq9rrLx7e 14
+rifiutato
+accettato
+accettato
+accettato
+rifornito
+accettato
+accettato
+accettato
 accettato
 accettato
 accettato
@@ -43,261 +82,215 @@ accettato
 aggiunta
 accettato
 accettato
+aggiunta
+rifornito
+accettato
+14 sUqU3EO8T90CHH4 5
+accettato
+rimossa
 accettato
 accettato
 accettato
 accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+15 sUqU3EO8T90CHH4 3
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+rifiutato
 accettato
 accettato
 rimossa
-rifiutato
-rimossa
-rifiutato
-rifiutato
-41 Kj8cfb01WZAyPsH9Adt8_RLR 7
-26 Kj8cfb01WZAyPsH9Adt8_RLR 5
-23 Kj8cfb01WZAyPsH9Adt8_RLR 4
-rifiutato
+accettato
+accettato
+accettato
+accettato
 accettato
 rifiutato
 rifiutato
+rifiutato
+accettato
+accettato
+17 HbRZdF7TduF30aqkRgle0uL7lSqD 116
 rifornito
-accettato
-rifornito
-accettato
 rifiutato
-rifiutato
-non presente
-rifiutato
-rifiutato
-rifiutato
-rifiutato
-accettato
-accettato
-rifornito
-accettato
-rifiutato
-67 Kj8cfb01WZAyPsH9Adt8_RLR 15
-65 Kj8cfb01WZAyPsH9Adt8_RLR 10
-rifiutato
-accettato
-rifiutato
-rifiutato
-accettato
-accettato
-rifiutato
-accettato
-aggiunta
-aggiunta
-rimossa
-non presente
-rifornito
-accettato
-rifiutato
-rifiutato
-accettato
-accettato
-rifornito
-rifornito
-78 Kj8cfb01WZAyPsH9Adt8_RLR 15
-76 Kj8cfb01WZAyPsH9Adt8_RLR 7
-accettato
-accettato
-accettato
-rifiutato
-aggiunta
-rifiutato
-accettato
-rifiutato
-rifiutato
-aggiunta
-accettato
-accettato
-rifiutato
-accettato
-accettato
-accettato
-accettato
-rifiutato
-rifornito
-accettato
-93 Kj8cfb01WuJYWnhdFI 3
-97 Kj8cfb01WZAyPsH9Adt8_RLR 5
-100 Kj8cfb01WuJYWnhdFI 1
-accettato
 accettato
 accettato
 accettato
 ignorato
+rifiutato
+accettato
+rimossa
+accettato
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+accettato
+rifiutato
+accettato
+accettato
+19 sUqU3y8_2pUnZVC 3
+18 sUqU3y8_2pUnZVC 2
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+accettato
+accettato
+rifornito
+accettato
+accettato
+rifornito
+ordini in sospeso
+accettato
+accettato
+rifiutato
+accettato
+28 X95UwR0i1ObYEU9qIPH 4
+27 X95UwR0i1ObYEU9qIPH 1
+accettato
+accettato
+rifiutato
+accettato
+accettato
+accettato
+ordini in sospeso
 accettato
 non presente
+accettato
 rifiutato
-rifiutato
+accettato
 ignorato
-110 k91ztT0fKnERew7EteSsXg4PIx2 9
+rifornito
 accettato
 accettato
 rifiutato
+rifiutato
+non presente
+aggiunta
+34 sUqU3EO8T90CHH4 3
+39 X95UwR0i1ObYEU9qIPH 2
+38 HbRZdF7TduF30aqkRgle0uL7lSqD 30
+accettato
+accettato
+rifiutato
+rifornito
+accettato
+accettato
+accettato
+rimossa
+accettato
+accettato
 accettato
 rifornito
 accettato
-rifiutato
-rifiutato
 accettato
-aggiunta
+non presente
 accettato
-accettato
-accettato
-rifiutato
 ignorato
-111 Kj8cfb01WZAyPsH9Adt8_RLR 7
-113 Kj8cfb01WZAyPsH9Adt8_RLR 5
-accettato
-aggiunta
+rifornito
 accettato
 accettato
+44 HbRZdF7TduF30aqkRgle0uL7lSqD 27
+46 HbRZdF7TduF30aqkRgle0uL7lSqD 24
+40 sUqU3y8_2pUnZVC 1
+43 sUqU3EO8T90CHH4 1
+accettato
+accettato
+accettato
+accettato
+rifornito
 accettato
 accettato
 ordini in sospeso
+rifornito
+accettato
+rifiutato
+accettato
+rifiutato
+accettato
+accettato
 accettato
 rifornito
 accettato
+aggiunta
+accettato
+47 HbRZdF7TOGMsAk2DcQDzAngYip 4
+50 HbRZdF7TduF30aqkRgle0uL7lSqD 32
+52 sUqU3y8_2pUnZVC 1
+rifiutato
+accettato
+aggiunta
+aggiunta
+rifiutato
+accettato
+rifiutato
 accettato
 rifiutato
 accettato
 rifiutato
 accettato
-114 k91ztT0fKnERew7EteSsXg4PIx2 9
-aggiunta
-accettato
-ordini in sospeso
-accettato
-accettato
-aggiunta
-accettato
-aggiunta
-aggiunta
-accettato
+rifiutato
 rifiutato
 accettato
-accettato
-accettato
-accettato
-accettato
-aggiunta
-accettato
-accettato
 rifiutato
-119 k91ztT0fKnERew7EteSsXg4PIx2 2
-115 nO5aUROrGLw4Nz7Fdsvs_We3pf 17
-116 Kj8cfb01WZAyPsH9Adt8_RLR 2
+rifiutato
+rifornito
 accettato
+accettato
+62 X95Uwah 1
 accettato
 rimossa
-accettato
-accettato
-accettato
-accettato
-accettato
-accettato
-rimossa
-aggiunta
-rifiutato
-accettato
-accettato
-ordini in sospeso
-accettato
-accettato
-rifornito
-accettato
-accettato
-121 k91ztT0fKnERew7EteSsXg4PIx2 6
-122 Kj8cfb01WZAyPsH9Adt8_RLR 8
-accettato
-rifiutato
-accettato
-accettato
-accettato
-accettato
-rifiutato
-accettato
-accettato
-rifornito
-accettato
-rifornito
-accettato
-rifiutato
-rifiutato
-accettato
-rifiutato
-accettato
-rifiutato
-rimossa
-149 Kj8cfb01WZAyPsH9Adt8_RLR 13
-123 Kj8cfb01WZAyPsH9Adt8_RLR 6
-156 Kj8cfb01WZAyPsH9Adt8_RLR 4
-rifiutato
-ordini in sospeso
-accettato
-accettato
-accettato
-accettato
-rifiutato
-rimossa
-accettato
-accettato
-rifiutato
-accettato
-aggiunta
-rifiutato
-rifiutato
-rimossa
-accettato
-rifornito
-aggiunta
-aggiunta
-177 Kj8cfb01WuJYWnhdFI 2
-167 k91ztT0fKnERew7EteSsXg4PIx2 2
-165 Kj8cfb01WZAyPsH9Adt8_RLR 5
-184 k91ztT0fKnERew7EteSsXg4PIx2 1
-183 dk8BmNQd7IowK 1
-rifiutato
-rifornito
-accettato
 non presente
+accettato
+accettato
+accettato
+accettato
+accettato
+rifiutato
 rifiutato
 accettato
+aggiunta
 accettato
 accettato
-non presente
+rifornito
 ordini in sospeso
 accettato
-accettato
-aggiunta
-accettato
-accettato
-accettato
-accettato
-rifornito
-aggiunta
-accettato
-193 Kj8cfb01WZAyPsH9Adt8_RLR 19
-189 k91ztT0frpdsex1azodLSVSaaK 11
-aggiunta
-rifornito
-accettato
-rifiutato
-accettato
-accettato
-accettato
-rifiutato
 rifiutato
 rifiutato
 accettato
+65 HbRZdF7TduF30aqkRgle0uL7lSqD 119
 accettato
-accettato
+rifiutato
+ordini in sospeso
 accettato
 rifiutato
 accettato
+ignorato
 accettato
-aggiunta
+accettato
+accettato
