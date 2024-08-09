@@ -107,23 +107,23 @@ Recipe *newRecipe(Recipe *cookbook) {
       return cookbook;
    }
 
-   Recipe *cur, *pre = cookbook;
+   Recipe *pre = NULL, *cur = cookbook;
    Recipe *newRecipe = (Recipe *)malloc(sizeof(Recipe));
    strcpy(newRecipe->name, name);
    newRecipe->nextRecipe = NULL;
 
-   if (pre == NULL) {
+   if (cur == NULL) {
       cookbook = newRecipe;
    } else {
-      cur = pre->nextRecipe;
       while (cur != NULL) {
-         if (!strcmp(pre->name, name)) {
+         if (!strcmp(cur->name, name)) {
             printf("ignorato\n");
             return cookbook; // nothing to do
          }
          pre = cur;
          cur = cur->nextRecipe;
       }
+      // adding to the end
       pre->nextRecipe = newRecipe;
    }
 

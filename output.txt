@@ -28,17 +28,9 @@ accettato
 accettato
 accettato
 accettato
-aggiunta
+ignorato
 ordini in sospeso
 accettato
-accettato
-accettato
-accettato
-accettato
-accettato
-accettato
-accettato
-aggiunta
 accettato
 20 k91ztT0f80YkrVS 13
 17 k91ztT0f80YkrVS 2
@@ -48,25 +40,32 @@ accettato
 accettato
 accettato
 accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
 accettato
 rimossa
 rifiutato
 rimossa
 rifiutato
 rifiutato
-rifiutato
-accettato
-rifiutato
-rifiutato
-rifornito
-accettato
-rifornito
-accettato
-57 Kj8cfb01WZAyPsH9Adt8_RLR 10
-33 Kj8cfb01WZAyPsH9Adt8_RLR 7
+41 Kj8cfb01WZAyPsH9Adt8_RLR 7
 26 Kj8cfb01WZAyPsH9Adt8_RLR 5
 23 Kj8cfb01WZAyPsH9Adt8_RLR 4
 rifiutato
+accettato
+rifiutato
+rifiutato
+rifornito
+accettato
+rifornito
+accettato
+rifiutato
 rifiutato
 non presente
 rifiutato
@@ -78,6 +77,8 @@ accettato
 rifornito
 accettato
 rifiutato
+67 Kj8cfb01WZAyPsH9Adt8_RLR 15
+65 Kj8cfb01WZAyPsH9Adt8_RLR 10
 rifiutato
 accettato
 rifiutato
@@ -86,8 +87,6 @@ accettato
 accettato
 rifiutato
 accettato
-59 Kj8cfb01WZAyPsH9Adt8_RLR 15
-68 Kj8cfb01WZAyPsH9Adt8_RLR 7
 aggiunta
 aggiunta
 rimossa
@@ -100,6 +99,8 @@ accettato
 accettato
 rifornito
 rifornito
+78 Kj8cfb01WZAyPsH9Adt8_RLR 15
+76 Kj8cfb01WZAyPsH9Adt8_RLR 7
 accettato
 accettato
 accettato
@@ -108,8 +109,6 @@ aggiunta
 rifiutato
 accettato
 rifiutato
-70 Kj8cfb01WZAyPsH9Adt8_RLR 15
-85 Kj8cfb01WuJYWnhdFI 3
 rifiutato
 aggiunta
 accettato
@@ -122,18 +121,20 @@ accettato
 rifiutato
 rifornito
 accettato
+93 Kj8cfb01WuJYWnhdFI 3
+97 Kj8cfb01WZAyPsH9Adt8_RLR 5
+100 Kj8cfb01WuJYWnhdFI 1
 accettato
 accettato
 accettato
 accettato
 ignorato
-89 Kj8cfb01WZAyPsH9Adt8_RLR 5
-92 Kj8cfb01WuJYWnhdFI 1
 accettato
 non presente
 rifiutato
 rifiutato
-aggiunta
+ignorato
+110 k91ztT0fKnERew7EteSsXg4PIx2 9
 accettato
 accettato
 rifiutato
@@ -146,10 +147,11 @@ accettato
 aggiunta
 accettato
 accettato
-102 k91ztT0fKnERew7EteSsXg4PIx2 9
 accettato
 rifiutato
 ignorato
+111 Kj8cfb01WZAyPsH9Adt8_RLR 7
+113 Kj8cfb01WZAyPsH9Adt8_RLR 5
 accettato
 aggiunta
 accettato
@@ -161,12 +163,11 @@ accettato
 rifornito
 accettato
 accettato
-103 Kj8cfb01WZAyPsH9Adt8_RLR 7
-105 Kj8cfb01WZAyPsH9Adt8_RLR 5
 rifiutato
 accettato
 rifiutato
 accettato
+114 k91ztT0fKnERew7EteSsXg4PIx2 9
 aggiunta
 accettato
 ordini in sospeso
@@ -183,11 +184,13 @@ accettato
 accettato
 accettato
 accettato
-106 k91ztT0fKnERew7EteSsXg4PIx2 9
 aggiunta
 accettato
 accettato
 rifiutato
+119 k91ztT0fKnERew7EteSsXg4PIx2 2
+115 nO5aUROrGLw4Nz7Fdsvs_We3pf 17
+116 Kj8cfb01WZAyPsH9Adt8_RLR 2
 accettato
 accettato
 rimossa
@@ -204,13 +207,12 @@ accettato
 accettato
 ordini in sospeso
 accettato
-111 k91ztT0fKnERew7EteSsXg4PIx2 2
-107 nO5aUROrGLw4Nz7Fdsvs_We3pf 17
-108 Kj8cfb01WZAyPsH9Adt8_RLR 2
 accettato
 rifornito
 accettato
 accettato
+121 k91ztT0fKnERew7EteSsXg4PIx2 6
+122 Kj8cfb01WZAyPsH9Adt8_RLR 8
 accettato
 rifiutato
 accettato
@@ -227,12 +229,13 @@ accettato
 rifiutato
 rifiutato
 accettato
-113 k91ztT0fKnERew7EteSsXg4PIx2 6
-114 Kj8cfb01WZAyPsH9Adt8_RLR 8
 rifiutato
 accettato
 rifiutato
 rimossa
+149 Kj8cfb01WZAyPsH9Adt8_RLR 13
+123 Kj8cfb01WZAyPsH9Adt8_RLR 6
+156 Kj8cfb01WZAyPsH9Adt8_RLR 4
 rifiutato
 ordini in sospeso
 accettato
@@ -249,14 +252,16 @@ aggiunta
 rifiutato
 rifiutato
 rimossa
-133 Kj8cfb01WZAyPsH9Adt8_RLR 13
-115 Kj8cfb01WZAyPsH9Adt8_RLR 6
-140 Kj8cfb01WZAyPsH9Adt8_RLR 4
 accettato
 rifornito
 aggiunta
 aggiunta
-accettato
+177 Kj8cfb01WuJYWnhdFI 2
+167 k91ztT0fKnERew7EteSsXg4PIx2 2
+165 Kj8cfb01WZAyPsH9Adt8_RLR 5
+184 k91ztT0fKnERew7EteSsXg4PIx2 1
+183 dk8BmNQd7IowK 1
+rifiutato
 rifornito
 accettato
 non presente
@@ -272,19 +277,16 @@ aggiunta
 accettato
 accettato
 accettato
-161 Kj8cfb01WuJYWnhdFI 2
-151 k91ztT0fKnERew7EteSsXg4PIx2 2
-149 Kj8cfb01WZAyPsH9Adt8_RLR 5
-168 k91ztT0fKnERew7EteSsXg4PIx2 1
-167 dk8BmNQd7IowK 1
 accettato
 rifornito
 aggiunta
 accettato
+193 Kj8cfb01WZAyPsH9Adt8_RLR 19
+189 k91ztT0frpdsex1azodLSVSaaK 11
 aggiunta
 rifornito
 accettato
-accettato
+rifiutato
 accettato
 accettato
 accettato
@@ -297,7 +299,5 @@ accettato
 accettato
 rifiutato
 accettato
-177 Kj8cfb01WZAyPsH9Adt8_RLR 19
-173 k91ztT0frpdsex1azodLSVSaaK 11
 accettato
 aggiunta
