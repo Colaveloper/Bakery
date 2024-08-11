@@ -3,8 +3,9 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_LEN 255
+#define HASH_SIZE 5 // TODO be careful this is large enough
 
-// ingredient, amount ∈ Ingredient ∈ Recipe ∈ cookbook
+// ingredient, amount ∈ Ingredient ∈ *Recipe[] ∈ cookbook
 typedef struct Ingredient {
    char name[MAX_LEN];
    int amount;
@@ -15,6 +16,9 @@ typedef struct Recipe {
    Ingredient *ingredientList;
    struct Recipe *nextRecipe;
 } Recipe;
+typedef struct Cookbook {
+   Recipe *buckets[HASH_SIZE]; // Array of lists of recipes
+} Cookbook;
 
 // expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
 typedef struct Bunch {
@@ -59,18 +63,31 @@ typedef struct State {
 
 } State;
 
-void printCookbook(Recipe *cookbook) {
+int hash(char *str) {
+   // using djb2
+   unsigned long hash = 5381;
+   int c;
+   while ((c = *str++)) {
+      hash = ((hash << 5) + hash) + c;
+   }
+   return hash % HASH_SIZE;
+}
+
+void printCookbook(Cookbook *cookbook) {
    printf("\n");
-   Recipe *curRec = cookbook;
-   while (curRec != NULL) {
-      printf("%10s:\t", curRec->name);
-      Ingredient *curIng = curRec->ingredientList;
-      while (curIng != NULL) {
-         printf("%10s:%*d\t", curIng->name, 5, curIng->amount);
-         curIng = curIng->nextIngredient;
+   Recipe *curRec;
+   for (int i = 0; i < HASH_SIZE; i++) {
+      curRec = cookbook->buckets[i];
+      while (curRec != NULL) {
+         printf("%10s:\t", curRec->name);
+         Ingredient *curIng = curRec->ingredientList;
+         while (curIng != NULL) {
+            printf("%10s:%*d\t", curIng->name, 5, curIng->amount);
+            curIng = curIng->nextIngredient;
+         }
+         curRec = curRec->nextRecipe;
+         printf("\n");
       }
-      curRec = curRec->nextRecipe;
-      printf("\n");
    }
 }
 
@@ -100,20 +117,26 @@ void printOrderList(OrderList pendingOrders) {
    }
 }
 
-Recipe *newRecipe(Recipe *cookbook) {
+Cookbook *newRecipe(Cookbook *cookbook) {
    char name[MAX_LEN];
    if (scanf("%s", name) == 0) {
       printf("MUST HAVE A RECIPE TO ADD");
       return cookbook;
    }
 
-   Recipe *pre = NULL, *cur = cookbook;
+   int i;
+   i = hash(name);
+   printf("[i=%d] ", i);
+
+   Recipe *pre = NULL, *cur = cookbook->buckets[i];
    Recipe *newRecipe = (Recipe *)malloc(sizeof(Recipe));
    strcpy(newRecipe->name, name);
    newRecipe->nextRecipe = NULL;
 
+   //// ------->
+
    if (cur == NULL) {
-      cookbook = newRecipe;
+      cookbook->buckets[i] = newRecipe;
    } else {
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
@@ -148,20 +171,25 @@ Recipe *newRecipe(Recipe *cookbook) {
    }
 
    newRecipe->ingredientList = lastPair;
+   //// <-------
+
    printf("aggiunta\n");
    return cookbook; // added to the end
 }
 
-Recipe *removeRecipe(Recipe *cookbook, State state) {
+Cookbook *removeRecipe(Cookbook *cookbook, State state) {
    char name[MAX_LEN];
    if (scanf("%s", name) == 0) {
       printf("MUST NAME A RECIPE TO REMOVE");
    }
-   // printf(" removing %s from: ", name);
-   // printf("\nPENDING ORDERS");
-   // printOrderList(state.pendingOrders);
-   // printf("\nREADY ORDERS");
-   // printOrderList(state.readyOrders);
+
+   int i = hash(name);
+
+   printf(" removing %s from: ", name);
+   printf("\nPENDING ORDERS");
+   printOrderList(state.pendingOrders);
+   printf("\nREADY ORDERS");
+   printOrderList(state.readyOrders);
 
    Order *curOrd = state.pendingOrders.head;
    while (curOrd != NULL) {
@@ -181,9 +209,9 @@ Recipe *removeRecipe(Recipe *cookbook, State state) {
    }
 
    Recipe *pre = NULL;
-   Recipe *cur = cookbook;
+   Recipe *cur = cookbook->buckets[i];
    if (cur != NULL && !strcmp(cur->name, name)) {
-      cookbook = cur->nextRecipe;
+      cookbook->buckets[i] = cur->nextRecipe;
       free(cur);
       printf("rimossa\n");
    } else {
@@ -245,7 +273,7 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
    return pendingOrders;
 }
 
-State tryBaking(Order *order, Recipe *cookbook, State state, int time) {
+State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
    // DOES NOT MODIFY PENDING LIST NOR READY LIST
    // ONLY MODIFIES WAREHOUSE AND STATE.BAKING
    // DOES NOT PRINT ANYTHING
@@ -261,7 +289,9 @@ State tryBaking(Order *order, Recipe *cookbook, State state, int time) {
 
    state.baking = 0;
 
-   Recipe *recipe = cookbook;
+   int i = hash(order->name);
+
+   Recipe *recipe = cookbook->buckets[i];
    while (recipe != NULL) {
       if (!strcmp(recipe->name, order->name)) {
          break;
@@ -388,7 +418,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state, int time) {
    return state;
 };
 
-State newBatch(State state, Recipe *cookbook, int time) {
+State newBatch(State state, Cookbook *cookbook, int time) {
 
    int expiration, amount;
    char name[MAX_LEN];
@@ -422,7 +452,7 @@ State newBatch(State state, Recipe *cookbook, int time) {
          }
       }
       char c = getchar();
-      if (c == '\n' || c == '\r' || c == EOF) {
+      if (c == '\n' ||c == '\n' || c == EOF) {
          break;
       }
    }
@@ -493,7 +523,7 @@ State newBatch(State state, Recipe *cookbook, int time) {
    return state;
 }
 
-State newOrder(Recipe *cookbook, State state, int time) {
+State newOrder(Cookbook *cookbook, State state, int time) {
 
    Order *newOrder = (Order *)malloc(sizeof(Order));
 
@@ -544,75 +574,78 @@ State newOrder(Recipe *cookbook, State state, int time) {
    return state;
 }
 
-State loadOrders(State state, int payloadLeft) {
-   // printf("\n");
-   // printf("\nWAREHOUSE");
-   // printWarehouse(state.warehouse);
-   // printf("\nPENDING ORDERS");
-   // printOrderList(state.pendingOrders);
-   // printf("\nREADY ORDERS");
-   // printOrderList(state.readyOrders);
-   if (state.readyOrders.head == NULL) {
-      printf("camioncino vuoto\n");
-   } else {
-      Order *loadingOrders = NULL, *curLoa, *preLoa;
-      Order *curRea = state.readyOrders.head;
-      while (curRea != NULL) {
-         // loading the van with ready orders by weight, by date
-         payloadLeft -= state.readyOrders.head->weight;
-         if (payloadLeft < 0) {
-            break;
-         }
-         state.readyOrders.head = state.readyOrders.head->nextOrder;
-         curLoa = loadingOrders;
-         preLoa = NULL;
-         while (curLoa != NULL) {
-            if (curRea->weight > curLoa->weight) {
-               break;
-            } else if (curRea->weight == curLoa->weight) {
-               if (curRea->time < curLoa->time) {
-                  break;
-               }
-            }
-            preLoa = curLoa;
-            curLoa = curLoa->nextOrder;
-         }
-         if (preLoa == NULL) {
-            curRea->nextOrder = curLoa;
-            loadingOrders = curRea;
-         } else {
-            preLoa->nextOrder = curRea;
-            curRea->nextOrder = curLoa;
-         }
-         curRea = state.readyOrders.head;
-      }
-      if (curRea == NULL) {
-         state.readyOrders.tail = NULL;
-      }
-      while (loadingOrders != NULL) {
-         printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
-         loadingOrders = loadingOrders->nextOrder;
-      }
-   }
-   // printf("\n");
-   // printf("\nWAREHOUSE");
-   // printWarehouse(state.warehouse);
-   // printf("\nPENDING ORDERS");
-   // printOrderList(state.pendingOrders);
-   // printf("\nREADY ORDERS");
-   // printOrderList(state.readyOrders);
-   return state;
-}
+// State loadOrders(State state, int payloadLeft) {
+//    // printf("\n");
+//    // printf("\nWAREHOUSE");
+//    // printWarehouse(state.warehouse);
+//    // printf("\nPENDING ORDERS");
+//    // printOrderList(state.pendingOrders);
+//    // printf("\nREADY ORDERS");
+//    // printOrderList(state.readyOrders);
+//    if (state.readyOrders.head == NULL) {
+//       printf("camioncino vuoto\n");
+//    } else {
+//       Order *loadingOrders = NULL, *curLoa, *preLoa;
+//       Order *curRea = state.readyOrders.head;
+//       while (curRea != NULL) {
+//          // loading the van with ready orders by weight, by date
+//          payloadLeft -= state.readyOrders.head->weight;
+//          if (payloadLeft < 0) {
+//             break;
+//          }
+//          state.readyOrders.head = state.readyOrders.head->nextOrder;
+//          curLoa = loadingOrders;
+//          preLoa = NULL;
+//          while (curLoa != NULL) {
+//             if (curRea->weight > curLoa->weight) {
+//                break;
+//             } else if (curRea->weight == curLoa->weight) {
+//                if (curRea->time < curLoa->time) {
+//                   break;
+//                }
+//             }
+//             preLoa = curLoa;
+//             curLoa = curLoa->nextOrder;
+//          }
+//          if (preLoa == NULL) {
+//             curRea->nextOrder = curLoa;
+//             loadingOrders = curRea;
+//          } else {
+//             preLoa->nextOrder = curRea;
+//             curRea->nextOrder = curLoa;
+//          }
+//          curRea = state.readyOrders.head;
+//       }
+//       if (curRea == NULL) {
+//          state.readyOrders.tail = NULL;
+//       }
+//       while (loadingOrders != NULL) {
+//          printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
+//          loadingOrders = loadingOrders->nextOrder;
+//       }
+//    }
+//    // printf("\n");
+//    // printf("\nWAREHOUSE");
+//    // printWarehouse(state.warehouse);
+//    // printf("\nPENDING ORDERS");
+//    // printOrderList(state.pendingOrders);
+//    // printf("\nREADY ORDERS");
+//    // printOrderList(state.readyOrders);
+//    return state;
+// }
 
-int main() {
+int main() { // TODO make cookbook testable commenting all instances of previous implementation
 
    int courierPeriod, maxPayload, time = 0;
    char command[MAX_LEN];
-   Recipe *cookbook = NULL;
+   Cookbook *cookbook = (Cookbook *)malloc(sizeof(Cookbook));
+   for (int i = 0; i < HASH_SIZE; i++) {
+      cookbook->buckets[i] = NULL;
+   }
    State state = {{NULL, NULL}, {NULL, NULL}, NULL, 0};
 
    if (scanf("%d", &courierPeriod) == 0 || scanf("%d", &maxPayload) == 0) {
-      printf("MUST SPECIFY COURIER PERIOD AND MAX PAYLOAD");
+      perror("MUST SPECIFY COURIER PERIOD AND MAX PAYLOAD");
       return -1;
    }
 
@@ -620,11 +653,11 @@ int main() {
       // printf("\n[%d] ", time);
 
       if (time && time % courierPeriod == 0) {
-         state = loadOrders(state, maxPayload);
+         // state = loadOrders(state, maxPayload);
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
-         // printf("[newRecipe] ");
+         // printf("[newRecipe at %d] ", time);
          cookbook = newRecipe(cookbook);
 
       } else if (!strcmp(command, "rimuovi_ricetta")) {
@@ -637,7 +670,7 @@ int main() {
 
       } else if (!strcmp(command, "ordine")) {
          // printf("[newOrder] ");
-         state = newOrder(cookbook, state, time);
+         // state = newOrder(cookbook, state, time);
       }
       // printf("\nWAREHOUSE AFTER");
       // printWarehouse(state.warehouse);
@@ -652,11 +685,11 @@ int main() {
       time++;
    }
    if (time && time % courierPeriod == 0) {
-      state = loadOrders(state, maxPayload);
+      // state = loadOrders(state, maxPayload);
    }
    // printf("\n");
-   // printf("\nCOOKBOOK");
-   // printCookbook(cookbook);
+   printf("\nCOOKBOOK");
+   printCookbook(cookbook);
    // printf("\nWAREHOUSE");
    // printWarehouse(state.warehouse);
    // printf("\nPENDING ORDERS");
