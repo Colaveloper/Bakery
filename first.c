@@ -142,7 +142,7 @@ Recipe *newRecipe(Recipe *cookbook) {
       newPair->nextIngredient = lastPair;
       lastPair = newPair;
       char c = getchar();
-      if (c == '\n' || c == EOF) {
+      if (c == '\n' || c == '\r' || c == EOF) {
          break;
       }
    }
@@ -245,7 +245,7 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
    return pendingOrders;
 }
 
-State tryBaking(Order *order, Recipe *cookbook, State state) {
+State tryBaking(Order *order, Recipe *cookbook, State state, int time) {
    // DOES NOT MODIFY PENDING LIST NOR READY LIST
    // ONLY MODIFIES WAREHOUSE AND STATE.BAKING
    // DOES NOT PRINT ANYTHING
@@ -277,13 +277,39 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
 
    // printf(" TB ");
 
-   // cleanWarehouse
    // checking if baking is possible
-   Shelf *curShe;
+   Bunch *delBun;
+   Shelf *preShe, *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
       curShe = state.warehouse;
+      preShe = NULL;
       while (curShe != NULL) {
+         if (curShe->bunchList->expiration <= time) { // TODO is "=" correct?
+            // removing expired
+            while (curShe->bunchList != NULL) {
+               if (curShe->bunchList->expiration <= time) {
+                  delBun = curShe->bunchList;
+                  curShe->bunchList = curShe->bunchList->nextBunch;
+                  curShe->total -= delBun->amount;
+                  free(delBun);
+               } else {
+                  break;
+               }
+            }
+            if (curShe->bunchList == NULL) {
+               // Removing entire shelf
+               if (preShe == NULL) {
+                  // First shelf
+                  state.warehouse = curShe->nextShelf;
+                  // DANGER
+               } else {
+                  preShe->nextShelf = curShe->nextShelf;
+               }
+               free(curShe);
+               break;
+            }
+         }
          if (!strcmp(curIng->name, curShe->name)) {
             if (curIng->amount * order->amount <= curShe->total) {
                break; // Enough curIng, check next ingredient
@@ -291,6 +317,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
             // printf("not enough %s to bake %s\n", curShe->name, order->name);
             return state;
          }
+         preShe = curShe;
          curShe = curShe->nextShelf;
       }
       if (curShe == NULL) {
@@ -306,8 +333,6 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
    // printf(" B ");
 
    curIng = recipe->ingredientList;
-   Shelf *preShe;
-   Bunch *delBun;
    int required, weight = 0;
    while (curIng != NULL) { // TODO be sure you can always get in here the first time
       curShe = state.warehouse;
@@ -363,7 +388,7 @@ State tryBaking(Order *order, Recipe *cookbook, State state) {
    return state;
 };
 
-State newBatch(State state, Recipe *cookbook) {
+State newBatch(State state, Recipe *cookbook, int time) {
 
    int expiration, amount;
    char name[MAX_LEN];
@@ -397,7 +422,7 @@ State newBatch(State state, Recipe *cookbook) {
          }
       }
       char c = getchar();
-      if (c == '\n' || c == EOF) {
+      if (c == '\n' || c == '\r' || c == EOF) {
          break;
       }
    }
@@ -406,7 +431,7 @@ State newBatch(State state, Recipe *cookbook) {
    Order *preRea = NULL, *curRea;
    Order *nexPen;
    while (curPen != NULL) {
-      state = tryBaking(curPen, cookbook, state);
+      state = tryBaking(curPen, cookbook, state, time);
       int baking = state.baking;
       nexPen = curPen->nextOrder;
       if (baking) {
@@ -482,7 +507,7 @@ State newOrder(Recipe *cookbook, State state, int time) {
    newOrder->weight = -1;
 
    // printf("Receiving order of %s; ", newOrder->name);
-   state = tryBaking(newOrder, cookbook, state);
+   state = tryBaking(newOrder, cookbook, state, time);
    int baking = state.baking;
    // printf(" state.baking==%d ", baking);
 
@@ -608,20 +633,22 @@ int main() {
 
       } else if (!strcmp(command, "rifornimento")) {
          // printf("[newBatch] ");
-         state = newBatch(state, cookbook);
+         state = newBatch(state, cookbook, time);
 
       } else if (!strcmp(command, "ordine")) {
          // printf("[newOrder] ");
          state = newOrder(cookbook, state, time);
       }
+      // printf("\nWAREHOUSE AFTER");
+      // printWarehouse(state.warehouse);
       // printf("\nPENDING ORDERS");
       // printOrderList(state.pendingOrders);
-      // if (state.pendingOrders.tail)
-      //    printf("tail: %d", state.pendingOrders.tail->time);
+      // // if (state.pendingOrders.tail)
+      // //    printf("tail: %d", state.pendingOrders.tail->time);
       // printf("\nREADY ORDERS");
       // printOrderList(state.readyOrders);
-      // if (state.readyOrders.tail)
-      //    printf("tail: %d", state.readyOrders.tail->time);
+      // // if (state.readyOrders.tail)
+      // // printf("tail: %d", state.readyOrders.tail->time);
       time++;
    }
    if (time && time % courierPeriod == 0) {
