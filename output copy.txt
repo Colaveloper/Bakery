@@ -1,0 +1,287 @@
+aggiunta
+ <aggiungi_ricetta> at [0] accettato
+ <ordine> at [1] rifornito
+ <rifornimento> at [2] accettato
+ <ordine> at [3] accettato
+ <ordine> at [4] accettato
+ <ordine> at [5] accettato
+ <ordine> at [6] rifornito
+ <rifornimento> at [7] accettato
+ <ordine> at [8] rifornito
+ <rifornimento> at [9] accettato
+ <ordine> at [10] accettato
+ <ordine> at [11] accettato
+ <ordine> at [12] accettato
+ <ordine> at [13] ordini in sospeso
+ <rimuovi_ricetta> at [14] rifiutato
+ <ordine> at [15] accettato
+ <ordine> at [16] accettato
+ <ordine> at [17] accettato
+ <ordine> at [18] rifornito
+ <rifornimento> at [19] 1 k91ztT0f80YkrVS 6
+3 k91ztT0f80YkrVS 5
+4 k91ztT0f80YkrVS 4
+accettato
+ <ordine> at [20] accettato
+ <ordine> at [21] aggiunta
+ <aggiungi_ricetta> at [22] accettato
+ <ordine> at [23] accettato
+ <ordine> at [24] accettato
+ <ordine> at [25] accettato
+ <ordine> at [26] accettato
+ <ordine> at [27] ignorato
+ <aggiungi_ricetta> at [28] accettato
+ <ordine> at [29] accettato
+ <ordine> at [30] accettato
+ <ordine> at [31] accettato
+ <ordine> at [32] accettato
+ <ordine> at [33] aggiunta
+ <aggiungi_ricetta> at [34] accettato
+ <ordine> at [35] accettato
+ <ordine> at [36] accettato
+ <ordine> at [37] accettato
+ <ordine> at [38] accettato
+ <ordine> at [39] 6 k91ztT0f80YkrVS 6
+5 k91ztT0f80YkrVS 4
+accettato
+ <ordine> at [40] accettato
+ <ordine> at [41] accettato
+ <ordine> at [42] ordini in sospeso
+ <rimuovi_ricetta> at [43] accettato
+ <ordine> at [44] ordini in sospeso
+ <rimuovi_ricetta> at [45] accettato
+ <ordine> at [46] accettato
+ <ordine> at [47] accettato
+ <ordine> at [48] accettato
+ <ordine> at [49] accettato
+ <ordine> at [50] accettato
+ <ordine> at [51] rifornito
+ <rifornimento> at [52] accettato
+ <ordine> at [53] rifornito
+ <rifornimento> at [54] accettato
+ <ordine> at [55] accettato
+ <ordine> at [56] accettato
+ <ordine> at [57] ordini in sospeso
+ <rimuovi_ricetta> at [58] accettato
+ <ordine> at [59] 8 k91ztT0f80YkrVS 10
+accettato
+ <ordine> at [60] accettato
+ <ordine> at [61] accettato
+ <ordine> at [62] accettato
+ <ordine> at [63] accettato
+ <ordine> at [64] rifornito
+ <rifornimento> at [65] accettato
+ <ordine> at [66] accettato
+ <ordine> at [67] accettato
+ <ordine> at [68] accettato
+ <ordine> at [69] rifiutato
+ <ordine> at [70] accettato
+ <ordine> at [71] accettato
+ <ordine> at [72] accettato
+ <ordine> at [73] accettato
+ <ordine> at [74] accettato
+ <ordine> at [75] aggiunta
+ <aggiungi_ricetta> at [76] ignorato
+ <aggiungi_ricetta> at [77] rimossa
+ <rimuovi_ricetta> at [78] non presente
+ <rimuovi_ricetta> at [79] 10 k91ztT0f80YkrVS 9
+11 k91ztT0f80YkrVS 3
+rifornito
+ <rifornimento> at [80] accettato
+ <ordine> at [81] accettato
+ <ordine> at [82] rifiutato
+ <ordine> at [83] accettato
+ <ordine> at [84] accettato
+ <ordine> at [85] rifornito
+ <rifornimento> at [86] rifornito
+ <rifornimento> at [87] accettato
+ <ordine> at [88] accettato
+ <ordine> at [89] accettato
+ <ordine> at [90] accettato
+ <ordine> at [91] aggiunta
+ <aggiungi_ricetta> at [92] accettato
+ <ordine> at [93] accettato
+ <ordine> at [94] rifiutato
+ <ordine> at [95] accettato
+ <ordine> at [96] aggiunta
+ <aggiungi_ricetta> at [97] accettato
+ <ordine> at [98] accettato
+ <ordine> at [99] 12 k91ztT0f80YkrVS 9
+23 Kj8cfb01WZAyPsH9Adt8_RLR 4
+17 k91ztT0f80YkrVS 2
+rifiutato
+ <ordine> at [100] accettato
+ <ordine> at [101] accettato
+ <ordine> at [102] accettato
+ <ordine> at [103] accettato
+ <ordine> at [104] rifiutato
+ <ordine> at [105] rifornito
+ <rifornimento> at [106] accettato
+ <ordine> at [107] accettato
+ <ordine> at [108] accettato
+ <ordine> at [109] accettato
+ <ordine> at [110] accettato
+ <ordine> at [111] ignorato
+ <aggiungi_ricetta> at [112] accettato
+ <ordine> at [113] non presente
+ <rimuovi_ricetta> at [114] accettato
+ <ordine> at [115] rifiutato
+ <ordine> at [116] ignorato
+ <aggiungi_ricetta> at [117] accettato
+ <ordine> at [118] accettato
+ <ordine> at [119] 24 Kj8cfb01WZAyPsH9Adt8_RLR 13
+accettato
+ <ordine> at [120] rifornito
+ <rifornimento> at [121] accettato
+ <ordine> at [122] accettato
+ <ordine> at [123] accettato
+ <ordine> at [124] accettato
+ <ordine> at [125] aggiunta
+ <aggiungi_ricetta> at [126] accettato
+ <ordine> at [127] accettato
+ <ordine> at [128] accettato
+ <ordine> at [129] accettato
+ <ordine> at [130] ignorato
+ <aggiungi_ricetta> at [131] accettato
+ <ordine> at [132] aggiunta
+ <aggiungi_ricetta> at [133] accettato
+ <ordine> at [134] accettato
+ <ordine> at [135] accettato
+ <ordine> at [136] accettato
+ <ordine> at [137] ordini in sospeso
+ <rimuovi_ricetta> at [138] accettato
+ <ordine> at [139] 25 k91ztT0f80YkrVS 9
+26 Kj8cfb01WZAyPsH9Adt8_RLR 5
+rifornito
+ <rifornimento> at [140] accettato
+ <ordine> at [141] accettato
+ <ordine> at [142] accettato
+ <ordine> at [143] accettato
+ <ordine> at [144] accettato
+ <ordine> at [145] accettato
+ <ordine> at [146] aggiunta
+ <aggiungi_ricetta> at [147] accettato
+ <ordine> at [148] ordini in sospeso
+ <rimuovi_ricetta> at [149] accettato
+ <ordine> at [150] accettato
+ <ordine> at [151] aggiunta
+ <aggiungi_ricetta> at [152] accettato
+ <ordine> at [153] aggiunta
+ <aggiungi_ricetta> at [154] aggiunta
+ <aggiungi_ricetta> at [155] accettato
+ <ordine> at [156] accettato
+ <ordine> at [157] accettato
+ <ordine> at [158] accettato
+ <ordine> at [159] 21 k91ztT0f80YkrVS 12
+accettato
+ <ordine> at [160] accettato
+ <ordine> at [161] accettato
+ <ordine> at [162] aggiunta
+ <aggiungi_ricetta> at [163] accettato
+ <ordine> at [164] accettato
+ <ordine> at [165] accettato
+ <ordine> at [166] accettato
+ <ordine> at [167] accettato
+ <ordine> at [168] ordini in sospeso
+ <rimuovi_ricetta> at [169] accettato
+ <ordine> at [170] accettato
+ <ordine> at [171] accettato
+ <ordine> at [172] accettato
+ <ordine> at [173] accettato
+ <ordine> at [174] accettato
+ <ordine> at [175] ordini in sospeso
+ <rimuovi_ricetta> at [176] aggiunta
+ <aggiungi_ricetta> at [177] accettato
+ <ordine> at [178] accettato
+ <ordine> at [179] 27 Kj8cfb01WZAyPsH9Adt8_RLR 11
+29 Kj8cfb01WZAyPsH9Adt8_RLR 7
+accettato
+ <ordine> at [180] ordini in sospeso
+ <rimuovi_ricetta> at [181] accettato
+ <ordine> at [182] accettato
+ <ordine> at [183] rifornito
+ <rifornimento> at [184] accettato
+ <ordine> at [185] accettato
+ <ordine> at [186] accettato
+ <ordine> at [187] accettato
+ <ordine> at [188] accettato
+ <ordine> at [189] accettato
+ <ordine> at [190] accettato
+ <ordine> at [191] accettato
+ <ordine> at [192] accettato
+ <ordine> at [193] accettato
+ <ordine> at [194] accettato
+ <ordine> at [195] rifornito
+ <rifornimento> at [196] accettato
+ <ordine> at [197] rifornito
+ <rifornimento> at [198] accettato
+ <ordine> at [199] 13 k91ztT0f80YkrVS 15
+accettato
+ <ordine> at [200] accettato
+ <ordine> at [201] accettato
+ <ordine> at [202] accettato
+ <ordine> at [203] accettato
+ <ordine> at [204] accettato
+ <ordine> at [205] ordini in sospeso
+ <rimuovi_ricetta> at [206] accettato
+ <ordine> at [207] ordini in sospeso
+ <rimuovi_ricetta> at [208] accettato
+ <ordine> at [209] accettato
+ <ordine> at [210] accettato
+ <ordine> at [211] accettato
+ <ordine> at [212] accettato
+ <ordine> at [213] ordini in sospeso
+ <rimuovi_ricetta> at [214] accettato
+ <ordine> at [215] accettato
+ <ordine> at [216] accettato
+ <ordine> at [217] accettato
+ <ordine> at [218] aggiunta
+ <aggiungi_ricetta> at [219] 31 Kj8cfb01WZAyPsH9Adt8_RLR 16
+accettato
+ <ordine> at [220] accettato
+ <ordine> at [221] ordini in sospeso
+ <rimuovi_ricetta> at [222] accettato
+ <ordine> at [223] rifornito
+ <rifornimento> at [224] aggiunta
+ <aggiungi_ricetta> at [225] aggiunta
+ <aggiungi_ricetta> at [226] accettato
+ <ordine> at [227] rifornito
+ <rifornimento> at [228] accettato
+ <ordine> at [229] ordini in sospeso
+ <rimuovi_ricetta> at [230] rifiutato
+ <ordine> at [231] accettato
+ <ordine> at [232] accettato
+ <ordine> at [233] accettato
+ <ordine> at [234] ordini in sospeso
+ <rimuovi_ricetta> at [235] ordini in sospeso
+ <rimuovi_ricetta> at [236] accettato
+ <ordine> at [237] accettato
+ <ordine> at [238] aggiunta
+ <aggiungi_ricetta> at [239] 32 k91ztT0f80YkrVS 7
+accettato
+ <ordine> at [240] accettato
+ <ordine> at [241] accettato
+ <ordine> at [242] accettato
+ <ordine> at [243] rifornito
+ <rifornimento> at [244] aggiunta
+ <aggiungi_ricetta> at [245] accettato
+ <ordine> at [246] aggiunta
+ <aggiungi_ricetta> at [247] rifornito
+ <rifornimento> at [248] accettato
+ <ordine> at [249] accettato
+ <ordine> at [250] accettato
+ <ordine> at [251] accettato
+ <ordine> at [252] accettato
+ <ordine> at [253] accettato
+ <ordine> at [254] accettato
+ <ordine> at [255] accettato
+ <ordine> at [256] accettato
+ <ordine> at [257] accettato
+ <ordine> at [258] accettato
+ <ordine> at [259] 33 Kj8cfb01WZAyPsH9Adt8_RLR 15
+accettato
+ <ordine> at [260] rifiutato
+ <ordine> at [261] accettato
+ <ordine> at [262] accettato
+ <ordine> at [263] aggiunta
+ <aggiungi_ricetta> at [264] 

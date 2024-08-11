@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_LEN 255
-#define HASH_SIZE 5 // TODO be careful this is large enough
+#define HASH_SIZE 500 // TODO be careful this is large enough
 
 // ingredient, amount ∈ Ingredient ∈ *Recipe[] ∈ cookbook
 typedef struct Ingredient {
@@ -126,12 +126,13 @@ Cookbook *newRecipe(Cookbook *cookbook) {
 
    int i;
    i = hash(name);
-   printf("[i=%d] ", i);
+   // printf("[i=%d] ", i);
 
    Recipe *pre = NULL, *cur = cookbook->buckets[i];
    Recipe *newRecipe = (Recipe *)malloc(sizeof(Recipe));
    strcpy(newRecipe->name, name);
    newRecipe->nextRecipe = NULL;
+   //// TODO ignorato introduces memory leak
 
    //// ------->
 
@@ -140,9 +141,10 @@ Cookbook *newRecipe(Cookbook *cookbook) {
    } else {
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
-            char c;
+            char c = ' ';
             printf("ignorato\n");
-            while ((c = getchar()) != '\n') {
+            while (c != '\n' && c != '\r' && c != EOF) {
+               c = getchar();
                continue;
             }
             return cookbook; // nothing to do
@@ -183,13 +185,11 @@ Cookbook *removeRecipe(Cookbook *cookbook, State state) {
       printf("MUST NAME A RECIPE TO REMOVE");
    }
 
-   int i = hash(name);
-
-   printf(" removing %s from: ", name);
-   printf("\nPENDING ORDERS");
-   printOrderList(state.pendingOrders);
-   printf("\nREADY ORDERS");
-   printOrderList(state.readyOrders);
+   // printf(" removing %s from: ", name);
+   // printf("\nPENDING ORDERS");
+   // printOrderList(state.pendingOrders);
+   // printf("\nREADY ORDERS");
+   // printOrderList(state.readyOrders);
 
    Order *curOrd = state.pendingOrders.head;
    while (curOrd != NULL) {
@@ -207,6 +207,8 @@ Cookbook *removeRecipe(Cookbook *cookbook, State state) {
       }
       curOrd = curOrd->nextOrder;
    }
+
+   int i = hash(name);
 
    Recipe *pre = NULL;
    Recipe *cur = cookbook->buckets[i];
@@ -452,7 +454,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
          }
       }
       char c = getchar();
-      if (c == '\n' ||c == '\n' || c == EOF) {
+      if (c == '\n' || c == '\r' || c == EOF) {
          break;
       }
    }
@@ -574,65 +576,65 @@ State newOrder(Cookbook *cookbook, State state, int time) {
    return state;
 }
 
-// State loadOrders(State state, int payloadLeft) {
-//    // printf("\n");
-//    // printf("\nWAREHOUSE");
-//    // printWarehouse(state.warehouse);
-//    // printf("\nPENDING ORDERS");
-//    // printOrderList(state.pendingOrders);
-//    // printf("\nREADY ORDERS");
-//    // printOrderList(state.readyOrders);
-//    if (state.readyOrders.head == NULL) {
-//       printf("camioncino vuoto\n");
-//    } else {
-//       Order *loadingOrders = NULL, *curLoa, *preLoa;
-//       Order *curRea = state.readyOrders.head;
-//       while (curRea != NULL) {
-//          // loading the van with ready orders by weight, by date
-//          payloadLeft -= state.readyOrders.head->weight;
-//          if (payloadLeft < 0) {
-//             break;
-//          }
-//          state.readyOrders.head = state.readyOrders.head->nextOrder;
-//          curLoa = loadingOrders;
-//          preLoa = NULL;
-//          while (curLoa != NULL) {
-//             if (curRea->weight > curLoa->weight) {
-//                break;
-//             } else if (curRea->weight == curLoa->weight) {
-//                if (curRea->time < curLoa->time) {
-//                   break;
-//                }
-//             }
-//             preLoa = curLoa;
-//             curLoa = curLoa->nextOrder;
-//          }
-//          if (preLoa == NULL) {
-//             curRea->nextOrder = curLoa;
-//             loadingOrders = curRea;
-//          } else {
-//             preLoa->nextOrder = curRea;
-//             curRea->nextOrder = curLoa;
-//          }
-//          curRea = state.readyOrders.head;
-//       }
-//       if (curRea == NULL) {
-//          state.readyOrders.tail = NULL;
-//       }
-//       while (loadingOrders != NULL) {
-//          printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
-//          loadingOrders = loadingOrders->nextOrder;
-//       }
-//    }
-//    // printf("\n");
-//    // printf("\nWAREHOUSE");
-//    // printWarehouse(state.warehouse);
-//    // printf("\nPENDING ORDERS");
-//    // printOrderList(state.pendingOrders);
-//    // printf("\nREADY ORDERS");
-//    // printOrderList(state.readyOrders);
-//    return state;
-// }
+State loadOrders(State state, int payloadLeft) {
+   // printf("\n");
+   // printf("\nWAREHOUSE");
+   // printWarehouse(state.warehouse);
+   // printf("\nPENDING ORDERS");
+   // printOrderList(state.pendingOrders);
+   // printf("\nREADY ORDERS");
+   // printOrderList(state.readyOrders);
+   if (state.readyOrders.head == NULL) {
+      printf("camioncino vuoto\n");
+   } else {
+      Order *loadingOrders = NULL, *curLoa, *preLoa;
+      Order *curRea = state.readyOrders.head;
+      while (curRea != NULL) {
+         // loading the van with ready orders by weight, by date
+         payloadLeft -= state.readyOrders.head->weight;
+         if (payloadLeft < 0) {
+            break;
+         }
+         state.readyOrders.head = state.readyOrders.head->nextOrder;
+         curLoa = loadingOrders;
+         preLoa = NULL;
+         while (curLoa != NULL) {
+            if (curRea->weight > curLoa->weight) {
+               break;
+            } else if (curRea->weight == curLoa->weight) {
+               if (curRea->time < curLoa->time) {
+                  break;
+               }
+            }
+            preLoa = curLoa;
+            curLoa = curLoa->nextOrder;
+         }
+         if (preLoa == NULL) {
+            curRea->nextOrder = curLoa;
+            loadingOrders = curRea;
+         } else {
+            preLoa->nextOrder = curRea;
+            curRea->nextOrder = curLoa;
+         }
+         curRea = state.readyOrders.head;
+      }
+      if (curRea == NULL) {
+         state.readyOrders.tail = NULL;
+      }
+      while (loadingOrders != NULL) {
+         printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
+         loadingOrders = loadingOrders->nextOrder;
+      }
+   }
+   // printf("\n");
+   // printf("\nWAREHOUSE");
+   // printWarehouse(state.warehouse);
+   // printf("\nPENDING ORDERS");
+   // printOrderList(state.pendingOrders);
+   // printf("\nREADY ORDERS");
+   // printOrderList(state.readyOrders);
+   return state;
+}
 
 int main() { // TODO make cookbook testable commenting all instances of previous implementation
 
@@ -650,10 +652,9 @@ int main() { // TODO make cookbook testable commenting all instances of previous
    }
 
    while (scanf("%s", command) > 0) {
-      // printf("\n[%d] ", time);
 
       if (time && time % courierPeriod == 0) {
-         // state = loadOrders(state, maxPayload);
+         state = loadOrders(state, maxPayload);
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
@@ -670,8 +671,16 @@ int main() { // TODO make cookbook testable commenting all instances of previous
 
       } else if (!strcmp(command, "ordine")) {
          // printf("[newOrder] ");
-         // state = newOrder(cookbook, state, time);
+         state = newOrder(cookbook, state, time);
+
+      } else {
+         printf("ERROR: UNKNOWN COMMAND");
       }
+
+      // printf(" <%s> ", command);
+      // printf("at [%d] ", time);
+      // printf("\nCOOKBOOK");
+      // printCookbook(cookbook);
       // printf("\nWAREHOUSE AFTER");
       // printWarehouse(state.warehouse);
       // printf("\nPENDING ORDERS");
@@ -685,11 +694,11 @@ int main() { // TODO make cookbook testable commenting all instances of previous
       time++;
    }
    if (time && time % courierPeriod == 0) {
-      // state = loadOrders(state, maxPayload);
+      state = loadOrders(state, maxPayload);
    }
    // printf("\n");
-   printf("\nCOOKBOOK");
-   printCookbook(cookbook);
+   // printf("\nCOOKBOOK");
+   // printCookbook(cookbook);
    // printf("\nWAREHOUSE");
    // printWarehouse(state.warehouse);
    // printf("\nPENDING ORDERS");
