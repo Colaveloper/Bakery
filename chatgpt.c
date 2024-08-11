@@ -86,7 +86,7 @@ Recipe* searchRecipe(HashTable *table, const char *name) {
     return NULL;
 }
 
-// Delete a recipe by name
+// Delete a recipe by name DONE
 void deleteRecipe(HashTable *table, const char *name) {
     unsigned int index = hash(name);
     Recipe *current = table->buckets[index];
