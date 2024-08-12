@@ -3,7 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #define MAX_LEN 255
-#define HASH_SIZE 500 // TODO be careful this is large enough
+#define HASH_SIZE 5000 // TODO be careful this is large enough
+#define INFINITE 2147483647
 
 // ingredient, amount ∈ Ingredient ∈ *Recipe[] ∈ cookbook
 typedef struct Ingredient {
@@ -13,6 +14,7 @@ typedef struct Ingredient {
 } Ingredient;
 typedef struct Recipe {
    char name[MAX_LEN];
+   int minUnbakeable;
    Ingredient *ingredientList;
    struct Recipe *nextRecipe;
 } Recipe;
@@ -82,7 +84,7 @@ void printCookbook(Cookbook *cookbook) {
    for (int i = 0; i < HASH_SIZE; i++) {
       curRec = cookbook->buckets[i];
       while (curRec != NULL) {
-         printf("%10s:\t", curRec->name);
+         printf("%10s:UB:%d\t", curRec->name, curRec->minUnbakeable);
          Ingredient *curIng = curRec->ingredientList;
          while (curIng != NULL) {
             printf("%10s:%*d\t", curIng->name, 5, curIng->amount);
@@ -179,6 +181,7 @@ Cookbook *newRecipe(Cookbook *cookbook) {
    }
 
    newRecipe->ingredientList = lastPair;
+   newRecipe->minUnbakeable = INFINITE;
    //// <-------
 
    printf("aggiunta\n");
@@ -281,7 +284,7 @@ OrderList appendOrder(Order *order, OrderList pendingOrders) {
    return pendingOrders;
 }
 
-State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
+State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    // DOES NOT MODIFY PENDING LIST NOR READY LIST
    // ONLY MODIFIES WAREHOUSE AND STATE.BAKING
    // DOES NOT PRINT ANYTHING
@@ -292,28 +295,14 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
    // printOrderList(state.pendingOrders);
    // printf("\nREADY ORDERS");
    // printOrderList(state.readyOrders);
-
    // printf(" %d", order->time);
 
-   state.baking = 0;
-
-   int i = hash(order->name);
-
-   Recipe *recipe = cookbook->buckets[i];
-   while (recipe != NULL) {
-      if (!strcmp(recipe->name, order->name)) {
-         break;
-      }
-      recipe = recipe->nextRecipe;
-   }
-
-   if (recipe == NULL) {
-      // rifiutato
-      state.baking = -1;
+   if (recipe->minUnbakeable <= order->amount) {
+      state.baking = 0;
       return state;
    }
 
-   // printf(" TB ");
+   int i;
 
    // checking if baking is possible
    Bunch *delBun;
@@ -346,6 +335,7 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
                }
                // if we removed a necessary ingredient, we can't bake
                free(curShe);
+               state.baking = 0;
                return state;
             }
          }
@@ -354,6 +344,7 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
                break; // Enough curIng, check next ingredient
             }
             // printf("not enough %s to bake %s\n", curShe->name, order->name);
+            state.baking = 0;
             return state;
          }
          preShe = curShe;
@@ -362,6 +353,7 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
       if (curShe == NULL) {
          // printf("%s not present at all to bake %s\n", curIng->name, order->name);
          // printf(" state.baking==%d ", state.baking);
+         state.baking = 0;
          return state;
       }
       curIng = curIng->nextIngredient;
@@ -370,7 +362,6 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
    // printf("(baking %s)\n", order->name);
    state.baking = 1; // ARRIVATI QUI
 
-   
    // printf("\nWAREHOUSE CLEANED");
    // printWarehouse(state.warehouse);
 
@@ -477,11 +468,33 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
    // printWarehouse(warehouse);
 
+   int i;
    Order *prePen = NULL, *curPen = state.pendingOrders.head;
    Order *preRea = NULL, *curRea;
    Order *nexPen;
+   Recipe *recipe;
+
+   // any recipe isn't unbakeable
+   for (int i = 0; i < HASH_SIZE; i++) {
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         recipe->minUnbakeable = INFINITE;
+         recipe = recipe->nextRecipe;
+      }
+   }
+
    while (curPen != NULL) {
-      state = tryBaking(curPen, cookbook, state, time);
+
+      i = hash(curPen->name);
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         if (!strcmp(recipe->name, curPen->name)) {
+            break;
+         }
+         recipe = recipe->nextRecipe;
+      }
+      // recipe == NULL is impossible
+      state = tryBaking(curPen, recipe, state, time);
       int baking = state.baking;
       nexPen = curPen->nextOrder;
       if (baking) {
@@ -538,7 +551,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
       }
       curPen = nexPen;
    }
-   
+
    printf("rifornito\n");
    return state;
 }
@@ -555,9 +568,24 @@ State newOrder(Cookbook *cookbook, State state, int time) {
    newOrder->nextOrder = NULL;
    newOrder->time = time;
    newOrder->weight = -1;
+   int i = hash(newOrder->name);
+   Recipe *recipe = cookbook->buckets[i];
 
-   // printf("Receiving order of %s; ", newOrder->name);
-   state = tryBaking(newOrder, cookbook, state, time);
+   while (recipe != NULL) {
+      if (!strcmp(recipe->name, newOrder->name)) {
+         break;
+      }
+      recipe = recipe->nextRecipe;
+   }
+   if (recipe == NULL) {
+      state.baking = -1;
+   } else if (recipe->minUnbakeable <= newOrder->amount) {
+      state.baking = 0;
+   } else {
+      // printf("Receiving order of %s; ", newOrder->name);
+      state = tryBaking(newOrder, recipe, state, time);
+   }
+
    int baking = state.baking;
    // printf(" state.baking==%d ", baking);
 
@@ -567,6 +595,9 @@ State newOrder(Cookbook *cookbook, State state, int time) {
       break;
    case 0: // baking newOrder in the future
       printf("accettato\n");
+      if (recipe->minUnbakeable > newOrder->amount) {
+         recipe->minUnbakeable = newOrder->amount;
+      }
       state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
       break;
    case 1: // baked immediately!
@@ -697,9 +728,9 @@ int main() { // TODO make cookbook testable commenting all instances of previous
          printf("ERROR: UNKNOWN COMMAND");
       }
 
-      // printf(" <%s> ", command);
+      // // printf(" <%s> ", command);
       // printf("at [%d] ", time);
-      // printf("'%s'", state.warehouse->buckets[3]->name);
+      // // printf("'%s'", state.warehouse->buckets[3]->name);
       // printf("\nCOOKBOOK");
       // printCookbook(cookbook);
       // printf("\nWAREHOUSE AFTER");
