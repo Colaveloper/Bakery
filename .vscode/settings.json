@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.pseudo": "pseudocode",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "stdlib.h": "c"
     }
 }
