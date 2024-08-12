@@ -32,6 +32,9 @@ typedef struct Shelf {
    Bunch *bunchList;
    struct Shelf *nextShelf;
 } Shelf;
+typedef struct Warehouse {
+   Shelf *buckets[HASH_SIZE]; // Array of lists of shelves
+} Warehouse;
 
 // name, amount ∈ Order ∈ pendingOrders, readyOrders
 typedef struct Order {
@@ -53,7 +56,7 @@ typedef struct State {
 
    OrderList pendingOrders;
    OrderList readyOrders;
-   Shelf *warehouse;
+   Warehouse *warehouse;
    int baking;
 
    // baking semantics:
@@ -91,19 +94,22 @@ void printCookbook(Cookbook *cookbook) {
    }
 }
 
-void printWarehouse(Shelf *warehouse) {
+void printWarehouse(Warehouse *warehouse) {
 
    printf("\n");
-   Shelf *curShe = warehouse;
-   while (curShe != NULL) {
-      printf("%10s:\t%*d:\t", curShe->name, 5, curShe->total);
-      Bunch *curBun = curShe->bunchList;
-      while (curBun != NULL) {
-         printf("%*d:%*d\t\t", 5, curBun->expiration, 5, curBun->amount);
-         curBun = curBun->nextBunch;
+   Shelf *curShe;
+   for (int i = 0; i < HASH_SIZE; i++) {
+      curShe = warehouse->buckets[i];
+      while (curShe != NULL) {
+         printf("'%s':\t%*d:\t", curShe->name, 5, curShe->total);
+         Bunch *curBun = curShe->bunchList;
+         while (curBun != NULL) {
+            printf("%*d:%*d\t\t", 5, curBun->expiration, 5, curBun->amount);
+            curBun = curBun->nextBunch;
+         }
+         curShe = curShe->nextShelf;
+         printf("\n");
       }
-      curShe = curShe->nextShelf;
-      printf("\n");
    }
 }
 
@@ -314,7 +320,8 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
    Shelf *preShe, *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
-      curShe = state.warehouse;
+      i = hash(curIng->name);
+      curShe = state.warehouse->buckets[i];
       preShe = NULL;
       while (curShe != NULL) {
          if (curShe->bunchList->expiration <= time) { // TODO is "=" correct?
@@ -333,13 +340,13 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
                // Removing entire shelf
                if (preShe == NULL) {
                   // First shelf
-                  state.warehouse = curShe->nextShelf;
-                  // DANGER
+                  state.warehouse->buckets[i] = curShe->nextShelf;
                } else {
                   preShe->nextShelf = curShe->nextShelf;
                }
+               // if we removed a necessary ingredient, we can't bake
                free(curShe);
-               break;
+               return state;
             }
          }
          if (!strcmp(curIng->name, curShe->name)) {
@@ -362,12 +369,16 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
 
    // printf("(baking %s)\n", order->name);
    state.baking = 1; // ARRIVATI QUI
-   // printf(" B ");
+
+   
+   // printf("\nWAREHOUSE CLEANED");
+   // printWarehouse(state.warehouse);
 
    curIng = recipe->ingredientList;
    int required, weight = 0;
    while (curIng != NULL) { // TODO be sure you can always get in here the first time
-      curShe = state.warehouse;
+      i = hash(curIng->name);
+      curShe = state.warehouse->buckets[i];
       preShe = NULL;
       weight += curIng->amount * order->amount;
 
@@ -391,7 +402,7 @@ State tryBaking(Order *order, Cookbook *cookbook, State state, int time) {
                      // Removing entire shelf
                      if (preShe == NULL) {
                         // First shelf
-                        state.warehouse = curShe->nextShelf;
+                        state.warehouse->buckets[i] = curShe->nextShelf;
                         // DANGER
                      } else {
                         preShe->nextShelf = curShe->nextShelf;
@@ -426,7 +437,10 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    char name[MAX_LEN];
 
    while (scanf("%s %d %d", name, &amount, &expiration)) {
-      Shelf *pre, *cur = state.warehouse;
+      int i = hash(name);
+      // printf(" <%s|%d>", name, i);
+      Shelf *pre = NULL;
+      Shelf *cur = state.warehouse->buckets[i];
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
             cur->bunchList = newBunch(cur->bunchList, expiration, amount);
@@ -447,8 +461,8 @@ State newBatch(State state, Cookbook *cookbook, int time) {
          newShelf->bunchList->expiration = expiration;
          newShelf->bunchList->amount = amount;
          newShelf->bunchList->nextBunch = NULL;
-         if (state.warehouse == NULL) {
-            state.warehouse = newShelf;
+         if (state.warehouse->buckets[i] == NULL) {
+            state.warehouse->buckets[i] = newShelf;
          } else {
             pre->nextShelf = newShelf;
          }
@@ -458,6 +472,10 @@ State newBatch(State state, Cookbook *cookbook, int time) {
          break;
       }
    }
+
+   // Warehouse *warehouse = state.warehouse;
+   // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
+   // printWarehouse(warehouse);
 
    Order *prePen = NULL, *curPen = state.pendingOrders.head;
    Order *preRea = NULL, *curRea;
@@ -520,7 +538,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
       }
       curPen = nexPen;
    }
-
+   
    printf("rifornito\n");
    return state;
 }
@@ -641,10 +659,12 @@ int main() { // TODO make cookbook testable commenting all instances of previous
    int courierPeriod, maxPayload, time = 0;
    char command[MAX_LEN];
    Cookbook *cookbook = (Cookbook *)malloc(sizeof(Cookbook));
+   Warehouse *warehouse = (Warehouse *)malloc(sizeof(Warehouse));
    for (int i = 0; i < HASH_SIZE; i++) {
       cookbook->buckets[i] = NULL;
+      warehouse->buckets[i] = NULL;
    }
-   State state = {{NULL, NULL}, {NULL, NULL}, NULL, 0};
+   State state = {{NULL, NULL}, {NULL, NULL}, warehouse, 0};
 
    if (scanf("%d", &courierPeriod) == 0 || scanf("%d", &maxPayload) == 0) {
       perror("MUST SPECIFY COURIER PERIOD AND MAX PAYLOAD");
@@ -679,6 +699,7 @@ int main() { // TODO make cookbook testable commenting all instances of previous
 
       // printf(" <%s> ", command);
       // printf("at [%d] ", time);
+      // printf("'%s'", state.warehouse->buckets[3]->name);
       // printf("\nCOOKBOOK");
       // printCookbook(cookbook);
       // printf("\nWAREHOUSE AFTER");
