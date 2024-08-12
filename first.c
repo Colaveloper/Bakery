@@ -143,8 +143,6 @@ Cookbook *newRecipe(Cookbook *cookbook) {
    Recipe *newRecipe = (Recipe *)malloc(sizeof(Recipe));
    strcpy(newRecipe->name, name);
    newRecipe->nextRecipe = NULL;
-   //// TODO ignorato introduces memory leak
-
    //// ------->
 
    if (cur == NULL) {
@@ -152,8 +150,9 @@ Cookbook *newRecipe(Cookbook *cookbook) {
    } else {
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
-            char c = ' ';
             printf("ignorato\n");
+            free(newRecipe);
+            char c = ' ';
             while (c != '\n' && c != '\r' && c != EOF) {
                c = getchar();
                continue;
@@ -224,8 +223,14 @@ Cookbook *removeRecipe(Cookbook *cookbook, State state) {
 
    Recipe *pre = NULL;
    Recipe *cur = cookbook->buckets[i];
+   Ingredient *delIng;
    if (cur != NULL && !strcmp(cur->name, name)) {
       cookbook->buckets[i] = cur->nextRecipe;
+      while (cur->ingredientList != NULL) {
+         delIng = cur->ingredientList;
+         cur->ingredientList = cur->ingredientList->nextIngredient;
+         free(delIng);
+      }
       free(cur);
       printf("rimossa\n");
    } else {
@@ -238,6 +243,12 @@ Cookbook *removeRecipe(Cookbook *cookbook, State state) {
          printf("non presente\n");
       } else {
          pre->nextRecipe = cur->nextRecipe;
+
+         while (cur->ingredientList != NULL) {
+            delIng = cur->ingredientList;
+            cur->ingredientList = cur->ingredientList->nextIngredient;
+            free(delIng);
+         }
          free(cur);
          printf("rimossa\n");
       }

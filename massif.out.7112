@@ -1,0 +1,910 @@
+desc: (none)
+cmd: ./first
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=382332342
+mem_heap_B=3247832
+mem_heap_extra_B=659608
+mem_stacks_B=0
+heap_tree=detailed
+n6: 3247832 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 1337696 0x1099B4: newRecipe (first.c:175)
+  n0: 1337696 0x1092A6: main (first.c:720)
+ n1: 1068016 0x109D19: newBunch (first.c:265)
+  n1: 1068016 0x10A1CD: newBatch (first.c:440)
+   n0: 1068016 0x1093DD: main (first.c:728)
+ n1: 361760 0x10A607: newOrder (first.c:564)
+  n0: 361760 0x109485: main (first.c:732)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n0: 113800 in 5 places, all below massif's threshold (1.00%)
+ n1: 86560 0x109D49: newBunch (first.c:265)
+  n1: 86560 0x10A1CD: newBatch (first.c:440)
+   n0: 86560 0x1093DD: main (first.c:728)
+#-----------
+snapshot=2
+#-----------
+time=649516695
+mem_heap_B=4646800
+mem_heap_extra_B=897376
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=838868595
+mem_heap_B=5261960
+mem_heap_extra_B=1002776
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=1164312843
+mem_heap_B=6230920
+mem_heap_extra_B=1198072
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=5
+#-----------
+time=1459846942
+mem_heap_B=7234520
+mem_heap_extra_B=1331432
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=1652712414
+mem_heap_B=7902536
+mem_heap_extra_B=1407184
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=1944434172
+mem_heap_B=8678768
+mem_heap_extra_B=1506632
+mem_stacks_B=0
+heap_tree=detailed
+n7: 8678768 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 4316096 0x1099B4: newRecipe (first.c:175)
+  n0: 4316096 0x1092A6: main (first.c:720)
+ n1: 2356080 0x109D19: newBunch (first.c:265)
+  n1: 2356080 0x10A1CD: newBatch (first.c:440)
+   n0: 2356080 0x1093DD: main (first.c:728)
+ n1: 1341480 0x10A607: newOrder (first.c:564)
+  n0: 1341480 0x109485: main (first.c:732)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 201264 0x109D49: newBunch (first.c:265)
+  n1: 201264 0x10A1CD: newBatch (first.c:440)
+   n0: 201264 0x1093DD: main (first.c:728)
+ n1: 105560 0x109913: newRecipe (first.c:143)
+  n0: 105560 0x1092A6: main (first.c:720)
+ n0: 78288 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=8
+#-----------
+time=2333970104
+mem_heap_B=9538216
+mem_heap_extra_B=1604584
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=2623257004
+mem_heap_B=10139896
+mem_heap_extra_B=1657080
+mem_stacks_B=0
+heap_tree=detailed
+n7: 10139896 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 5221312 0x1099B4: newRecipe (first.c:175)
+  n0: 5221312 0x1092A6: main (first.c:720)
+ n1: 2529536 0x109D19: newBunch (first.c:265)
+  n1: 2529536 0x10A1CD: newBatch (first.c:440)
+   n0: 2529536 0x1093DD: main (first.c:728)
+ n1: 1665720 0x10A607: newOrder (first.c:564)
+  n0: 1665720 0x109485: main (first.c:732)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 236784 0x109D49: newBunch (first.c:265)
+  n1: 236784 0x10A1CD: newBatch (first.c:440)
+   n0: 236784 0x1093DD: main (first.c:728)
+ n1: 129360 0x109913: newRecipe (first.c:143)
+  n0: 129360 0x1092A6: main (first.c:720)
+ n0: 77184 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=10
+#-----------
+time=2939878570
+mem_heap_B=10655080
+mem_heap_extra_B=1699648
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=3134281202
+mem_heap_B=11112456
+mem_heap_extra_B=1721128
+mem_stacks_B=0
+heap_tree=detailed
+n7: 11112456 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 5930416 0x1099B4: newRecipe (first.c:175)
+  n0: 5930416 0x1092A6: main (first.c:720)
+ n1: 2574512 0x109D19: newBunch (first.c:265)
+  n1: 2574512 0x10A1CD: newBatch (first.c:440)
+   n0: 2574512 0x1093DD: main (first.c:728)
+ n1: 1848840 0x10A607: newOrder (first.c:564)
+  n0: 1848840 0x109485: main (first.c:732)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 256032 0x109D49: newBunch (first.c:265)
+  n1: 256032 0x10A1CD: newBatch (first.c:440)
+   n0: 256032 0x1093DD: main (first.c:728)
+ n1: 146160 0x109913: newRecipe (first.c:143)
+  n0: 146160 0x1092A6: main (first.c:720)
+ n0: 76496 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=12
+#-----------
+time=3451512862
+mem_heap_B=11764240
+mem_heap_extra_B=1729560
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=13
+#-----------
+time=3697165118
+mem_heap_B=12234448
+mem_heap_extra_B=1720152
+mem_stacks_B=0
+heap_tree=detailed
+n7: 12234448 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 6849776 0x1099B4: newRecipe (first.c:175)
+  n0: 6849776 0x1092A6: main (first.c:720)
+ n1: 2465632 0x109D19: newBunch (first.c:265)
+  n1: 2465632 0x10A1CD: newBatch (first.c:440)
+   n0: 2465632 0x1093DD: main (first.c:728)
+ n1: 2120720 0x10A607: newOrder (first.c:564)
+  n0: 2120720 0x109485: main (first.c:732)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+ n1: 276176 0x109D49: newBunch (first.c:265)
+  n1: 276176 0x10A1CD: newBatch (first.c:440)
+   n0: 276176 0x1093DD: main (first.c:728)
+ n1: 166600 0x109913: newRecipe (first.c:143)
+  n0: 166600 0x1092A6: main (first.c:720)
+ n0: 75824 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=14
+#-----------
+time=3898050086
+mem_heap_B=12515488
+mem_heap_extra_B=1723064
+mem_stacks_B=0
+heap_tree=detailed
+n7: 12515488 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 7075264 0x1099B4: newRecipe (first.c:175)
+  n0: 7075264 0x1092A6: main (first.c:720)
+ n1: 2443744 0x109D19: newBunch (first.c:265)
+  n1: 2443744 0x10A1CD: newBatch (first.c:440)
+   n0: 2443744 0x1093DD: main (first.c:728)
+ n1: 2186520 0x10A607: newOrder (first.c:564)
+  n0: 2186520 0x109485: main (first.c:732)
+ n1: 282752 0x109D49: newBunch (first.c:265)
+  n1: 282752 0x10A1CD: newBatch (first.c:440)
+   n0: 282752 0x1093DD: main (first.c:728)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 171640 0x109913: newRecipe (first.c:143)
+  n0: 171640 0x1092A6: main (first.c:720)
+ n0: 75568 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=15
+#-----------
+time=4146221782
+mem_heap_B=12896832
+mem_heap_extra_B=1710048
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=4491406079
+mem_heap_B=13297216
+mem_heap_extra_B=1682088
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=4736903690
+mem_heap_B=13451256
+mem_heap_extra_B=1654048
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=4902629263
+mem_heap_B=13617848
+mem_heap_extra_B=1636512
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=5172381464
+mem_heap_B=13953112
+mem_heap_extra_B=1586112
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=5408660430
+mem_heap_B=14074296
+mem_heap_extra_B=1548696
+mem_stacks_B=0
+heap_tree=detailed
+n7: 14074296 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 8541344 0x1099B4: newRecipe (first.c:175)
+  n0: 8541344 0x1092A6: main (first.c:720)
+ n1: 2743160 0x10A607: newOrder (first.c:564)
+  n0: 2743160 0x109485: main (first.c:732)
+ n1: 1914784 0x109D19: newBunch (first.c:265)
+  n1: 1914784 0x10A1CD: newBatch (first.c:440)
+   n0: 1914784 0x1093DD: main (first.c:728)
+ n1: 306624 0x109D49: newBunch (first.c:265)
+  n1: 306624 0x10A1CD: newBatch (first.c:440)
+   n0: 306624 0x1093DD: main (first.c:728)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 214480 0x109913: newRecipe (first.c:143)
+  n0: 214480 0x1092A6: main (first.c:720)
+ n0: 73904 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=21
+#-----------
+time=5662127051
+mem_heap_B=14256512
+mem_heap_extra_B=1525536
+mem_stacks_B=0
+heap_tree=detailed
+n7: 14256512 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 8723856 0x1099B4: newRecipe (first.c:175)
+  n0: 8723856 0x1092A6: main (first.c:720)
+ n1: 2804760 0x10A607: newOrder (first.c:564)
+  n0: 2804760 0x109485: main (first.c:732)
+ n1: 1851440 0x109D19: newBunch (first.c:265)
+  n1: 1851440 0x10A1CD: newBatch (first.c:440)
+   n0: 1851440 0x1093DD: main (first.c:728)
+ n1: 303472 0x109D49: newBunch (first.c:265)
+  n1: 303472 0x10A1CD: newBatch (first.c:440)
+   n0: 303472 0x1093DD: main (first.c:728)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 219240 0x109913: newRecipe (first.c:143)
+  n0: 219240 0x1092A6: main (first.c:720)
+ n0: 73744 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=22
+#-----------
+time=5860369108
+mem_heap_B=14435576
+mem_heap_extra_B=1475592
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=6144127192
+mem_heap_B=14589640
+mem_heap_extra_B=1430672
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=6543402639
+mem_heap_B=15007600
+mem_heap_extra_B=1331328
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=6731993429
+mem_heap_B=15173472
+mem_heap_extra_B=1313616
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=7016282250
+mem_heap_B=15358456
+mem_heap_extra_B=1276784
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=27
+#-----------
+time=7272107865
+mem_heap_B=15633792
+mem_heap_extra_B=1225400
+mem_stacks_B=0
+heap_tree=detailed
+n7: 15633792 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 10323760 0x1099B4: newRecipe (first.c:175)
+  n0: 10323760 0x1092A6: main (first.c:720)
+ n1: 3338160 0x10A607: newOrder (first.c:564)
+  n0: 3338160 0x109485: main (first.c:732)
+ n1: 1118816 0x109D19: newBunch (first.c:265)
+  n1: 1118816 0x10A1CD: newBatch (first.c:440)
+   n0: 1118816 0x1093DD: main (first.c:728)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+ n1: 263480 0x109913: newRecipe (first.c:143)
+  n0: 263480 0x1092A6: main (first.c:720)
+ n1: 236112 0x109D49: newBunch (first.c:265)
+  n1: 236112 0x10A1CD: newBatch (first.c:440)
+   n0: 236112 0x1093DD: main (first.c:728)
+ n0: 73744 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=28
+#-----------
+time=7462891044
+mem_heap_B=15819704
+mem_heap_extra_B=1208184
+mem_stacks_B=0
+heap_tree=detailed
+n7: 15819704 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 10513888 0x1099B4: newRecipe (first.c:175)
+  n0: 10513888 0x1092A6: main (first.c:720)
+ n1: 3385480 0x10A607: newOrder (first.c:564)
+  n0: 3385480 0x109485: main (first.c:732)
+ n1: 1068592 0x109D19: newBunch (first.c:265)
+  n1: 1068592 0x10A1CD: newBatch (first.c:440)
+   n0: 1068592 0x1093DD: main (first.c:728)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n1: 267680 0x109913: newRecipe (first.c:143)
+  n0: 267680 0x1092A6: main (first.c:720)
+ n1: 230304 0x109D49: newBunch (first.c:265)
+  n1: 230304 0x10A1CD: newBatch (first.c:440)
+   n0: 230304 0x1093DD: main (first.c:728)
+ n0: 73760 in 4 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=29
+#-----------
+time=7842724899
+mem_heap_B=16265416
+mem_heap_extra_B=1156920
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=8140058632
+mem_heap_B=16488384
+mem_heap_extra_B=1107256
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=31
+#-----------
+time=8284432043
+mem_heap_B=16551016
+mem_heap_extra_B=1094728
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=8550618394
+mem_heap_B=16697248
+mem_heap_extra_B=1071400
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=8817712056
+mem_heap_B=17074392
+mem_heap_extra_B=1045952
+mem_stacks_B=0
+heap_tree=detailed
+n6: 17074392 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 11815952 0x1099B4: newRecipe (first.c:175)
+  n0: 11815952 0x1092A6: main (first.c:720)
+ n1: 3790080 0x10A607: newOrder (first.c:564)
+  n0: 3790080 0x109485: main (first.c:732)
+ n1: 638672 0x109D19: newBunch (first.c:265)
+  n1: 638672 0x10A1CD: newBatch (first.c:440)
+   n0: 638672 0x1093DD: main (first.c:728)
+ n1: 298480 0x109913: newRecipe (first.c:143)
+  n0: 298480 0x1092A6: main (first.c:720)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+ n0: 251488 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=34
+#-----------
+time=9105558280
+mem_heap_B=17302888
+mem_heap_extra_B=1026704
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=9383520960
+mem_heap_B=17487576
+mem_heap_extra_B=1005616
+mem_stacks_B=0
+heap_tree=detailed
+n6: 17487576 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 12218512 0x1099B4: newRecipe (first.c:175)
+  n0: 12218512 0x1092A6: main (first.c:720)
+ n1: 3923360 0x10A607: newOrder (first.c:564)
+  n0: 3923360 0x109485: main (first.c:732)
+ n1: 521616 0x109D19: newBunch (first.c:265)
+  n1: 521616 0x10A1CD: newBatch (first.c:440)
+   n0: 521616 0x1093DD: main (first.c:728)
+ n1: 308280 0x109913: newRecipe (first.c:143)
+  n0: 308280 0x1092A6: main (first.c:720)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n0: 235808 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=36
+#-----------
+time=9776809216
+mem_heap_B=17907328
+mem_heap_extra_B=969888
+mem_stacks_B=0
+heap_tree=detailed
+n6: 17907328 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 12619984 0x1099B4: newRecipe (first.c:175)
+  n0: 12619984 0x1092A6: main (first.c:720)
+ n1: 4051040 0x10A607: newOrder (first.c:564)
+  n0: 4051040 0x109485: main (first.c:732)
+ n1: 418192 0x109D19: newBunch (first.c:265)
+  n1: 418192 0x10A1CD: newBatch (first.c:440)
+   n0: 418192 0x1093DD: main (first.c:728)
+ n1: 318360 0x109913: newRecipe (first.c:143)
+  n0: 318360 0x1092A6: main (first.c:720)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+ n0: 220032 in 5 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=37
+#-----------
+time=10103283182
+mem_heap_B=18072816
+mem_heap_extra_B=953464
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=10323574041
+mem_heap_B=18270992
+mem_heap_extra_B=946504
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=10544610112
+mem_heap_B=18452360
+mem_heap_extra_B=940664
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=10853176179
+mem_heap_B=18598240
+mem_heap_extra_B=935488
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=11069558186
+mem_heap_B=18679536
+mem_heap_extra_B=933096
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=42
+#-----------
+time=11400546670
+mem_heap_B=19031344
+mem_heap_extra_B=922592
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=11616991976
+mem_heap_B=19119136
+mem_heap_extra_B=918720
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=11866100216
+mem_heap_B=19410208
+mem_heap_extra_B=914288
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=12237681834
+mem_heap_B=19681696
+mem_heap_extra_B=913176
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=12493674726
+mem_heap_B=19865952
+mem_heap_extra_B=903440
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=12672300551
+mem_heap_B=19996952
+mem_heap_extra_B=898736
+mem_stacks_B=0
+heap_tree=detailed
+n5: 19996952 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 14420896 0x1099B4: newRecipe (first.c:175)
+  n0: 14420896 0x1092A6: main (first.c:720)
+ n1: 4639040 0x10A607: newOrder (first.c:564)
+  n0: 4639040 0x109485: main (first.c:732)
+ n1: 367920 0x109913: newRecipe (first.c:143)
+  n0: 367920 0x1092A6: main (first.c:720)
+ n0: 289376 in 6 places, all below massif's threshold (1.00%)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+#-----------
+snapshot=48
+#-----------
+time=12922278314
+mem_heap_B=20216760
+mem_heap_extra_B=893488
+mem_stacks_B=0
+heap_tree=detailed
+n5: 20216760 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 14598512 0x1099B4: newRecipe (first.c:175)
+  n0: 14598512 0x1092A6: main (first.c:720)
+ n1: 4708480 0x10A607: newOrder (first.c:564)
+  n0: 4708480 0x109485: main (first.c:732)
+ n1: 372120 0x109913: newRecipe (first.c:143)
+  n0: 372120 0x1092A6: main (first.c:720)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n0: 257648 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=49
+#-----------
+time=13214370823
+mem_heap_B=20456792
+mem_heap_extra_B=886072
+mem_stacks_B=0
+heap_tree=detailed
+n5: 20456792 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 14784016 0x1099B4: newRecipe (first.c:175)
+  n0: 14784016 0x1092A6: main (first.c:720)
+ n1: 4796680 0x10A607: newOrder (first.c:564)
+  n0: 4796680 0x109485: main (first.c:732)
+ n1: 378000 0x109913: newRecipe (first.c:143)
+  n0: 378000 0x1092A6: main (first.c:720)
+ n1: 279440 0x10A4E6: newBatch (first.c:449)
+  n0: 279440 0x1093DD: main (first.c:728)
+ n0: 218656 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=50
+#-----------
+time=13361334773
+mem_heap_B=20626848
+mem_heap_extra_B=886072
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=13413896501
+mem_heap_B=20682296
+mem_heap_extra_B=885752
+mem_stacks_B=0
+heap_tree=detailed
+n5: 20682296 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 14980944 0x1099B4: newRecipe (first.c:175)
+  n0: 14980944 0x1092A6: main (first.c:720)
+ n1: 4839800 0x10A607: newOrder (first.c:564)
+  n0: 4839800 0x109485: main (first.c:732)
+ n1: 381640 0x109913: newRecipe (first.c:143)
+  n0: 381640 0x1092A6: main (first.c:720)
+ n1: 279720 0x10A4E6: newBatch (first.c:449)
+  n0: 279720 0x1093DD: main (first.c:728)
+ n0: 200192 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=52
+#-----------
+time=13558646010
+mem_heap_B=20812048
+mem_heap_extra_B=882872
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=13570158933
+mem_heap_B=20920048
+mem_heap_extra_B=886760
+mem_stacks_B=0
+heap_tree=detailed
+n5: 20920048 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15178688 0x1099B4: newRecipe (first.c:175)
+  n0: 15178688 0x1092A6: main (first.c:720)
+ n1: 4892720 0x10A607: newOrder (first.c:564)
+  n0: 4892720 0x109485: main (first.c:732)
+ n1: 385840 0x109913: newRecipe (first.c:143)
+  n0: 385840 0x1092A6: main (first.c:720)
+ n1: 280000 0x10A4E6: newBatch (first.c:449)
+  n0: 280000 0x1093DD: main (first.c:728)
+ n0: 182800 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=54
+#-----------
+time=13716563923
+mem_heap_B=20998832
+mem_heap_extra_B=886688
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=13867626972
+mem_heap_B=21099296
+mem_heap_extra_B=887344
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=13888711106
+mem_heap_B=21142904
+mem_heap_extra_B=889048
+mem_stacks_B=0
+heap_tree=detailed
+n5: 21142904 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15360928 0x1099B4: newRecipe (first.c:175)
+  n0: 15360928 0x1092A6: main (first.c:720)
+ n1: 4942280 0x10A607: newOrder (first.c:564)
+  n0: 4942280 0x109485: main (first.c:732)
+ n1: 391720 0x109913: newRecipe (first.c:143)
+  n0: 391720 0x1092A6: main (first.c:720)
+ n1: 279160 0x10A4E6: newBatch (first.c:449)
+  n0: 279160 0x1093DD: main (first.c:728)
+ n0: 168816 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=57
+#-----------
+time=13980279857
+mem_heap_B=21371152
+mem_heap_extra_B=889904
+mem_stacks_B=0
+heap_tree=detailed
+n5: 21371152 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15549968 0x1099B4: newRecipe (first.c:175)
+  n0: 15549968 0x1092A6: main (first.c:720)
+ n1: 4994360 0x10A607: newOrder (first.c:564)
+  n0: 4994360 0x109485: main (first.c:732)
+ n1: 396480 0x109913: newRecipe (first.c:143)
+  n0: 396480 0x1092A6: main (first.c:720)
+ n1: 278040 0x10A4E6: newBatch (first.c:449)
+  n0: 278040 0x1093DD: main (first.c:728)
+ n0: 152304 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=58
+#-----------
+time=14127089941
+mem_heap_B=21474312
+mem_heap_extra_B=889168
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=59
+#-----------
+time=14205256489
+mem_heap_B=21590424
+mem_heap_extra_B=893312
+mem_stacks_B=0
+heap_tree=detailed
+n5: 21590424 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15727856 0x1099B4: newRecipe (first.c:175)
+  n0: 15727856 0x1092A6: main (first.c:720)
+ n1: 5042800 0x10A607: newOrder (first.c:564)
+  n0: 5042800 0x109485: main (first.c:732)
+ n1: 400680 0x109913: newRecipe (first.c:143)
+  n0: 400680 0x1092A6: main (first.c:720)
+ n1: 277760 0x10A4E6: newBatch (first.c:449)
+  n0: 277760 0x1093DD: main (first.c:728)
+ n0: 141328 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=60
+#-----------
+time=14350504303
+mem_heap_B=21723144
+mem_heap_extra_B=894072
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=61
+#-----------
+time=14367730353
+mem_heap_B=21816240
+mem_heap_extra_B=896584
+mem_stacks_B=0
+heap_tree=detailed
+n5: 21816240 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 15904112 0x1099B4: newRecipe (first.c:175)
+  n0: 15904112 0x1092A6: main (first.c:720)
+ n1: 5103840 0x10A607: newOrder (first.c:564)
+  n0: 5103840 0x109485: main (first.c:732)
+ n1: 405440 0x109913: newRecipe (first.c:143)
+  n0: 405440 0x1092A6: main (first.c:720)
+ n1: 273280 0x10A4E6: newBatch (first.c:449)
+  n0: 273280 0x1093DD: main (first.c:728)
+ n0: 129568 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=62
+#-----------
+time=14443800692
+mem_heap_B=22040592
+mem_heap_extra_B=899920
+mem_stacks_B=0
+heap_tree=detailed
+n5: 22040592 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16098592 0x1099B4: newRecipe (first.c:175)
+  n0: 16098592 0x1092A6: main (first.c:720)
+ n1: 5145560 0x10A607: newOrder (first.c:564)
+  n0: 5145560 0x109485: main (first.c:732)
+ n1: 409080 0x109913: newRecipe (first.c:143)
+  n0: 409080 0x1092A6: main (first.c:720)
+ n1: 267680 0x10A4E6: newBatch (first.c:449)
+  n0: 267680 0x1093DD: main (first.c:728)
+ n0: 119680 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=63
+#-----------
+time=14564376945
+mem_heap_B=22273544
+mem_heap_extra_B=903856
+mem_stacks_B=0
+heap_tree=detailed
+n5: 22273544 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16301232 0x1099B4: newRecipe (first.c:175)
+  n0: 16301232 0x1092A6: main (first.c:720)
+ n1: 5195680 0x10A607: newOrder (first.c:564)
+  n0: 5195680 0x109485: main (first.c:732)
+ n1: 414400 0x109913: newRecipe (first.c:143)
+  n0: 414400 0x1092A6: main (first.c:720)
+ n1: 251720 0x10A4E6: newBatch (first.c:449)
+  n0: 251720 0x1093DD: main (first.c:728)
+ n0: 110512 in 6 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=64
+#-----------
+time=14708750895
+mem_heap_B=22468432
+mem_heap_extra_B=908224
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=65
+#-----------
+time=14737443959
+mem_heap_B=22528072
+mem_heap_extra_B=909088
+mem_stacks_B=0
+heap_tree=detailed
+n4: 22528072 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16506592 0x1099B4: newRecipe (first.c:175)
+  n0: 16506592 0x1092A6: main (first.c:720)
+ n1: 5268760 0x10A607: newOrder (first.c:564)
+  n0: 5268760 0x109485: main (first.c:732)
+ n1: 419720 0x109913: newRecipe (first.c:143)
+  n0: 419720 0x1092A6: main (first.c:720)
+ n0: 333000 in 7 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=66
+#-----------
+time=14835364070
+mem_heap_B=22762344
+mem_heap_extra_B=911600
+mem_stacks_B=0
+heap_tree=detailed
+n4: 22762344 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16727728 0x1099B4: newRecipe (first.c:175)
+  n0: 16727728 0x1092A6: main (first.c:720)
+ n1: 5343520 0x10A607: newOrder (first.c:564)
+  n0: 5343520 0x109485: main (first.c:732)
+ n1: 427280 0x109913: newRecipe (first.c:143)
+  n0: 427280 0x1092A6: main (first.c:720)
+ n0: 263816 in 7 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=67
+#-----------
+time=14915319399
+mem_heap_B=23041984
+mem_heap_extra_B=917808
+mem_stacks_B=0
+heap_tree=detailed
+n4: 23041984 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 16995104 0x1099B4: newRecipe (first.c:175)
+  n0: 16995104 0x1092A6: main (first.c:720)
+ n1: 5416040 0x10A607: newOrder (first.c:564)
+  n0: 5416040 0x109485: main (first.c:732)
+ n1: 432040 0x109913: newRecipe (first.c:143)
+  n0: 432040 0x1092A6: main (first.c:720)
+ n0: 198800 in 7 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=68
+#-----------
+time=14993947817
+mem_heap_B=23307464
+mem_heap_extra_B=926584
+mem_stacks_B=0
+heap_tree=detailed
+n4: 23307464 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 17211072 0x1099B4: newRecipe (first.c:175)
+  n0: 17211072 0x1092A6: main (first.c:720)
+ n1: 5496960 0x10A607: newOrder (first.c:564)
+  n0: 5496960 0x109485: main (first.c:732)
+ n1: 438480 0x109913: newRecipe (first.c:143)
+  n0: 438480 0x1092A6: main (first.c:720)
+ n0: 160952 in 7 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=69
+#-----------
+time=15083709413
+mem_heap_B=23554256
+mem_heap_extra_B=935256
+mem_stacks_B=0
+heap_tree=peak
+n4: 23554256 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n1: 17390320 0x1099B4: newRecipe (first.c:175)
+  n0: 17390320 0x1092A6: main (first.c:720)
+ n1: 5586560 0x10A607: newOrder (first.c:564)
+  n0: 5586560 0x109485: main (first.c:732)
+ n1: 443800 0x109913: newRecipe (first.c:143)
+  n0: 443800 0x1092A6: main (first.c:720)
+ n0: 133576 in 7 places, all below massif's threshold (1.00%)
