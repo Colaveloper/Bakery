@@ -152,7 +152,7 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 
    } else {
 
-      // searching for recipes with the same name
+      // searching for recipes with that name
       while (cur != NULL) {
 
          if (!strcmp(cur->name, name)) {
@@ -272,72 +272,69 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
    return cookbook;
 }
 
-// Cookbook *removeRecipe(Cookbook *cookbook, State state) {
-// char name[MAX_LEN];
-// if (scanf("%s", name) == 0) {
-//    printf("MUST NAME A RECIPE TO REMOVE");
-// }
-//
-// // printf(" removing %s from: ", name);
-// // printf("\nPENDING ORDERS");
-// // printOrderList(state.pendingOrders);
-// // printf("\nREADY ORDERS");
-// // printOrderList(state.readyOrders);
-//
-// Order *curOrd = state.pendingOrders.head;
-// while (curOrd != NULL) {
-//    if (!strcmp(curOrd->name, name)) {
-//       printf("ordini in sospeso\n");
-//       return cookbook;
-//    }
-//    curOrd = curOrd->nextOrder;
-// }
-// curOrd = state.readyOrders.head;
-// while (curOrd != NULL) {
-//    if (!strcmp(curOrd->name, name)) {
-//       printf("ordini in sospeso\n");
-//       return cookbook;
-//    }
-//    curOrd = curOrd->nextOrder;
-// }
-//
-// int i = hash(name);
-//
-// Recipe *pre = NULL;
-// Recipe *cur = cookbook->buckets[i];
-// Ingredient *delIng;
-// if (cur != NULL && !strcmp(cur->name, name)) {
-//    cookbook->buckets[i] = cur->nextRecipe;
-//    while (cur->ingredientList != NULL) {
-//       delIng = cur->ingredientList;
-//       cur->ingredientList = cur->ingredientList->nextIngredient;
-//       free(delIng);
-//    }
-//    free(cur);
-//    printf("rimossa\n");
-// } else {
-//    while (cur != NULL && strcmp(cur->name, name)) {
-//       pre = cur;
-//       cur = cur->nextRecipe;
-//    }
-//
-//    if (cur == NULL) {
-//       printf("non presente\n");
-//    } else {
-//       pre->nextRecipe = cur->nextRecipe;
-//
-//       while (cur->ingredientList != NULL) {
-//          delIng = cur->ingredientList;
-//          cur->ingredientList = cur->ingredientList->nextIngredient;
-//          free(delIng);
-//       }
-//       free(cur);
-//       printf("rimossa\n");
-//    }
-// }
-//
-// return cookbook;
-// }
+Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
+   char name[MAX_LEN];
+   if (scanf("%s", name) == 0) {
+      printf("MUST NAME A RECIPE TO REMOVE");
+   }
+
+   int i = hash(name);
+   Recipe *pre = NULL, *cur = cookbook->buckets[i];
+
+   // the bucket can't be empty
+   // searching for a recipe with that name
+   while (cur != NULL) {
+
+      if (!strcmp(cur->name, name)) {
+         // recipe recovered
+         break;
+      }
+      pre = cur;
+      cur = cur->nextRecipe;
+   }
+
+   if (cur == NULL) {
+
+      // the recipe was already absent
+      printf("non presente\n");
+      return cookbook;
+   }
+
+   if (cur->usage) {
+
+      // there are orders using this recipe
+      printf("ordini in sospeso\n");
+      return cookbook;
+   }
+
+   // removing all ingredients
+   Ingredient *delIng;
+   while (cur->ingredientList != NULL) {
+      delIng = cur->ingredientList;
+      delIng->shelf->usage--;
+
+      // TODO removing unused empty shelves
+      // if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
+      // }
+
+      cur->ingredientList = cur->ingredientList->nextIngredient;
+   }
+
+   // removing recipe
+   if (pre == NULL) {
+
+      // removing the first
+      cookbook->buckets[i] = cur->nextRecipe;
+   } else {
+
+      // removing any other
+      pre->nextRecipe = cur->nextRecipe;
+   }
+
+   free(cur);
+   printf("rimossa\n");
+   return cookbook;
+}
 
 // Bunch *newBunch(Bunch *bunch, int expiration, int amount) {
 //    // ASSUMING BUNCH IS NOT EMPTY
@@ -812,8 +809,8 @@ int main() {
          cookbook = newRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rimuovi_ricetta")) {
-         printf("[removeRecipe] ");
-         // cookbook = removeRecipe(cookbook, state);
+         // printf("[removeRecipe] ");
+         cookbook = removeRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rifornimento")) {
          printf("[newBatch] ");

@@ -1,19 +1,21 @@
 aggiunta
 aggiunta
 aggiunta
+ignorato
 aggiunta
+non presente
+rimossa
 
 
 COOKBOOK
-profiterole	2147483647	0cioccolato:    4	  zucchero:    3	     latte:    3	      uova:    2	    farina:   10	
      torta	2147483647	0  zucchero:   20	      uova:   10	    farina:   50	
  ciambella	2147483647	0     burro:    2	      uova:    5	    farina:   20	
  miambella	2147483647	0     burro:    2	      uova:    5	    farina:   40	
 
 WAREHOUSE
-zucchero:	    0:	2
+zucchero:	    0:	1
+cioccolato:	    0:	0
 burro:	    0:	2
-cioccolato:	    0:	1
-farina:	    0:	4
-uova:	    0:	4
-latte:	    0:	1
+farina:	    0:	3
+uova:	    0:	3
+latte:	    0:	0
