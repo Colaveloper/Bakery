@@ -1,143 +1,279 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
+#include <math.h>
 
-#define TABLE_SIZE 101  // Preferably a prime number
+// Node structure for the tree-based min-heap
+typedef struct MinHeapNode {
+   int key;                    // The key of the node
+   struct MinHeapNode *left;   // Pointer to the left child
+   struct MinHeapNode *right;  // Pointer to the right child
+   struct MinHeapNode *parent; // Pointer to the parent node
+} MinHeapNode;
 
-// Define the Recipe struct DONE
-typedef struct Recipe {
-    char name[100];
-    char ingredients[500];
-    char instructions[1000];
-    struct Recipe *next;  // Pointer for the linked list
-} Recipe;
+// MinHeap structure that maintains the root of the tree and its size
+typedef struct MinHeap {
+   MinHeapNode *root; // Root node of the heap
+   int size;          // Number of elements in the heap
+} MinHeap;
 
-// Define the Hash Table DONE
-typedef struct HashTable {
-    Recipe *buckets[TABLE_SIZE];  // Array of pointers to linked lists
-} HashTable;
-
-// Hash function (djb2) DONE
-unsigned int hash(const char *str) {
-    unsigned long hash = 5381;
-    int c;
-    while ((c = *str++)) {
-        hash = ((hash << 5) + hash) + c;
-    }
-    return hash % TABLE_SIZE;
+// Function to create a new min-heap node
+MinHeapNode *newMinHeapNode(int key) {
+   MinHeapNode *node = (MinHeapNode *)malloc(sizeof(MinHeapNode));
+   node->key = key;
+   node->left = node->right = node->parent = NULL;
+   return node;
 }
 
-// Initialize the hash table DONE
-HashTable* createHashTable() {
-    HashTable *table = (HashTable *)malloc(sizeof(HashTable));
-    if (table == NULL) {
-        perror("Failed to create hash table");
-        exit(EXIT_FAILURE);
-    }
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        table->buckets[i] = NULL;
-    }
-    return table;
+// Function to create a new empty min-heap
+MinHeap *createMinHeap() {
+   MinHeap *heap = (MinHeap *)malloc(sizeof(MinHeap));
+   heap->root = NULL;
+   heap->size = 0;
+   return heap;
 }
 
-// Insert a recipe into the hash table DONE
-void insertRecipe(HashTable *table, const char *name, const char *ingredients, const char *instructions) {
-    unsigned int index = hash(name);
-    Recipe *newRecipe = (Recipe *)malloc(sizeof(Recipe));
-    if (newRecipe == NULL) {
-        perror("Failed to insert recipe");
-        exit(EXIT_FAILURE);
-    }
-    strcpy(newRecipe->name, name);
-    strcpy(newRecipe->ingredients, ingredients);
-    strcpy(newRecipe->instructions, instructions);
-    ////
-    newRecipe->next = table->buckets[index];
-    table->buckets[index] = newRecipe;
-    ////
+// Function to swap the keys of two nodes
+void swapKeys(MinHeapNode *a, MinHeapNode *b) {
+   int temp = a->key;
+   a->key = b->key;
+   b->key = temp;
 }
 
-// Print all recipes in the hash table DONE
-void printHashTable(HashTable *table) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        Recipe *current = table->buckets[i];
-        if (current != NULL) {
-            printf("Bucket %d:\n", i);
-            while (current != NULL) {
-                printf("  Recipe Name: %s\n", current->name);
-                printf("  Ingredients: %s\n", current->ingredients);
-                printf("  Instructions: %s\n\n", current->instructions);
-                current = current->next;
-            }
+// Function to heapify down after extraction
+void heapifyDown(MinHeapNode *node) {
+   MinHeapNode *smallest = node;
+
+   if (node->left && node->left->key < smallest->key)
+      smallest = node->left;
+
+   if (node->right && node->right->key < smallest->key)
+      smallest = node->right;
+
+   if (smallest != node) {
+      swapKeys(node, smallest);
+      heapifyDown(smallest);
+   }
+}
+
+// Function to heapify up after insertion
+
+
+// Function to insert a new key into the min-heap
+void insertMinHeap(MinHeap* heap, int key) {
+    MinHeapNode* newNode = newMinHeapNode(key);
+    heap->size++;
+
+    if (heap->root == NULL) {
+        heap->root = newNode;
+        return;
+    }
+
+    // Dynamic path allocation
+    int depth = (int)log2(heap->size) + 1;
+    int* path = (int*)malloc(depth * sizeof(int));
+    int level = 0;
+    int n = heap->size;
+
+    // Generate path to the new node
+    while (n > 1) {
+        path[level++] = n % 2;
+        n /= 2;
+    }
+
+    MinHeapNode* current = heap->root;
+    for (int i = level - 1; i >= 0; i--) {
+        if (path[i] == 0) {
+            if (current->left == NULL)
+                break;
+            current = current->left;
+        } else {
+            if (current->right == NULL)
+                break;
+            current = current->right;
         }
     }
+
+    newNode->parent = current;
+    if (path[0] == 0)
+        current->left = newNode;
+    else
+        current->right = newNode;
+
+    heapifyUp(newNode);
+
+    // Free dynamically allocated memory
+    free(path);
 }
 
-// Search for a recipe by name 
-Recipe* searchRecipe(HashTable *table, const char *name) {
-    unsigned int index = hash(name);
-    Recipe *current = table->buckets[index];
-    while (current != NULL) {
-        if (strcmp(current->name, name) == 0) {
-            return current;
-        }
-        current = current->next;
-    }
-    return NULL;
+// Helper function to get the last node in the heap
+MinHeapNode *getLastNode(MinHeap *heap) {
+   if (heap->size == 0)
+      return NULL;
+
+   int path[32], level = 0;
+   int n = heap->size;
+
+   // Generate path to the last node
+   while (n > 1) {
+      path[level++] = n % 2;
+      n /= 2;
+   }
+
+   MinHeapNode *current = heap->root;
+   for (int i = level - 1; i >= 0; i--) {
+      if (path[i] == 0)
+         current = current->left;
+      else
+         current = current->right;
+   }
+
+   return current;
 }
 
-// Delete a recipe by name DONE
-void deleteRecipe(HashTable *table, const char *name) {
-    unsigned int index = hash(name);
-    Recipe *current = table->buckets[index];
-    Recipe *previous = NULL;
+// Function to extract the minimum element (root) from the heap
+int extractMin(MinHeap *heap) {
+   if (heap->size == 0) {
+      printf("Heap is empty\n");
+      return -1;
+   }
 
-    while (current != NULL) {
-        if (strcmp(current->name, name) == 0) {
-            if (previous == NULL) {
-                table->buckets[index] = current->next;
-            } else {
-                previous->next = current->next;
-            }
-            free(current);
-            printf("Recipe '%s' deleted.\n", name);
-            return;
-        }
-        previous = current;
-        current = current->next;
-    }
+   int min = heap->root->key;
 
-    printf("Recipe '%s' not found.\n", name);
+   if (heap->size == 1) {
+      free(heap->root);
+      heap->root = NULL;
+   } else {
+      MinHeapNode *lastNode = getLastNode(heap);
+
+      // Move last node's key to root
+      heap->root->key = lastNode->key;
+
+      // Detach the last node
+      if (lastNode->parent) {
+         if (lastNode->parent->right == lastNode)
+            lastNode->parent->right = NULL;
+         else
+            lastNode->parent->left = NULL;
+      }
+
+      free(lastNode);
+      heapifyDown(heap->root);
+   }
+
+   heap->size--;
+   return min;
 }
 
-// Free the hash table
-void freeHashTable(HashTable *table) {
-    for (int i = 0; i < TABLE_SIZE; i++) {
-        Recipe *current = table->buckets[i];
-        while (current != NULL) {
-            Recipe *toDelete = current;
-            current = current->next;
-            free(toDelete);
-        }
-    }
-    free(table);
+// Function to find the node with a given key (used for deletion)
+MinHeapNode *findNode(MinHeapNode *root, int key) {
+   if (root == NULL || root->key == key)
+      return root;
+
+   MinHeapNode *left = findNode(root->left, key);
+   if (left)
+      return left;
+
+   return findNode(root->right, key);
 }
 
+// Function to delete a key from the min-heap
+void deleteKey(MinHeap *heap, int key) {
+   MinHeapNode *nodeToDelete = findNode(heap->root, key);
+   if (nodeToDelete == NULL) {
+      printf("Key not found\n");
+      return;
+   }
+
+   if (heap->size == 1) {
+      free(heap->root);
+      heap->root = NULL;
+      heap->size--;
+      return;
+   }
+
+   MinHeapNode *lastNode = getLastNode(heap);
+
+   // Replace nodeToDelete's key with lastNode's key
+   nodeToDelete->key = lastNode->key;
+
+   // Detach the last node
+   if (lastNode->parent) {
+      if (lastNode->parent->right == lastNode)
+         lastNode->parent->right = NULL;
+      else
+         lastNode->parent->left = NULL;
+   }
+
+   free(lastNode);
+   heapifyDown(nodeToDelete);
+   heap->size--;
+}
+
+// Function to get the minimum element from the heap
+int getMin(MinHeap *heap) {
+   if (heap->size == 0) {
+      printf("Heap is empty\n");
+      return -1;
+   }
+   return heap->root->key;
+}
+
+// Function to free all nodes in the heap
+void freeHeap(MinHeapNode *node) {
+   if (node == NULL)
+      return;
+   freeHeap(node->left);
+   freeHeap(node->right);
+   free(node);
+}
+
+// Function to print the min-heap structure
+void printHeap(MinHeapNode *node, int depth) {
+   if (node == NULL)
+      return;
+
+   // Print right child
+   printHeap(node->right, depth + 1);
+
+   // Print current node
+   for (int i = 0; i < depth; i++)
+      printf("    ");
+   printf("%d\n", node->key);
+
+   // Print left child
+   printHeap(node->left, depth + 1);
+}
+
+// Main function to test the tree-based min-heap implementation
 int main() {
-    HashTable *cookbook = createHashTable();
+   MinHeap *heap = createMinHeap();
 
-    insertRecipe(cookbook, "Pancakes", "Flour, Eggs, Milk", "Mix and cook");
-    insertRecipe(cookbook, "Omelette", "Eggs, Salt", "Beat eggs, cook in pan");
+   // Insert 10 values into the heap
+   insertMinHeap(heap, 10);
+   insertMinHeap(heap, 4);
+   insertMinHeap(heap, 15);
+   insertMinHeap(heap, 20);
+   insertMinHeap(heap, 8);
+   insertMinHeap(heap, 12);
+   insertMinHeap(heap, 6);
+   insertMinHeap(heap, 3);
+   insertMinHeap(heap, 9);
+   insertMinHeap(heap, 2);
 
-    Recipe *r = searchRecipe(cookbook, "Pancakes");
-    if (r != NULL) {
-        printf("Found recipe for %s: %s\n", r->name, r->ingredients);
-    }
+   printf("Min-Heap after insertion:\n");
+   printHeap(heap->root, 0);
 
-    deleteRecipe(cookbook, "Omelette");
+   // Extract and print each value from the heap
+   printf("\nExtracting values from Min-Heap:\n");
+   while (heap->size > 0) {
+      int minValue = extractMin(heap);
+      printf("%d ", minValue);
+   }
+   printf("\n");
 
-    printHashTable(cookbook);
-    freeHashTable(cookbook);
+   // Free memory
+   freeHeap(heap->root);
+   free(heap);
 
-    return 0;
+   return 0;
 }

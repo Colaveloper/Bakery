@@ -1,21 +1,33 @@
-aggiunta
-aggiunta
-aggiunta
-ignorato
-aggiunta
-non presente
-rimossa
-
-
-COOKBOOK
-     torta	2147483647	0  zucchero:   20	      uova:   10	    farina:   50	
- ciambella	2147483647	0     burro:    2	      uova:    5	    farina:   20	
- miambella	2147483647	0     burro:    2	      uova:    5	    farina:   40	
+rifornito
+rifornito
+rifornito
 
 WAREHOUSE
-zucchero:	    0:	1
-cioccolato:	    0:	0
-burro:	    0:	2
-farina:	    0:	3
-uova:	    0:	3
-latte:	    0:	0
+zucchero:	tot:  145	usg:0 
+    20:20
+10:100
+    15:25
+
+burro:	tot:  115	usg:0 
+    20:15
+10:100
+
+cioccolato:	tot:  105	usg:0 
+    15:5
+10:100
+
+farina:	tot:  350	usg:0 
+    15:100
+10:100
+    13:50
+        15:100
+
+uova:	tot:  152	usg:0 
+    20:45
+10:100
+    15:7
+
+latte:	tot:  105	usg:0 
+    15:5
+10:100
+

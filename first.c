@@ -1,11 +1,11 @@
-// #include <math.h>
+#include <math.h>
 // #include <stddef.h>
 #include <stdint.h> // TODO delete in final production, used only in prints
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LEN 255
+#define MAX_LEN 255 // TODO understand if strcmp compares all 255 chars
 #define HASH_SIZE 3 // TODO be careful this is adequate, try 4096
 #define INFINITE 2147483647
 
@@ -13,12 +13,18 @@
 typedef struct Bunch {
    int expiration;
    int amount;
-   struct Bunch *nextBunch;
+   struct Bunch *left;
+   struct Bunch *right;
+   struct Bunch *parent;
 } Bunch;
+typedef struct BunchMinHeap {
+   Bunch *root;
+   int size;
+} BunchMinHeap;
 typedef struct Shelf {
    char name[MAX_LEN];
    int total;
-   Bunch *bunchList;
+   BunchMinHeap *bunchMinHeap;
    struct Shelf *nextShelf;
    int usage;
 } Shelf;
@@ -89,7 +95,7 @@ void printCookbook(Cookbook *cookbook) {
    for (int i = 0; i < HASH_SIZE; i++) {
       curRec = cookbook->buckets[i];
       while (curRec != NULL) {
-         printf("%10s\t%d\t%d", curRec->name, curRec->minUnbakeable, curRec->usage);
+         printf("%10s\t%d\t%d ", curRec->name, curRec->minUnbakeable, curRec->usage);
          Ingredient *curIng = curRec->ingredientList;
          while (curIng != NULL) {
             printf("%10s:%*d\t", curIng->shelf->name, 5, curIng->amount);
@@ -101,6 +107,22 @@ void printCookbook(Cookbook *cookbook) {
    }
 }
 
+void printBunchHeap(Bunch *node, int depth) {
+   if (node == NULL)
+      return;
+
+   // Print right child
+   printBunchHeap(node->right, depth + 1);
+
+   // Print current node
+   for (int i = 0; i < depth; i++)
+      printf("    ");
+   printf("%d:%d\n", node->expiration, node->amount);
+
+   // Print left child
+   printBunchHeap(node->left, depth + 1);
+}
+
 void printWarehouse(Warehouse *warehouse) {
 
    printf("\n");
@@ -108,678 +130,252 @@ void printWarehouse(Warehouse *warehouse) {
    for (int i = 0; i < HASH_SIZE; i++) {
       curShe = warehouse->buckets[i];
       while (curShe != NULL) {
-         printf("%s:\t%*d:\t%d", curShe->name, 5, curShe->total, curShe->usage);
-         Bunch *curBun = curShe->bunchList;
-         while (curBun != NULL) {
-            printf("%*d:%*d\t\t", 5, curBun->expiration, 5, curBun->amount);
-            curBun = curBun->nextBunch;
-         }
-         curShe = curShe->nextShelf;
+         printf("%s:\ttot:%*d\tusg:%d ", curShe->name, 5, curShe->total, curShe->usage);
          printf("\n");
+         printBunchHeap(curShe->bunchMinHeap->root, 0);
+         printf("\n");
+         curShe = curShe->nextShelf;
       }
    }
 }
 
-// void printOrderList(OrderList pendingOrders) {
-//    printf("\n");
-//    Order *cur = pendingOrders.head;
-//    while (cur != NULL) {
-//       printf("at %*d\t%10s:\t%*d\t tot:%*d", 5, cur->time, cur->name, 5, cur->amount, 5, cur->weight);
-//       cur = cur->nextOrder;
-//       printf("\n");
-//    }
-// }
+void printOrderList(OrderList pendingOrders) {
+   printf("\n");
+   Order *cur = pendingOrders.head;
+   while (cur != NULL) {
+      printf("at %*d\t%10s:\t%*d\t tot:%*d", 5, cur->time, cur->recipe->name, 5, cur->amount, 5, cur->weight);
+      cur = cur->nextOrder;
+      printf("\n");
+   }
+}
 
-Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
+void swapKeys(Bunch *a, Bunch *b) {
+   int temp = a->expiration;
+   a->expiration = b->expiration;
+   b->expiration = temp;
+   temp = a->amount;
+   a->amount = b->amount;
+   b->amount = temp;
+}
 
-   char name[MAX_LEN];
-   if (scanf("%s", name) == 0) {
-      printf("MUST HAVE A RECIPE TO ADD");
-      return cookbook;
+void heapifyUp(Bunch *node) {
+   while (node->parent && node->expiration < node->parent->expiration) {
+      swapKeys(node, node->parent);
+      node = node->parent;
+   }
+}
+
+BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
+   // LOWEST EXPIRATION ON ROOT
+
+   // Empty heap
+   if (heap->root == NULL) {
+      Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+      newBunch->expiration = key;
+      newBunch->amount = amount;
+      newBunch->left = NULL;
+      newBunch->right = NULL;
+      newBunch->parent = NULL;
+
+      heap->root = newBunch;
+      return heap;
    }
 
-   int i = hash(name);
-   Recipe *pre = NULL, *cur = cookbook->buckets[i];
-   Recipe *newRecipe;
-
-   if (cur == NULL) {
-
-      // the bucket was empty
-      newRecipe = (Recipe *)malloc(sizeof(Recipe));
-      strcpy(newRecipe->name, name);
-      newRecipe->nextRecipe = NULL;
-      cookbook->buckets[i] = newRecipe;
-
-   } else {
-
-      // searching for recipes with that name
-      while (cur != NULL) {
-
-         if (!strcmp(cur->name, name)) {
-
-            printf("ignorato\n");
-
-            // ignoring until EOL
-            char c = 'c';
-            while (c != '\n' && c != '\r' && c != EOF) {
-               c = getchar();
-               continue;
-            }
-
-            return cookbook;
-         }
-         pre = cur;
-         cur = cur->nextRecipe;
-      }
-
-      // creating at the end
-      newRecipe = (Recipe *)malloc(sizeof(Recipe));
-      strcpy(newRecipe->name, name);
-      newRecipe->nextRecipe = NULL;
-      pre->nextRecipe = newRecipe;
+   // looking for bunches with the same expiration
+   int depth = (int)log2(heap->size) + 1;
+   int *path = (int *)malloc(depth * sizeof(int));
+   int level = 0;
+   int n = heap->size;
+   while (n > 1) {
+      path[level++] = n % 2;
+      n /= 2;
    }
 
-   // now reading the ingredients
-   Ingredient *lastPair = NULL;
-   Ingredient *newIng;
-   char ingredient[MAX_LEN];
-   int amount;
-   Shelf *preShe, *curShe;
-
-   while (scanf("%s %d", ingredient, &amount)) {
-
-      newIng = (Ingredient *)malloc(sizeof(Ingredient));
-      newIng->amount = amount;
-
-      int j = hash(ingredient);
-      preShe = NULL;
-      curShe = warehouse->buckets[j];
-
-      // printf(" <curShe=%s> ", curShe->name);
-
-      // searching for ingredients to connect
-      if (curShe == NULL) {
-
-         // the bucket was empty
-         // creating a new empty shelf
-         curShe = (Shelf *)malloc(sizeof(Shelf));
-         strcpy(curShe->name, ingredient);
-         curShe->nextShelf = NULL;
-         curShe->total = 0;
-         curShe->usage = 1;
-         curShe->bunchList = NULL;
-
-         warehouse->buckets[j] = curShe;
-
+   Bunch *cur = heap->root;
+   for (int i = level - 1; i >= 0; i--) {
+      if (path[i] == 0) {
+         if (cur->left == NULL)
+            break;
+         cur = cur->left;
       } else {
+         if (cur->right == NULL)
+            break;
+         cur = cur->right;
+      }
+   }
 
-         // searching for ingredients with the same name
-         while (curShe != NULL) {
+   Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+   newBunch->expiration = key;
+   newBunch->amount = amount;
+   newBunch->left = NULL;
+   newBunch->right = NULL;
+   newBunch->parent = NULL;
+   newBunch->parent = cur;
+   if (path[0] == 0)
+      cur->left = newBunch;
+   else
+      cur->right = newBunch;
 
-            // printf(" <%s,%s> ", curShe->name, ingredient);
+   heap->size++; // TODO check if meaningful
 
-            if (!strcmp(curShe->name, ingredient)) {
+   heapifyUp(newBunch);
 
-               // the ingredient already exists in warehouse
-               curShe->usage++;
-               break;
-            } else {
-               preShe = curShe;
-               curShe = curShe->nextShelf;
-            }
-         }
+   // Free dynamically allocated memory
+   free(path);
 
-         if (curShe == NULL) {
-            // creating at the end
-            curShe = (Shelf *)malloc(sizeof(Shelf));
-            strcpy(curShe->name, ingredient);
-            curShe->nextShelf = NULL;
-            curShe->nextShelf = NULL;
-            curShe->total = 0;
-            curShe->usage = 1;
-            curShe->bunchList = NULL;
+   // if found
+   // cur->amount += amount;
+   // else create
+   return heap;
+}
 
-            if (preShe == NULL) {
-               warehouse->buckets[j] = curShe;
-            } else {
-               preShe->nextShelf = curShe;
-            }
+State newBatch(State state, Cookbook *cookbook, int time) {
+
+   int expiration, amount;
+   char name[MAX_LEN];
+
+   while (scanf("%s %d %d", name, &amount, &expiration)) {
+      int i = hash(name);
+      // printf(" <%s|%d>", name, i);
+      Shelf *pre = NULL;
+      Shelf *cur = state.warehouse->buckets[i];
+
+      // looking for an existing shelf with that name
+      while (cur != NULL) {
+         if (!strcmp(cur->name, name)) {
+            cur->bunchMinHeap = insertBunch(cur->bunchMinHeap, expiration, amount);
+            cur->total += amount;
+            break;
+         } else {
+            pre = cur;
+            cur = cur->nextShelf;
          }
       }
+      if (cur == NULL) {
 
-      // connecting the ingredient
-      newIng->shelf = curShe;
+         // creating new shelf with one bunch
+         Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
+         strcpy(newShelf->name, name);
+         newShelf->total = amount;
+         newShelf->nextShelf = NULL;
 
-      // pushing on top of ingredient list
-      newIng->nextIngredient = lastPair;
-      lastPair = newIng;
+         // creating heap in shelf
+         BunchMinHeap *heap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
+         heap->size = 1;
 
-      // check if cur is the last ingredient
+         newShelf->bunchMinHeap = heap;
+
+         // creating first bunch in heap root
+         Bunch *firstBunch = (Bunch *)malloc(sizeof(Bunch));
+         firstBunch->expiration = expiration;
+         firstBunch->amount = amount;
+
+         heap->root = firstBunch;
+
+         if (state.warehouse->buckets[i] == NULL) {
+            state.warehouse->buckets[i] = newShelf;
+         } else {
+            pre->nextShelf = newShelf;
+         }
+      }
       char c = getchar();
       if (c == '\n' || c == '\r' || c == EOF) {
          break;
       }
    }
 
-   // attaching ingredient list to recipe
-   newRecipe->ingredientList = lastPair;
+   // Warehouse *warehouse = state.warehouse;
+   // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
+   // printWarehouse(warehouse);
 
-   // we now assume the recipe not to be unbakeable
-   // TODO make this variable actually tell if recipe is bakeable
-   newRecipe->minUnbakeable = INFINITE;
+   int i;
+   // Order *prePen = NULL;
+   Order *curPen = state.pendingOrders.head;
+   // Order *preRea = NULL, *curRea;
+   // Order *nexPen; // TODO restore
+   Recipe *recipe;
 
-   printf("aggiunta\n");
-   return cookbook;
-}
-
-Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
-   char name[MAX_LEN];
-   if (scanf("%s", name) == 0) {
-      printf("MUST NAME A RECIPE TO REMOVE");
-   }
-
-   int i = hash(name);
-   Recipe *pre = NULL, *cur = cookbook->buckets[i];
-
-   // the bucket can't be empty
-   // searching for a recipe with that name
-   while (cur != NULL) {
-
-      if (!strcmp(cur->name, name)) {
-         // recipe recovered
-         break;
+   // any recipe isn't unbakeable
+   for (int i = 0; i < HASH_SIZE; i++) {
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         recipe->minUnbakeable = INFINITE;
+         recipe = recipe->nextRecipe;
       }
-      pre = cur;
-      cur = cur->nextRecipe;
    }
 
-   if (cur == NULL) {
+   while (curPen != NULL) {
 
-      // the recipe was already absent
-      printf("non presente\n");
-      return cookbook;
+      i = hash(curPen->recipe->name);
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         if (!strcmp(recipe->name, curPen->recipe->name)) {
+            break;
+         }
+         recipe = recipe->nextRecipe;
+      }
+      // recipe == NULL is impossible
+      // TODO RESTORE
+      //    state = tryBaking(curPen, recipe, state, time);
+      //    int baking = state.baking;
+      //    nexPen = curPen->nextOrder;
+      //    if (baking) {
+      //       printf(" transferring %d ", curPen->time);
+      //       removing curPen from pending
+      //       if (prePen == NULL) {
+      //          state.pendingOrders.head = curPen->nextOrder;
+      //          if (state.pendingOrders.head == NULL) {
+      //             state.pendingOrders.tail = NULL;
+      //          }
+      //       } else {
+      //          prePen->nextOrder = curPen->nextOrder;
+      //          if (state.pendingOrders.tail == curPen) {
+      //             state.pendingOrders.tail = prePen;
+      //          }
+      //       }
+      //       adding curPen in ready
+      //       curRea = state.readyOrders.head;
+      //       if (curRea == NULL) {
+      //          curPen->nextOrder = NULL;
+      //          state.readyOrders.head = curPen;
+      //          state.readyOrders.tail = curPen;
+      //       } else {
+      //          //
+      //          while (curRea != NULL) {
+      //             if (curRea->time > curPen->time) {
+      //                break;
+      //             }
+      //             preRea = curRea;
+      //             curRea = curRea->nextOrder;
+      //          }
+
+      //          curPen->nextOrder = curRea;
+
+      //          if (preRea == NULL) {
+      //             state.readyOrders.head = curPen;
+      //          } else {
+      //             preRea->nextOrder = curPen;
+      //          }
+
+      //          if (curRea == NULL) {
+      //             state.readyOrders.tail = curPen;
+      //          }
+      //          //
+      //       }
+      //       prePen unchanged
+
+      //       printf("\nPENDING ORDERS");
+      //       printOrderList(state.pendingOrders);
+      //       printf("\nREADY ORDERS");
+      //       printOrderList(state.readyOrders);
+      //    } else {
+      //       prePen = curPen;
+      //    }
+      //    curPen = nexPen;
    }
-
-   if (cur->usage) {
-
-      // there are orders using this recipe
-      printf("ordini in sospeso\n");
-      return cookbook;
-   }
-
-   // removing all ingredients
-   Ingredient *delIng;
-   while (cur->ingredientList != NULL) {
-      delIng = cur->ingredientList;
-      delIng->shelf->usage--;
-
-      // TODO removing unused empty shelves
-      // if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
-      // }
-
-      cur->ingredientList = cur->ingredientList->nextIngredient;
-   }
-
-   // removing recipe
-   if (pre == NULL) {
-
-      // removing the first
-      cookbook->buckets[i] = cur->nextRecipe;
-   } else {
-
-      // removing any other
-      pre->nextRecipe = cur->nextRecipe;
-   }
-
-   free(cur);
-   printf("rimossa\n");
-   return cookbook;
+   printf("rifornito\n");
+   return state;
 }
-
-// Bunch *newBunch(Bunch *bunch, int expiration, int amount) {
-//    // ASSUMING BUNCH IS NOT EMPTY
-//    // LOWEST EXPIRATION IN HEAD
-//    Bunch *pre = NULL, *cur = bunch;
-//    while (cur != NULL) {
-//       if (expiration == cur->expiration) { // can return
-//          cur->amount += amount;
-//          return bunch;
-//       } else if (expiration < cur->expiration) { // must add bunch before cur
-//          break;
-//       } else { // go on until cur is NULL, then add bunch before cur
-//          pre = cur;
-//          cur = cur->nextBunch;
-//       }
-//    }
-//
-//    Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
-//    newBunch->expiration = expiration;
-//    newBunch->amount = amount;
-//    newBunch->nextBunch = cur;
-//    if (pre == NULL) {
-//       bunch = newBunch;
-//    } else {
-//       pre->nextBunch = newBunch;
-//    }
-//
-//    return bunch;
-// }
-
-// OrderList appendOrder(Order *order, OrderList pendingOrders) {
-
-// if (pendingOrders.tail != NULL) {
-//    pendingOrders.tail->nextOrder = order;
-//    pendingOrders.tail = pendingOrders.tail->nextOrder;
-// } else {
-//    pendingOrders.head = order;
-//    pendingOrders.tail = order;
-// }
-// return pendingOrders;
-// }
-
-// State tryBaking(Order *order, Recipe *recipe, State state, int time) {
-//    // DOES NOT MODIFY PENDING LIST NOR READY LIST
-//    // ONLY MODIFIES WAREHOUSE AND STATE.BAKING
-//    // DOES NOT PRINT ANYTHING
-//
-//    // printf("trying to bake %s with:", order->name);
-//    // printWarehouse(state.warehouse);
-//    // printf("\nPENDING ORDERS");
-//    // printOrderList(state.pendingOrders);
-//    // printf("\nREADY ORDERS");
-//    // printOrderList(state.readyOrders);
-//    // printf(" %d", order->time);
-//
-//    if (recipe->minUnbakeable <= order->amount) {
-//       state.baking = 0;
-//       return state;
-//    }
-//
-//    int i;
-//
-//    // checking if baking is possible
-//    Bunch *delBun;
-//    Shelf *preShe, *curShe;
-//    Ingredient *curIng = recipe->ingredientList;
-//    while (curIng != NULL) {
-//       i = hash(curIng->name);
-//       curShe = state.warehouse->buckets[i];
-//       preShe = NULL;
-//       while (curShe != NULL) {
-//          if (curShe->bunchList->expiration <= time) {
-//             // removing expired
-//             while (curShe->bunchList != NULL) {
-//                if (curShe->bunchList->expiration <= time) {
-//                   delBun = curShe->bunchList;
-//                   curShe->bunchList = curShe->bunchList->nextBunch;
-//                   curShe->total -= delBun->amount;
-//                   free(delBun);
-//                } else {
-//                   break;
-//                }
-//             }
-//             if (curShe->bunchList == NULL) {
-//                // Removing entire shelf
-//                if (preShe == NULL) {
-//                   // First shelf
-//                   state.warehouse->buckets[i] = curShe->nextShelf;
-//                } else {
-//                   preShe->nextShelf = curShe->nextShelf;
-//                }
-//                // if we removed a necessary ingredient, we can't bake
-//                free(curShe);
-//                state.baking = 0;
-//                return state;
-//             }
-//          }
-//          if (!strcmp(curIng->name, curShe->name)) {
-//             if (curIng->amount * order->amount <= curShe->total) {
-//                break; // Enough curIng, check next ingredient
-//             }
-//             // printf("not enough %s to bake %s\n", curShe->name, order->name);
-//             state.baking = 0;
-//             return state;
-//          }
-//          preShe = curShe;
-//          curShe = curShe->nextShelf;
-//       }
-//       if (curShe == NULL) {
-//          // printf("%s not present at all to bake %s\n", curIng->name, order->name);
-//          // printf(" state.baking==%d ", state.baking);
-//          state.baking = 0;
-//          return state;
-//       }
-//       curIng = curIng->nextIngredient;
-//    }
-//
-//    // printf("(baking %s)\n", order->name);
-//    state.baking = 1; // ARRIVATI QUI
-//
-//    // printf("\nWAREHOUSE CLEANED");
-//    // printWarehouse(state.warehouse);
-//
-//    curIng = recipe->ingredientList;
-//    int required, weight = 0;
-//    while (curIng != NULL) { // TODO be sure you can always get in here the first time
-//       i = hash(curIng->name);
-//       curShe = state.warehouse->buckets[i];
-//       preShe = NULL;
-//       weight += curIng->amount * order->amount;
-//
-//       // this "while" should terminate only thorugh "break"
-//       // since it's guaranteed to have all the required ingredients
-//       while (curShe != NULL) {
-//          if (!strcmp(curIng->name, curShe->name)) {
-//             // Removing used ingredients
-//             required = curIng->amount * order->amount;
-//             while (required != 0) {
-//                if (curShe->bunchList->amount <= required) {
-//                   required -= curShe->bunchList->amount;
-//                   curShe->total -= curShe->bunchList->amount;
-//                   ////
-//                   delBun = curShe->bunchList;
-//                   curShe->bunchList = curShe->bunchList->nextBunch;
-//                   free(delBun);
-//                   // curShe->bunchList can become NULL
-//                   // but we don't want empty shelves
-//                   if (curShe->bunchList == NULL) {
-//                      // Removing entire shelf
-//                      if (preShe == NULL) {
-//                         // First shelf
-//                         state.warehouse->buckets[i] = curShe->nextShelf;
-//                         // DANGER
-//                      } else {
-//                         preShe->nextShelf = curShe->nextShelf;
-//                      }
-//                      free(curShe);
-//                      break;
-//                   }
-//                } else {
-//                   curShe->bunchList->amount -= required;
-//                   curShe->total -= required;
-//                   // required = 0; useless
-//                   break;
-//                }
-//             }
-//             break;
-//          }
-//          preShe = curShe;
-//          curShe = curShe->nextShelf;
-//       }
-//       ////
-//       curIng = curIng->nextIngredient;
-//    }
-//
-//    order->weight = weight;
-//
-//    return state;
-// };
-
-// State newBatch(State state, Cookbook *cookbook, int time) {
-//
-// int expiration, amount;
-// char name[MAX_LEN];
-//
-// while (scanf("%s %d %d", name, &amount, &expiration)) {
-//    int i = hash(name);
-//    // printf(" <%s|%d>", name, i);
-//    Shelf *pre = NULL;
-//    Shelf *cur = state.warehouse->buckets[i];
-//    while (cur != NULL) {
-//       if (!strcmp(cur->name, name)) {
-//          cur->bunchList = newBunch(cur->bunchList, expiration, amount);
-//          cur->total += amount;
-//          break;
-//       } else {
-//          pre = cur;
-//          cur = cur->nextShelf;
-//       }
-//    }
-//    if (cur == NULL) {
-//       Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
-//       strcpy(newShelf->name, name);
-//       newShelf->total = amount;
-//       newShelf->nextShelf = NULL;
-//       Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
-//       newShelf->bunchList = newBunch;
-//       newShelf->bunchList->expiration = expiration;
-//       newShelf->bunchList->amount = amount;
-//       newShelf->bunchList->nextBunch = NULL;
-//       if (state.warehouse->buckets[i] == NULL) {
-//          state.warehouse->buckets[i] = newShelf;
-//       } else {
-//          pre->nextShelf = newShelf;
-//       }
-//    }
-//    char c = getchar();
-//    if (c == '\n' || c == '\r' || c == EOF) {
-//       break;
-//    }
-// }
-//
-// // Warehouse *warehouse = state.warehouse;
-// // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
-// // printWarehouse(warehouse);
-//
-// int i;
-// Order *prePen = NULL, *curPen = state.pendingOrders.head;
-// Order *preRea = NULL, *curRea;
-// Order *nexPen;
-// Recipe *recipe;
-//
-// // any recipe isn't unbakeable
-// for (int i = 0; i < HASH_SIZE; i++) {
-//    recipe = cookbook->buckets[i];
-//    while (recipe != NULL) {
-//       recipe->minUnbakeable = INFINITE;
-//       recipe = recipe->nextRecipe;
-//    }
-// }
-//
-// while (curPen != NULL) {
-//
-//    i = hash(curPen->name);
-//    recipe = cookbook->buckets[i];
-//    while (recipe != NULL) {
-//       if (!strcmp(recipe->name, curPen->name)) {
-//          break;
-//       }
-//       recipe = recipe->nextRecipe;
-//    }
-//    // recipe == NULL is impossible
-//    state = tryBaking(curPen, recipe, state, time);
-//    int baking = state.baking;
-//    nexPen = curPen->nextOrder;
-//    if (baking) {
-//       // printf(" transferring %d ", curPen->time);
-//       // removing curPen from pending
-//       if (prePen == NULL) {
-//          state.pendingOrders.head = curPen->nextOrder;
-//          if (state.pendingOrders.head == NULL) {
-//             state.pendingOrders.tail = NULL;
-//          }
-//       } else {
-//          prePen->nextOrder = curPen->nextOrder;
-//          if (state.pendingOrders.tail == curPen) {
-//             state.pendingOrders.tail = prePen;
-//          }
-//       }
-//       // adding curPen in ready
-//       curRea = state.readyOrders.head;
-//       if (curRea == NULL) {
-//          curPen->nextOrder = NULL;
-//          state.readyOrders.head = curPen;
-//          state.readyOrders.tail = curPen;
-//       } else {
-//          ////
-//          while (curRea != NULL) {
-//             if (curRea->time > curPen->time) {
-//                break;
-//             }
-//             preRea = curRea;
-//             curRea = curRea->nextOrder;
-//          }
-//
-//          curPen->nextOrder = curRea;
-//
-//          if (preRea == NULL) {
-//             state.readyOrders.head = curPen;
-//          } else {
-//             preRea->nextOrder = curPen;
-//          }
-//
-//          if (curRea == NULL) {
-//             state.readyOrders.tail = curPen;
-//          }
-//          ////
-//       }
-//       // prePen unchanged
-//
-//       // printf("\nPENDING ORDERS");
-//       // printOrderList(state.pendingOrders);
-//       // printf("\nREADY ORDERS");
-//       // printOrderList(state.readyOrders);
-//    } else {
-//       prePen = curPen;
-//    }
-//    curPen = nexPen;
-// }
-//
-// printf("rifornito\n");
-// return state;
-// }
-
-// State newOrder(Cookbook *cookbook, State state, int time) {
-
-// Order *newOrder = (Order *)malloc(sizeof(Order));
-
-// if (scanf("%s %d", newOrder->name, &newOrder->amount) == 0) {
-//    printf("EXPECTED ORDER NAME AND AMOUNT");
-//    return state;
-// }
-
-// newOrder->nextOrder = NULL;
-// newOrder->time = time;
-// newOrder->weight = -1;
-// int i = hash(newOrder->name);
-// Recipe *recipe = cookbook->buckets[i];
-
-// while (recipe != NULL) {
-//    if (!strcmp(recipe->name, newOrder->name)) {
-//       break;
-//    }
-//    recipe = recipe->nextRecipe;
-// }
-// if (recipe == NULL) {
-//    state.baking = -1;
-// } else if (recipe->minUnbakeable <= newOrder->amount) {
-//    state.baking = 0;
-// } else {
-//    printf("Receiving order of %s; ", newOrder->name);
-//    state = tryBaking(newOrder, recipe, state, time);
-// }
-
-// int baking = state.baking;
-// printf(" state.baking==%d ", baking);
-
-// switch (baking) {
-// case -1:
-//    printf("rifiutato\n");
-//    free(newOrder);
-//    break;
-// case 0: // baking newOrder in the future
-//    printf("accettato\n");
-//    if (recipe->minUnbakeable > newOrder->amount) {
-//       recipe->minUnbakeable = newOrder->amount;
-//    }
-//    state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
-//    break;
-// case 1: // baked immediately!
-//    printf("accettato\n");
-//    if (state.readyOrders.tail == NULL) {
-//       state.readyOrders.head = newOrder;
-//       state.readyOrders.tail = newOrder;
-//    } else {
-//       newOrder has the least priority
-//       state.readyOrders.tail->nextOrder = newOrder;
-//       state.readyOrders.tail = newOrder;
-//    }
-//    break;
-// default:
-//    printf("UNKNOWN BAKING CODE");
-//    break;
-// }
-
-// printf("\nPENDING ORDERS");
-// printOrderList(state.pendingOrders);
-// printf("\nREADY ORDERS");
-// printOrderList(state.readyOrders);
-// printCookbook(cookbook);
-
-// return state;
-// }
-
-// State loadOrders(State state, int payloadLeft) {
-//    // printf("\n");
-//    // printf("\nWAREHOUSE");
-//    // printWarehouse(state.warehouse);
-//    // printf("\nPENDING ORDERS");
-//    // printOrderList(state.pendingOrders);
-//    // printf("\nREADY ORDERS");
-//    // printOrderList(state.readyOrders);
-//    if (state.readyOrders.head == NULL) {
-//       printf("camioncino vuoto\n");
-//    } else {
-//       Order *loadingOrders = NULL, *curLoa, *preLoa, *delOrd;
-//       Order *curRea = state.readyOrders.head;
-//       while (curRea != NULL) {
-//          // loading the van with ready orders by weight, by date
-//          payloadLeft -= state.readyOrders.head->weight;
-//          if (payloadLeft < 0) {
-//             break;
-//          }
-//          state.readyOrders.head = state.readyOrders.head->nextOrder;
-//          curLoa = loadingOrders;
-//          preLoa = NULL;
-//          while (curLoa != NULL) {
-//             if (curRea->weight > curLoa->weight) {
-//                break;
-//             } else if (curRea->weight == curLoa->weight) {
-//                if (curRea->time < curLoa->time) {
-//                   break;
-//                }
-//             }
-//             preLoa = curLoa;
-//             curLoa = curLoa->nextOrder;
-//          }
-//          if (preLoa == NULL) {
-//             curRea->nextOrder = curLoa;
-//             loadingOrders = curRea;
-//          } else {
-//             preLoa->nextOrder = curRea;
-//             curRea->nextOrder = curLoa;
-//          }
-//          curRea = state.readyOrders.head;
-//       }
-//       if (curRea == NULL) {
-//          state.readyOrders.tail = NULL;
-//       }
-//       while (loadingOrders != NULL) {
-//          printf("%d %s %d\n", loadingOrders->time, loadingOrders->name, loadingOrders->amount);
-//          delOrd = loadingOrders;
-//          loadingOrders = loadingOrders->nextOrder;
-//          free(delOrd);
-//       }
-//    }
-//    // printf("\n");
-//    // printf("\nWAREHOUSE");
-//    // printWarehouse(state.warehouse);
-//    // printf("\nPENDING ORDERS");
-//    // printOrderList(state.pendingOrders);
-//    // printf("\nREADY ORDERS");
-//    // printOrderList(state.readyOrders);
-//    return state;
-// }
 
 int main() {
 
@@ -805,27 +401,26 @@ int main() {
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
-         // printf("[newRecipe at %d] ", time);
-         cookbook = newRecipe(cookbook, state.warehouse);
+         printf("[newRecipe at %d] ", time);
+         // cookbook = newRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rimuovi_ricetta")) {
-         // printf("[removeRecipe] ");
-         cookbook = removeRecipe(cookbook, state.warehouse);
+         printf("[removeRecipe] ");
+         // cookbook = removeRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rifornimento")) {
-         printf("[newBatch] ");
-         // state = newBatch(state, cookbook, time);
+         // printf("[newBatch] ");
+         state = newBatch(state, cookbook, time);
 
       } else if (!strcmp(command, "ordine")) {
          printf("[newOrder] ");
          // state = newOrder(cookbook, state, time);
 
       } else {
-         printf("ERROR: UNKNOWN COMMAND");
+         printf("ERROR: UNKNOWN COMMAND %s", command);
       }
 
       // // printf(" <%s> ", command);
-      // printf("at [%d] ", time);
       // // printf("'%s'", state.warehouse->buckets[3]->name);
       // printf("\nCOOKBOOK");
       // printCookbook(cookbook);
@@ -834,19 +429,21 @@ int main() {
       // printf("\nPENDING ORDERS");
       // printOrderList(state.pendingOrders);
       // // if (state.pendingOrders.tail)
-      // //    printf("tail: %d", state.pendingOrders.tail->time);
+      // //    printf(" pending tail: %d ", state.pendingOrders.tail->time);
       // printf("\nREADY ORDERS");
       // printOrderList(state.readyOrders);
       // // if (state.readyOrders.tail)
-      // // printf("tail: %d", state.readyOrders.tail->time);
-      time++;
+      // // printf(" ready tail: %d ", state.readyOrders.tail->time);
+      // printf("\n\n");
+      // time++;
+      // printf("It's [%d]\n", time);
    }
    if (time && time % courierPeriod == 0) {
       // state = loadOrders(state, maxPayload);
    }
-   printf("\n");
-   printf("\nCOOKBOOK");
-   printCookbook(cookbook);
+   // printf("\n");
+   // printf("\nCOOKBOOK");
+   // printCookbook(cookbook);
    printf("\nWAREHOUSE");
    printWarehouse(state.warehouse);
    // printf("\nPENDING ORDERS");
