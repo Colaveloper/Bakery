@@ -95,7 +95,7 @@ void printCookbook(Cookbook *cookbook) {
    for (int i = 0; i < HASH_SIZE; i++) {
       curRec = cookbook->buckets[i];
       while (curRec != NULL) {
-         printf("%10s\t%d\t%d ", curRec->name, curRec->minUnbakeable, curRec->usage);
+         printf("%10s\tmun:%d\tusg:%d ", curRec->name, curRec->minUnbakeable, curRec->usage);
          Ingredient *curIng = curRec->ingredientList;
          while (curIng != NULL) {
             printf("%10s:%*d\t", curIng->shelf->name, 5, curIng->amount);
@@ -165,23 +165,64 @@ void heapifyUp(Bunch *node) {
    }
 }
 
+void heapifyDown(Bunch *node) {
+   Bunch *smallest = node;
+
+   if (node->left && node->left->expiration < smallest->expiration)
+      smallest = node->left;
+
+   if (node->right && node->right->expiration < smallest->expiration)
+      smallest = node->right;
+
+   if (smallest != node) {
+      swapKeys(node, smallest);
+      heapifyDown(smallest);
+   }
+}
+
+Bunch *getLastNode(BunchMinHeap *heap) {
+   if (heap->size == 0)
+      return NULL;
+
+   int path[32], level = 0;
+   int n = heap->size;
+
+   // Generate path to the last node
+   while (n > 1) {
+      path[level++] = n % 2;
+      n /= 2;
+   }
+
+   Bunch *current = heap->root;
+   for (int i = level - 1; i >= 0; i--) {
+      if (path[i] == 0)
+         current = current->left;
+      else
+         current = current->right;
+   }
+
+   return current;
+}
+
 BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
    // LOWEST EXPIRATION ON ROOT
 
-   // Empty heap
-   if (heap->root == NULL) {
-      Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
-      newBunch->expiration = key;
-      newBunch->amount = amount;
-      newBunch->left = NULL;
-      newBunch->right = NULL;
-      newBunch->parent = NULL;
+   Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
+   Bunch *cur = heap->root;
+   newBunch->expiration = key;
+   newBunch->amount = amount;
+   newBunch->left = NULL;
+   newBunch->right = NULL;
+   newBunch->parent = cur;
 
+   // empty heap
+   if (heap->root == NULL) {
+      newBunch->parent = NULL;
       heap->root = newBunch;
+      heap->size++;
       return heap;
    }
 
-   // looking for bunches with the same expiration
    int depth = (int)log2(heap->size) + 1;
    int *path = (int *)malloc(depth * sizeof(int));
    int level = 0;
@@ -191,7 +232,6 @@ BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
       n /= 2;
    }
 
-   Bunch *cur = heap->root;
    for (int i = level - 1; i >= 0; i--) {
       if (path[i] == 0) {
          if (cur->left == NULL)
@@ -204,13 +244,6 @@ BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
       }
    }
 
-   Bunch *newBunch = (Bunch *)malloc(sizeof(Bunch));
-   newBunch->expiration = key;
-   newBunch->amount = amount;
-   newBunch->left = NULL;
-   newBunch->right = NULL;
-   newBunch->parent = NULL;
-   newBunch->parent = cur;
    if (path[0] == 0)
       cur->left = newBunch;
    else
@@ -229,6 +262,37 @@ BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
    return heap;
 }
 
+BunchMinHeap *extractBunch(BunchMinHeap *heap) {
+   // used only when the required amount is more than stored in the root
+   // only handles repositioning
+   // Bunch* min = heap->root; // TODO use
+
+   if (heap->size == 1) {
+      free(heap->root);
+      heap->root = NULL;
+   } else {
+      Bunch *lastNode = getLastNode(heap);
+
+      // Move last node's key to root
+      heap->root->amount = lastNode->amount;
+      heap->root->expiration = lastNode->expiration;
+
+      // Detach the last node
+      if (lastNode->parent) {
+         if (lastNode->parent->right == lastNode)
+            lastNode->parent->right = NULL;
+         else
+            lastNode->parent->left = NULL;
+      }
+
+      free(lastNode);
+      heapifyDown(heap->root);
+
+      // TODO handle empty tree
+   }
+   return heap;
+}
+
 State newBatch(State state, Cookbook *cookbook, int time) {
 
    int expiration, amount;
@@ -243,6 +307,10 @@ State newBatch(State state, Cookbook *cookbook, int time) {
       // looking for an existing shelf with that name
       while (cur != NULL) {
          if (!strcmp(cur->name, name)) {
+            // TODO !!! if bunchMinHeap is null create one
+            if (cur->bunchMinHeap == NULL) {
+               cur->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
+            }
             cur->bunchMinHeap = insertBunch(cur->bunchMinHeap, expiration, amount);
             cur->total += amount;
             break;
@@ -377,6 +445,211 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    return state;
 }
 
+Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
+
+   char name[MAX_LEN];
+   if (scanf("%s", name) == 0) {
+      printf("MUST HAVE A RECIPE TO ADD");
+      return cookbook;
+   }
+
+   int i = hash(name);
+   Recipe *pre = NULL, *cur = cookbook->buckets[i];
+   Recipe *newRecipe;
+
+   if (cur == NULL) {
+
+      // the bucket was empty
+      newRecipe = (Recipe *)malloc(sizeof(Recipe));
+      strcpy(newRecipe->name, name);
+      newRecipe->nextRecipe = NULL;
+      cookbook->buckets[i] = newRecipe;
+
+   } else {
+
+      // searching for recipes with that name
+      while (cur != NULL) {
+
+         if (!strcmp(cur->name, name)) {
+
+            printf("ignorato\n");
+
+            // ignoring until EOL
+            char c = 'c';
+            while (c != '\n' && c != '\r' && c != EOF) {
+               c = getchar();
+               continue;
+            }
+
+            return cookbook;
+         }
+         pre = cur;
+         cur = cur->nextRecipe;
+      }
+
+      // creating at the end
+      newRecipe = (Recipe *)malloc(sizeof(Recipe));
+      strcpy(newRecipe->name, name);
+      newRecipe->nextRecipe = NULL;
+      pre->nextRecipe = newRecipe;
+   }
+
+   // now reading the ingredients
+   Ingredient *lastPair = NULL;
+   Ingredient *newIng;
+   char ingredient[MAX_LEN];
+   int amount;
+   Shelf *preShe, *curShe;
+
+   while (scanf("%s %d", ingredient, &amount)) {
+
+      newIng = (Ingredient *)malloc(sizeof(Ingredient));
+      newIng->amount = amount;
+
+      int j = hash(ingredient);
+      preShe = NULL;
+      curShe = warehouse->buckets[j];
+
+      // printf(" <curShe=%s> ", curShe->name);
+
+      // searching for ingredients to connect
+      if (curShe == NULL) {
+
+         // the bucket was empty
+         // creating a new empty shelf
+         curShe = (Shelf *)malloc(sizeof(Shelf));
+         strcpy(curShe->name, ingredient);
+         curShe->nextShelf = NULL;
+         curShe->total = 0;
+         curShe->usage = 1;
+         curShe->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
+         warehouse->buckets[j] = curShe;
+
+      } else {
+
+         // searching for ingredients with the same name
+         while (curShe != NULL) {
+
+            // printf(" <%s,%s> ", curShe->name, ingredient);
+
+            if (!strcmp(curShe->name, ingredient)) {
+
+               // the ingredient already exists in warehouse
+               curShe->usage++;
+               break;
+            } else {
+               preShe = curShe;
+               curShe = curShe->nextShelf;
+            }
+         }
+
+         if (curShe == NULL) {
+            // creating at the end
+            curShe = (Shelf *)malloc(sizeof(Shelf));
+            strcpy(curShe->name, ingredient);
+            curShe->nextShelf = NULL;
+            curShe->nextShelf = NULL;
+            curShe->total = 0;
+            curShe->usage = 1;
+            curShe->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
+
+            if (preShe == NULL) {
+               warehouse->buckets[j] = curShe;
+            } else {
+               preShe->nextShelf = curShe;
+            }
+         }
+      }
+
+      // connecting the ingredient
+      newIng->shelf = curShe;
+
+      // pushing on top of ingredient list
+      newIng->nextIngredient = lastPair;
+      lastPair = newIng;
+
+      // check if cur is the last ingredient
+      char c = getchar();
+      if (c == '\n' || c == '\r' || c == EOF) {
+         break;
+      }
+   }
+
+   // attaching ingredient list to recipe
+   newRecipe->ingredientList = lastPair;
+
+   // we now assume the recipe not to be unbakeable
+   // TODO make this variable actually tell if recipe is bakeable
+   newRecipe->minUnbakeable = INFINITE;
+
+   printf("aggiunta\n");
+   return cookbook;
+}
+
+Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
+   char name[MAX_LEN];
+   if (scanf("%s", name) == 0) {
+      printf("MUST NAME A RECIPE TO REMOVE");
+   }
+
+   int i = hash(name);
+   Recipe *pre = NULL, *cur = cookbook->buckets[i];
+
+   // the bucket can't be empty
+   // searching for a recipe with that name
+   while (cur != NULL) {
+
+      if (!strcmp(cur->name, name)) {
+         // recipe recovered
+         break;
+      }
+      pre = cur;
+      cur = cur->nextRecipe;
+   }
+
+   if (cur == NULL) {
+
+      // the recipe was already absent
+      printf("non presente\n");
+      return cookbook;
+   }
+
+   if (cur->usage) {
+
+      // there are orders using this recipe
+      printf("ordini in sospeso\n");
+      return cookbook;
+   }
+
+   // removing all ingredients
+   Ingredient *delIng;
+   while (cur->ingredientList != NULL) {
+      delIng = cur->ingredientList;
+      delIng->shelf->usage--;
+
+      // TODO removing unused empty shelves
+      // if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
+      // }
+
+      cur->ingredientList = cur->ingredientList->nextIngredient;
+   }
+
+   // removing recipe
+   if (pre == NULL) {
+
+      // removing the first
+      cookbook->buckets[i] = cur->nextRecipe;
+   } else {
+
+      // removing any other
+      pre->nextRecipe = cur->nextRecipe;
+   }
+
+   free(cur);
+   printf("rimossa\n");
+   return cookbook;
+}
+
 int main() {
 
    int courierPeriod, maxPayload, time = 0;
@@ -401,12 +674,12 @@ int main() {
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
-         printf("[newRecipe at %d] ", time);
-         // cookbook = newRecipe(cookbook, state.warehouse);
+         // printf("[newRecipe at %d] ", time);
+         cookbook = newRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rimuovi_ricetta")) {
-         printf("[removeRecipe] ");
-         // cookbook = removeRecipe(cookbook, state.warehouse);
+         // printf("[removeRecipe] ");
+         cookbook = removeRecipe(cookbook, state.warehouse);
 
       } else if (!strcmp(command, "rifornimento")) {
          // printf("[newBatch] ");
@@ -442,8 +715,8 @@ int main() {
       // state = loadOrders(state, maxPayload);
    }
    // printf("\n");
-   // printf("\nCOOKBOOK");
-   // printCookbook(cookbook);
+   printf("\nCOOKBOOK");
+   printCookbook(cookbook);
    printf("\nWAREHOUSE");
    printWarehouse(state.warehouse);
    // printf("\nPENDING ORDERS");

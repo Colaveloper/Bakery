@@ -1,14 +1,22 @@
+aggiunta
+aggiunta
+aggiunta
 rifornito
 rifornito
 rifornito
+rimossa
+
+COOKBOOK
+     torta	mun:2147483647	usg:0   zucchero:   20	      uova:   10	    farina:   50	
+ ciambella	mun:2147483647	usg:0      burro:    2	      uova:    5	    farina:   20	
 
 WAREHOUSE
-zucchero:	tot:  145	usg:0 
+zucchero:	tot:  145	usg:1 
     20:20
 10:100
     15:25
 
-burro:	tot:  115	usg:0 
+burro:	tot:  115	usg:1 
     20:15
 10:100
 
@@ -16,13 +24,13 @@ cioccolato:	tot:  105	usg:0
     15:5
 10:100
 
-farina:	tot:  350	usg:0 
+farina:	tot:  350	usg:2 
     15:100
 10:100
-    13:50
-        15:100
+    15:100
+        13:50
 
-uova:	tot:  152	usg:0 
+uova:	tot:  152	usg:2 
     20:45
 10:100
     15:7

@@ -1,6 +1,6 @@
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 
 // Node structure for the tree-based min-heap
 typedef struct MinHeapNode {
@@ -57,52 +57,51 @@ void heapifyDown(MinHeapNode *node) {
 
 // Function to heapify up after insertion
 
-
 // Function to insert a new key into the min-heap
-void insertMinHeap(MinHeap* heap, int key) {
-    MinHeapNode* newNode = newMinHeapNode(key);
-    heap->size++;
+void insertMinHeap(MinHeap *heap, int key) {
+   MinHeapNode *newNode = newMinHeapNode(key);
+   heap->size++;
 
-    if (heap->root == NULL) {
-        heap->root = newNode;
-        return;
-    }
+   if (heap->root == NULL) {
+      heap->root = newNode;
+      return;
+   }
 
-    // Dynamic path allocation
-    int depth = (int)log2(heap->size) + 1;
-    int* path = (int*)malloc(depth * sizeof(int));
-    int level = 0;
-    int n = heap->size;
+   // Dynamic path allocation
+   int depth = (int)log2(heap->size) + 1;
+   int *path = (int *)malloc(depth * sizeof(int));
+   int level = 0;
+   int n = heap->size;
 
-    // Generate path to the new node
-    while (n > 1) {
-        path[level++] = n % 2;
-        n /= 2;
-    }
+   // Generate path to the new node
+   while (n > 1) {
+      path[level++] = n % 2;
+      n /= 2;
+   }
 
-    MinHeapNode* current = heap->root;
-    for (int i = level - 1; i >= 0; i--) {
-        if (path[i] == 0) {
-            if (current->left == NULL)
-                break;
-            current = current->left;
-        } else {
-            if (current->right == NULL)
-                break;
-            current = current->right;
-        }
-    }
+   MinHeapNode *current = heap->root;
+   for (int i = level - 1; i >= 0; i--) {
+      if (path[i] == 0) {
+         if (current->left == NULL)
+            break;
+         current = current->left;
+      } else {
+         if (current->right == NULL)
+            break;
+         current = current->right;
+      }
+   }
 
-    newNode->parent = current;
-    if (path[0] == 0)
-        current->left = newNode;
-    else
-        current->right = newNode;
+   newNode->parent = current;
+   if (path[0] == 0)
+      current->left = newNode;
+   else
+      current->right = newNode;
 
-    heapifyUp(newNode);
+   heapifyUp(newNode);
 
-    // Free dynamically allocated memory
-    free(path);
+   // Free dynamically allocated memory
+   free(path);
 }
 
 // Helper function to get the last node in the heap
