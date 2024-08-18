@@ -1,60 +1,291 @@
 aggiunta
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+rifiutato
+accettato
+accettato
+accettato
+rifornito
+1 k91ztT0f80YkrVS 6
+3 k91ztT0f80YkrVS 5
+4 k91ztT0f80YkrVS 4
+accettato
+accettato
 aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+ignorato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
 aggiunta
+accettato
+6 k91ztT0f80YkrVS 6
+5 k91ztT0f80YkrVS 4
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+rifornito
+accettato
+8 k91ztT0f80YkrVS 10
+accettato
+accettato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+accettato
+10 k91ztT0f80YkrVS 9
+11 k91ztT0f80YkrVS 3
+aggiunta
+ignorato
+rimossa
 non presente
 rifornito
-camioncino vuoto
 accettato
+accettato
+rifiutato
+accettato
+accettato
+rifornito
+rifornito
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+accettato
+rifiutato
+12 k91ztT0f80YkrVS 9
+23 Kj8cfb01WZAyPsH9Adt8_RLR 4
+17 k91ztT0f80YkrVS 2
+accettato
+aggiunta
+accettato
+accettato
+rifiutato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+ignorato
+accettato
+non presente
+accettato
+24 Kj8cfb01WZAyPsH9Adt8_RLR 13
+rifiutato
+ignorato
+accettato
+accettato
+accettato
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+ignorato
+accettato
+aggiunta
+accettato
+25 k91ztT0f80YkrVS 9
+26 Kj8cfb01WZAyPsH9Adt8_RLR 5
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+ordini in sospeso
+accettato
+accettato
+aggiunta
+accettato
+aggiunta
+21 k91ztT0f80YkrVS 12
+aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+27 Kj8cfb01WZAyPsH9Adt8_RLR 11
+33 Kj8cfb01WZAyPsH9Adt8_RLR 7
 accettato
 ordini in sospeso
 aggiunta
 accettato
-9 ciambella 3
-6 profiterole 3
+accettato
+accettato
+ordini in sospeso
+accettato
 accettato
 rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+37 Kj8cfb01WZAyPsH9Adt8_RLR 15
+accettato
 rifornito
 accettato
-
-
-COOKBOOK
-profiterole	mun:2147483647	usg:0 cioccolato:    4	  zucchero:    3	     latte:    3	      uova:    2	    farina:   10	
-     torta	mun:1	usg:2   zucchero:   20	      uova:   10	    farina:   50	
- ciambella	mun:6	usg:1      burro:    2	      uova:    5	    farina:   20	
-pane_dolce	mun:2147483647	usg:0       uova:    1	  zucchero:    1	    farina:    1	
-
-WAREHOUSE
-zucchero:	tot:   45	usg:3 
-    20:20
-15:25
-
-burro:	tot:  109	usg:1 
-10:94
-    20:15
-
-cioccolato:	tot:   93	usg:1 
-10:88
-    15:5
-
-farina:	tot:  260	usg:4 
-    13:50
-10:10
-    15:100
-        15:100
-
-uova:	tot:  131	usg:4 
-    15:7
-10:79
-    20:45
-
-latte:	tot:   96	usg:1 
-10:91
-    15:5
-
-
-PENDING ORDERS
-at     5	 ciambella:	    6	 tot:   -1
-at    10	     torta:	    1	 tot:   -1
-at    13	     torta:	    1	 tot:   -1
-
-READY ORDERS
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+accettato
+ordini in sospeso
+accettato
+accettato
+accettato
+accettato
+accettato
+ordini in sospeso
+13 k91ztT0f80YkrVS 15
+accettato
+accettato
+accettato
+accettato
+aggiunta
+accettato
+accettato
+ordini in sospeso
+accettato
+rifornito
+aggiunta
+aggiunta
+accettato
+rifornito
+accettato
+ordini in sospeso
+rifiutato
+accettato
+accettato
+accettato
+30 k91ztT0f80YkrVS 7
+ordini in sospeso
+ordini in sospeso
+accettato
+accettato
+aggiunta
+accettato
+accettato
+accettato
+accettato
+rifornito
+aggiunta
+accettato
+aggiunta
+rifornito
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+39 Kj8cfb01WZAyPsH9Adt8_RLR 15
+accettato
+accettato
+accettato
+accettato
+accettato
+accettato
+rifiutato
+accettato
+accettato
+aggiunta

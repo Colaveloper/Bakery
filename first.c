@@ -191,7 +191,8 @@ Bunch *getLastNode(BunchMinHeap *heap) {
 
    // Generate path to the last node
    while (n > 1) {
-      path[level++] = n % 2;
+      path[level] = n % 2;
+      level++;
       n /= 2;
    }
 
@@ -551,6 +552,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                if (curShe->bunchMinHeap->root->expiration <= time) {
                   curShe->total -= curShe->bunchMinHeap->root->amount;
                   curShe->bunchMinHeap = deleteMinBunch(curShe->bunchMinHeap);
+                  curShe->bunchMinHeap->size--;
                } else {
                   break;
                }
@@ -615,6 +617,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                   required -= curShe->bunchMinHeap->root->amount;
                   curShe->total -= curShe->bunchMinHeap->root->amount;
                   curShe->bunchMinHeap = deleteMinBunch(curShe->bunchMinHeap);
+                  curShe->bunchMinHeap->size--;
                   // curShe->bunchList can become NULL
                   // but we don't want empty shelves
                   // if (curShe->bunchMinHeap->root == NULL) {
@@ -794,89 +797,89 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
    // printWarehouse(warehouse);
 
-   // int i;
-   // Order *prePen = NULL;
-   // Order *curPen = state.pendingOrders.head;
-   // Order *preRea = NULL, *curRea;
-   // Order *nexPen; // TODO restore
-   // Recipe *recipe;
+   int i;
+   Order *prePen = NULL;
+   Order *curPen = state.pendingOrders.head;
+   Order *preRea = NULL, *curRea;
+   Order *nexPen; // TODO restore
+   Recipe *recipe;
 
-   // // any recipe isn't unbakeable
-   // for (int i = 0; i < HASH_SIZE; i++) {
-   //    recipe = cookbook->buckets[i];
-   //    while (recipe != NULL) {
-   //       recipe->minUnbakeable = INFINITE;
-   //       recipe = recipe->nextRecipe;
-   //    }
-   // }
+   // any recipe isn't unbakeable
+   for (int i = 0; i < HASH_SIZE; i++) {
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         recipe->minUnbakeable = INFINITE;
+         recipe = recipe->nextRecipe;
+      }
+   }
 
-   // while (curPen != NULL) {
+   while (curPen != NULL) {
 
-   //    i = hash(curPen->recipe->name);
-   //    recipe = cookbook->buckets[i];
-   //    while (recipe != NULL) {
-   //       if (!strcmp(recipe->name, curPen->recipe->name)) {
-   //          break;
-   //       }
-   //       recipe = recipe->nextRecipe;
-   //    }
-   //    // recipe == NULL is impossible
-   //    // TODO RESTORE
-   //    state = tryBaking(curPen, recipe, state, time);
-   //    int baking = state.baking;
-   //    nexPen = curPen->nextOrder;
-   //    if (baking) {
-   //       printf(" transferring %d ", curPen->time);
-   //       // removing curPen from pending
-   //       if (prePen == NULL) {
-   //          state.pendingOrders.head = curPen->nextOrder;
-   //          if (state.pendingOrders.head == NULL) {
-   //             state.pendingOrders.tail = NULL;
-   //          }
-   //       } else {
-   //          prePen->nextOrder = curPen->nextOrder;
-   //          if (state.pendingOrders.tail == curPen) {
-   //             state.pendingOrders.tail = prePen;
-   //          }
-   //       }
-   //       // adding curPen in ready
-   //       curRea = state.readyOrders.head;
-   //       if (curRea == NULL) {
-   //          curPen->nextOrder = NULL;
-   //          state.readyOrders.head = curPen;
-   //          state.readyOrders.tail = curPen;
-   //       } else {
-   //          while (curRea != NULL) {
-   //             if (curRea->time > curPen->time) {
-   //                break;
-   //             }
-   //             preRea = curRea;
-   //             curRea = curRea->nextOrder;
-   //          }
+      i = hash(curPen->recipe->name);
+      recipe = cookbook->buckets[i];
+      while (recipe != NULL) {
+         if (!strcmp(recipe->name, curPen->recipe->name)) {
+            break;
+         }
+         recipe = recipe->nextRecipe;
+      }
+      // recipe == NULL is impossible
+      // TODO RESTORE
+      state = tryBaking(curPen, recipe, state, time);
+      int baking = state.baking;
+      nexPen = curPen->nextOrder;
+      if (baking) {
+         // printf(" transferring %d ", curPen->time);
+         // removing curPen from pending
+         if (prePen == NULL) {
+            state.pendingOrders.head = curPen->nextOrder;
+            if (state.pendingOrders.head == NULL) {
+               state.pendingOrders.tail = NULL;
+            }
+         } else {
+            prePen->nextOrder = curPen->nextOrder;
+            if (state.pendingOrders.tail == curPen) {
+               state.pendingOrders.tail = prePen;
+            }
+         }
+         // adding curPen in ready
+         curRea = state.readyOrders.head;
+         if (curRea == NULL) {
+            curPen->nextOrder = NULL;
+            state.readyOrders.head = curPen;
+            state.readyOrders.tail = curPen;
+         } else {
+            while (curRea != NULL) {
+               if (curRea->time > curPen->time) {
+                  break;
+               }
+               preRea = curRea;
+               curRea = curRea->nextOrder;
+            }
 
-   //          curPen->nextOrder = curRea;
+            curPen->nextOrder = curRea;
 
-   //          if (preRea == NULL) {
-   //             state.readyOrders.head = curPen;
-   //          } else {
-   //             preRea->nextOrder = curPen;
-   //          }
+            if (preRea == NULL) {
+               state.readyOrders.head = curPen;
+            } else {
+               preRea->nextOrder = curPen;
+            }
 
-   //          if (curRea == NULL) {
-   //             state.readyOrders.tail = curPen;
-   //          }
-   //       }
-   //       // prePen unchanged
+            if (curRea == NULL) {
+               state.readyOrders.tail = curPen;
+            }
+         }
+         // prePen unchanged
 
-   //       printf("\nPENDING ORDERS");
-   //       printOrderList(state.pendingOrders);
-   //       printf("\nREADY ORDERS");
-   //       printOrderList(state.readyOrders);
-   //    } else {
-   //       prePen = curPen;
-   //    }
-   //    curPen = nexPen;
-   // }
+         // printf("\nPENDING ORDERS");
+         // printOrderList(state.pendingOrders);
+         // printf("\nREADY ORDERS");
+         // printOrderList(state.readyOrders);
+      } else {
+         prePen = curPen;
+      }
+      curPen = nexPen;
+   }
    printf("rifornito\n");
    return state;
 }
@@ -944,7 +947,6 @@ State loadOrders(State state, int payloadLeft) {
    return state;
 }
 
-
 int main() {
 
    int courierPeriod, maxPayload, time = 0;
@@ -1009,13 +1011,13 @@ int main() {
    if (time && time % courierPeriod == 0) {
       state = loadOrders(state, maxPayload);
    }
-   printf("\n");
-   printf("\nCOOKBOOK");
-   printCookbook(cookbook);
-   printf("\nWAREHOUSE");
-   printWarehouse(state.warehouse);
-   printf("\nPENDING ORDERS");
-   printOrderList(state.pendingOrders);
-   printf("\nREADY ORDERS");
-   printOrderList(state.readyOrders);
+   // printf("\n");
+   // printf("\nCOOKBOOK");
+   // printCookbook(cookbook);
+   // printf("\nWAREHOUSE");
+   // printWarehouse(state.warehouse);
+   // printf("\nPENDING ORDERS");
+   // printOrderList(state.pendingOrders);
+   // printf("\nREADY ORDERS");
+   // printOrderList(state.readyOrders);
 }
