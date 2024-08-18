@@ -6,7 +6,7 @@
 #include <string.h>
 
 #define MAX_LEN 255 // TODO understand if strcmp compares all 255 chars
-#define HASH_SIZE 3 // TODO be careful this is adequate, try 4096
+#define HASH_SIZE 4096 // TODO be careful this is adequate, try 4096
 #define INFINITE 2147483647
 
 // expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
@@ -139,13 +139,27 @@ void printWarehouse(Warehouse *warehouse) {
    }
 }
 
+void printSimpleWarehouse(Warehouse *warehouse) {
+   Shelf *curShe;
+   for (int i = 0; i < HASH_SIZE; i++) {
+      curShe = warehouse->buckets[i];
+      while (curShe != NULL) {
+         if (curShe->total != 0) {
+            printf("'%s':\t%*d:\t", curShe->name, 5, curShe->total);
+            printf("\n");
+         }
+         curShe = curShe->nextShelf;
+      }
+   }
+}
+
 void printOrderList(OrderList pendingOrders) {
    printf("\n");
    Order *cur = pendingOrders.head;
    while (cur != NULL) {
       printf("at %*d\t%10s:\t%*d\t tot:%*d", 5, cur->time, cur->recipe->name, 5, cur->amount, 5, cur->weight);
       cur = cur->nextOrder;
-      printf("\n");
+      // printf("\n");
    }
 }
 
@@ -600,7 +614,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
 
    curIng = recipe->ingredientList;
    int required, weight = 0;
-   while (curIng != NULL) { // TODO be sure you can always get in here the first time
+   while (curIng != NULL) {
       i = hash(curIng->shelf->name);
       curShe = state.warehouse->buckets[i];
       preShe = NULL;
@@ -801,7 +815,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    Order *prePen = NULL;
    Order *curPen = state.pendingOrders.head;
    Order *preRea = NULL, *curRea;
-   Order *nexPen; // TODO restore
+   Order *nexPen;
    Recipe *recipe;
 
    // any recipe isn't unbakeable
@@ -824,7 +838,6 @@ State newBatch(State state, Cookbook *cookbook, int time) {
          recipe = recipe->nextRecipe;
       }
       // recipe == NULL is impossible
-      // TODO RESTORE
       state = tryBaking(curPen, recipe, state, time);
       int baking = state.baking;
       nexPen = curPen->nextOrder;
@@ -990,10 +1003,10 @@ int main() {
          printf("ERROR: UNKNOWN COMMAND %s", command);
       }
 
-      // // printf(" <%s> ", command);
-      // // printf("'%s'", state.warehouse->buckets[3]->name);
-      // printf("\nCOOKBOOK");
-      // printCookbook(cookbook);
+      // printf(" <%s> ", command);
+      // // // printf("'%s'", state.warehouse->buckets[3]->name);
+      // // printf("\nCOOKBOOK");
+      // // printCookbook(cookbook);
       // printf("\nWAREHOUSE AFTER");
       // printWarehouse(state.warehouse);
       // printf("\nPENDING ORDERS");
@@ -1005,7 +1018,10 @@ int main() {
       // // if (state.readyOrders.tail)
       // // printf(" ready tail: %d ", state.readyOrders.tail->time);
       // printf("\n\n");
+
+      // printSimpleWarehouse(state.warehouse);
       time++;
+
       // printf("It's [%d]\n", time);
    }
    if (time && time % courierPeriod == 0) {
