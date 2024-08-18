@@ -1,41 +1,60 @@
 aggiunta
 aggiunta
 aggiunta
+non presente
+rifornito
+camioncino vuoto
+accettato
+accettato
+ordini in sospeso
+aggiunta
+accettato
+9 ciambella 3
+6 profiterole 3
+accettato
 rifornito
 rifornito
-rifornito
-rimossa
+accettato
+
 
 COOKBOOK
-     torta	mun:2147483647	usg:0   zucchero:   20	      uova:   10	    farina:   50	
- ciambella	mun:2147483647	usg:0      burro:    2	      uova:    5	    farina:   20	
+profiterole	mun:2147483647	usg:0 cioccolato:    4	  zucchero:    3	     latte:    3	      uova:    2	    farina:   10	
+     torta	mun:1	usg:2   zucchero:   20	      uova:   10	    farina:   50	
+ ciambella	mun:6	usg:1      burro:    2	      uova:    5	    farina:   20	
+pane_dolce	mun:2147483647	usg:0       uova:    1	  zucchero:    1	    farina:    1	
 
 WAREHOUSE
-zucchero:	tot:  145	usg:1 
+zucchero:	tot:   45	usg:3 
     20:20
-10:100
-    15:25
+15:25
 
-burro:	tot:  115	usg:1 
+burro:	tot:  109	usg:1 
+10:94
     20:15
-10:100
 
-cioccolato:	tot:  105	usg:0 
+cioccolato:	tot:   93	usg:1 
+10:88
     15:5
-10:100
 
-farina:	tot:  350	usg:2 
+farina:	tot:  260	usg:4 
+    13:50
+10:10
     15:100
-10:100
-    15:100
-        13:50
+        15:100
 
-uova:	tot:  152	usg:2 
-    20:45
-10:100
+uova:	tot:  131	usg:4 
     15:7
+10:79
+    20:45
 
-latte:	tot:  105	usg:0 
+latte:	tot:   96	usg:1 
+10:91
     15:5
-10:100
 
+
+PENDING ORDERS
+at     5	 ciambella:	    6	 tot:   -1
+at    10	     torta:	    1	 tot:   -1
+at    13	     torta:	    1	 tot:   -1
+
+READY ORDERS

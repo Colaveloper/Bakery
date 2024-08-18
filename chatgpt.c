@@ -56,6 +56,12 @@ void heapifyDown(MinHeapNode *node) {
 }
 
 // Function to heapify up after insertion
+void heapifyUp(MinHeapNode *node) {
+   while (node->parent && node->key < node->parent->key) {
+      swapKeys(node, node->parent);
+      node = node->parent;
+   }
+}
 
 // Function to insert a new key into the min-heap
 void insertMinHeap(MinHeap *heap, int key) {
@@ -251,13 +257,6 @@ int main() {
    insertMinHeap(heap, 10);
    insertMinHeap(heap, 4);
    insertMinHeap(heap, 15);
-   insertMinHeap(heap, 20);
-   insertMinHeap(heap, 8);
-   insertMinHeap(heap, 12);
-   insertMinHeap(heap, 6);
-   insertMinHeap(heap, 3);
-   insertMinHeap(heap, 9);
-   insertMinHeap(heap, 2);
 
    printf("Min-Heap after insertion:\n");
    printHeap(heap->root, 0);
@@ -266,7 +265,11 @@ int main() {
    printf("\nExtracting values from Min-Heap:\n");
    while (heap->size > 0) {
       int minValue = extractMin(heap);
+      printHeap(heap->root, 0);
+      printf("\n");
+
       printf("%d ", minValue);
+      printf("\n");
    }
    printf("\n");
 
