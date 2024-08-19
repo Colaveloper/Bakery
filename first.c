@@ -1,12 +1,11 @@
 #include <math.h>
-// #include <stddef.h>
 #include <stdint.h> // TODO delete in final production, used only in prints
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LEN 255 // TODO understand if strcmp compares all 255 chars
-#define HASH_SIZE 4096 // TODO be careful this is adequate, try 4096
+#define MAX_LEN 255    // TODO understand if strcmp compares all 255 chars
+#define HASH_SIZE 8192 // TODO find optimal for the two hash-tables
 #define INFINITE 2147483647
 
 // expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
@@ -303,8 +302,6 @@ BunchMinHeap *deleteMinBunch(BunchMinHeap *heap) {
 
       free(lastNode);
       heapifyDown(heap->root);
-
-      // TODO handle empty tree
    }
    return heap;
 }
@@ -443,7 +440,6 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
    newRecipe->ingredientList = lastPair;
 
    // we now assume the recipe not to be unbakeable
-   // TODO make this variable actually tell if recipe is bakeable
    newRecipe->minUnbakeable = INFINITE;
 
    printf("aggiunta\n");
@@ -456,29 +452,29 @@ Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
       printf("MUST NAME A RECIPE TO REMOVE");
    }
 
-   int i = hash(name);
-   Recipe *pre = NULL, *cur = cookbook->buckets[i];
+   int j = hash(name);
+   Recipe *preRec = NULL, *curRec = cookbook->buckets[j];
 
    // the bucket can't be empty
    // searching for a recipe with that name
-   while (cur != NULL) {
+   while (curRec != NULL) {
 
-      if (!strcmp(cur->name, name)) {
+      if (!strcmp(curRec->name, name)) {
          // recipe recovered
          break;
       }
-      pre = cur;
-      cur = cur->nextRecipe;
+      preRec = curRec;
+      curRec = curRec->nextRecipe;
    }
 
-   if (cur == NULL) {
+   if (curRec == NULL) {
 
       // the recipe was already absent
       printf("non presente\n");
       return cookbook;
    }
 
-   if (cur->usage) {
+   if (curRec->usage) {
 
       // there are orders using this recipe
       printf("ordini in sospeso\n");
@@ -487,29 +483,48 @@ Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 
    // removing all ingredients
    Ingredient *delIng;
-   while (cur->ingredientList != NULL) {
-      delIng = cur->ingredientList;
+   while (curRec->ingredientList != NULL) {
+      delIng = curRec->ingredientList;
       delIng->shelf->usage--;
 
-      // TODO removing unused empty shelves
-      // if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
-      // }
+      // removing unused empty shelves
+      if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
+         // search the previous shelf
+         int i = hash(delIng->shelf->name);
+         Shelf *curShe = warehouse->buckets[i];
+         Shelf *preShe = NULL;
 
-      cur->ingredientList = cur->ingredientList->nextIngredient;
+         while (curShe != delIng->shelf) {
+            preShe = curShe;
+            curShe = curShe->nextShelf;
+         }
+
+         if (preShe == NULL) {
+            // first shelf
+            warehouse->buckets[i] = curShe->nextShelf;
+         } else {
+            // any other
+            preShe->nextShelf = curShe->nextShelf;
+         }
+         free(curShe->bunchMinHeap);
+         free(curShe);
+      }
+
+      curRec->ingredientList = curRec->ingredientList->nextIngredient;
    }
 
    // removing recipe
-   if (pre == NULL) {
+   if (preRec == NULL) {
 
       // removing the first
-      cookbook->buckets[i] = cur->nextRecipe;
+      cookbook->buckets[j] = curRec->nextRecipe;
    } else {
 
       // removing any other
-      pre->nextRecipe = cur->nextRecipe;
+      preRec->nextRecipe = curRec->nextRecipe;
    }
 
-   free(cur);
+   free(curRec);
    printf("rimossa\n");
    return cookbook;
 }
@@ -572,7 +587,6 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                }
             }
             if (curShe->bunchMinHeap->size == 0 && curShe->usage == 0) {
-               // TODO handling empty shelves
                // Removing entire shelf
                if (preShe == NULL) {
                   // First shelf
@@ -580,8 +594,9 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                } else {
                   preShe->nextShelf = curShe->nextShelf;
                }
-               // if we removed a necessary ingredient, we can't bake
+               free(curShe->bunchMinHeap);
                free(curShe);
+               // if we removed a necessary ingredient, we can't bake
                state.baking = 0;
                return state;
             }
@@ -634,18 +649,19 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                   curShe->bunchMinHeap->size--;
                   // curShe->bunchList can become NULL
                   // but we don't want empty shelves
-                  // if (curShe->bunchMinHeap->root == NULL) {
-                  //    // Removing entire shelf // TODO restore
-                  //    if (preShe == NULL) {
-                  //       // First shelf
-                  //       state.warehouse->buckets[i] = curShe->nextShelf;
-                  //       // DANGER
-                  //    } else {
-                  //       preShe->nextShelf = curShe->nextShelf;
-                  //    }
-                  //    // free(curShe);
-                  //    break;
-                  // }
+                  if (curShe->bunchMinHeap->size == 0 && curShe->usage == 0) {
+                     // Removing entire shelf
+                     if (preShe == NULL) {
+                        // First shelf
+                        state.warehouse->buckets[i] = curShe->nextShelf;
+                     } else {
+                        // Any other shelf
+                        preShe->nextShelf = curShe->nextShelf;
+                     }
+                     free(curShe->bunchMinHeap);
+                     free(curShe);
+                     break;
+                  }
                } else {
                   curShe->bunchMinHeap->root->amount -= required;
                   curShe->total -= required;
