@@ -199,7 +199,7 @@ Bunch *getLastNode(BunchMinHeap *heap) {
       return NULL;
 
    int depth = (int)log2(heap->size) + 1;
-   int *path = (int *)malloc(depth * sizeof(int));
+   int *path = (int *)malloc(depth * sizeof(int)); // not leaking
    int level = 0;
    int n = heap->size;
 
@@ -242,7 +242,7 @@ BunchMinHeap *insertBunch(BunchMinHeap *heap, int key, int amount) {
    }
 
    int depth = (int)log2(heap->size) + 1;
-   int *path = (int *)malloc(depth * sizeof(int));
+   int *path = (int *)malloc(depth * sizeof(int)); // not leaking
    int level = 0;
    int n = heap->size;
 
@@ -512,6 +512,7 @@ Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
       }
 
       curRec->ingredientList = curRec->ingredientList->nextIngredient;
+      free(delIng);
    }
 
    // removing recipe
@@ -1058,6 +1059,7 @@ int main() {
    if (time && time % courierPeriod == 0) {
       state = loadOrders(state, maxPayload);
    }
+
    // printf("\n");
    // printf("\nCOOKBOOK");
    // printCookbook(cookbook);
