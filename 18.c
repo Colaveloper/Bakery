@@ -79,7 +79,6 @@ typedef struct State {
 } State;
 
 int hash(char *str) {
-   // TODO try hashing while taking the input
    // using djb2
    unsigned long hash = 5381;
    int c;
@@ -555,9 +554,14 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    // printOrderList(state.readyOrders);
    // printf(" %d", order->time);
 
+   if (recipe->minUnbakeable <= order->amount) {
+      state.baking = 0;
+      return state;
+   }
+
    int i;
 
-   // printf(" mu:%d>am:%d, checking if baking is possible ", recipe->minUnbakeable, order->amount);
+   // checking if baking is possible
    Shelf *preShe, *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
@@ -601,7 +605,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
             if (curIng->amount * order->amount <= curShe->total) {
                break; // Enough curIng, check next ingredient
             }
-            // printf("not enough %s to bake %s: \n", curShe->name, order->recipe->name);
+            // printf("not enough %s to bake %s\n", curShe->name, order->name);
             state.baking = 0;
             return state;
          }
@@ -609,7 +613,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
          curShe = curShe->nextShelf;
       }
       if (curShe == NULL) {
-         // printf("%s not present at all to bake %s\n", curIng->shelf->name, order->recipe->name);
+         // printf("%s not present at all to bake %s\n", curIng->name, order->name);
          // printf(" state.baking==%d ", state.baking);
          state.baking = 0;
          return state;
@@ -710,7 +714,6 @@ State newOrder(Cookbook *cookbook, State state, int time) {
    } else if (recipe->minUnbakeable <= newOrder->amount) {
 
       // we couldn't bake smaller orders of the same recipe
-      // printf(" mu:%d<=am:%d, not even trying\n", recipe->minUnbakeable, newOrder->amount);
       state.baking = 0;
       recipe->usage++;
       newOrder->recipe = recipe;
@@ -733,7 +736,6 @@ State newOrder(Cookbook *cookbook, State state, int time) {
       // printf("baking in the future\n");
       if (recipe->minUnbakeable > newOrder->amount) {
          recipe->minUnbakeable = newOrder->amount;
-         // printf(" mu reduced to %d\n", recipe->minUnbakeable);
       }
       state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
       break;
@@ -821,8 +823,6 @@ State newBatch(State state, Cookbook *cookbook, int time) {
       }
    }
 
-   printf("rifornito\n");
-
    // Warehouse *warehouse = state.warehouse;
    // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
    // printWarehouse(warehouse);
@@ -844,7 +844,6 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    }
 
    while (curPen != NULL) {
-      nexPen = curPen->nextOrder;
 
       i = hash(curPen->recipe->name);
       recipe = cookbook->buckets[i];
@@ -854,25 +853,20 @@ State newBatch(State state, Cookbook *cookbook, int time) {
          }
          recipe = recipe->nextRecipe;
       }
-      // printf(" o:%d ", curPen->time);
-      if (recipe->minUnbakeable <= curPen->amount) {
-         // printf(" mu:%d<=am:%d, not even trying to bake %s\n", recipe->minUnbakeable, curPen->amount, recipe->name);
-         state.baking = 0;
-      } else {
-         // printf(" mu:%d>am:%d, trying to bake %s\n", recipe->minUnbakeable, curPen->amount, recipe->name);
-         // recipe == NULL is impossible
-         state = tryBaking(curPen, recipe, state, time);
-      }
-      if (state.baking) {
+      // recipe == NULL is impossible
+      state = tryBaking(curPen, recipe, state, time);
+      int baking = state.baking;
+      nexPen = curPen->nextOrder;
+      if (baking) {
          // printf(" transferring %d ", curPen->time);
          // removing curPen from pending
          if (prePen == NULL) {
-            state.pendingOrders.head = nexPen;
+            state.pendingOrders.head = curPen->nextOrder;
             if (state.pendingOrders.head == NULL) {
                state.pendingOrders.tail = NULL;
             }
          } else {
-            prePen->nextOrder = nexPen;
+            prePen->nextOrder = curPen->nextOrder;
             if (state.pendingOrders.tail == curPen) {
                state.pendingOrders.tail = prePen;
             }
@@ -904,27 +898,18 @@ State newBatch(State state, Cookbook *cookbook, int time) {
                state.readyOrders.tail = curPen;
             }
          }
+         // prePen unchanged
 
          // printf("\nPENDING ORDERS");
          // printOrderList(state.pendingOrders);
          // printf("\nREADY ORDERS");
          // printOrderList(state.readyOrders);
-         prePen = prePen;
       } else {
-         if (recipe->minUnbakeable > curPen->amount) {
-            // smallest unbakeable order yet
-            recipe->minUnbakeable = curPen->amount;
-            // printf(" mu reduced to %d\n", recipe->minUnbakeable);
-         }
          prePen = curPen;
       }
       curPen = nexPen;
-      if (nexPen == NULL) {
-         break;
-      } else {
-         nexPen = nexPen->nextOrder;
-      }
    }
+   printf("rifornito\n");
    return state;
 }
 
