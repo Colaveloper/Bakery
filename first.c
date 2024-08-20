@@ -604,12 +604,15 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
 
 
          if (!strcmp(curIng->shelf->name, curShe->name)) {
-            if (curIng->amount * order->amount <= curShe->total) {
+
+            recipe->minUnbakeable = fmin(recipe->minUnbakeable, curShe->total/curIng->amount+1);
+            // printf(" mu: %d ", recipe->minUnbakeable);
+            if (order->amount < recipe->minUnbakeable) {
                break; // Enough curIng, check next ingredient
             }
-            // printf("not enough %s to bake %s: \n", curShe->name, order->recipe->name);
             state.baking = 0;
             return state;
+            
          }
          preShe = curShe;
          curShe = curShe->nextShelf;
