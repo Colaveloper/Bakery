@@ -628,6 +628,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
 
    // printf(" (baking %s) \n", order->recipe->name);
    state.baking = 1; // ARRIVATI QUI
+   recipe->minUnbakeable -= order->amount;
 
    // printf("\nWAREHOUSE CLEANED");
    // printWarehouse(state.warehouse);
