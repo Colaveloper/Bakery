@@ -556,68 +556,68 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    Shelf *preShe, *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
-      i = hash(curIng->shelf->name, WARE_SIZE);
-      curShe = state.warehouse->buckets[i];
-      preShe = NULL;
-      while (curShe != NULL) {
 
-         // ingredient missing
-         if (curShe->total == 0) {
-            state.baking = 0;
-            recipe->minUnbakeable = 0;
-            return state;
-         }
-
-         // clensing from expired
-         if (curShe->bunchMinHeap->root->expiration <= time) {
-            while (curShe->bunchMinHeap->root != NULL) {
-               if (curShe->bunchMinHeap->root->expiration <= time) {
-                  curShe->total -= curShe->bunchMinHeap->root->amount;
-                  curShe->bunchMinHeap = deleteMinBunch(curShe->bunchMinHeap);
-                  curShe->bunchMinHeap->size--;
-               } else {
-                  break;
-               }
-            }
-            if (curShe->bunchMinHeap->size == 0 && curShe->usage == 0) {
-               // Removing entire shelf
-               if (preShe == NULL) {
-                  // First shelf
-                  state.warehouse->buckets[i] = curShe->nextShelf;
-               } else {
-                  preShe->nextShelf = curShe->nextShelf;
-               }
-               free(curShe->bunchMinHeap);
-               free(curShe);
-               // if we removed a necessary ingredient, we can't bake
-               state.baking = 0;
-               recipe->minUnbakeable = 0;
-               return state;
-            }
-         }
-
-         if (!strcmp(curIng->shelf->name, curShe->name)) {
-
-            recipe->minUnbakeable = fmin(recipe->minUnbakeable, curShe->total / curIng->amount + 1);
-            // printf(" mu: %d ", recipe->minUnbakeable);
-            if (order->amount < recipe->minUnbakeable) {
-               break; // Enough curIng, check next ingredient
-            }
-            state.baking = 0;
-            return state;
-         }
-         preShe = curShe;
-         curShe = curShe->nextShelf;
-      }
-
-      // shelf missing
-      if (curShe == NULL) {
+      if (curIng->shelf->total == 0) {
          // printf("%s not present at all to bake %s\n", curIng->shelf->name, order->recipe->name);
          // printf(" state.baking==%d ", state.baking);
          state.baking = 0;
          recipe->minUnbakeable = 0;
          return state;
       }
+
+      // purging from expired
+      if (curIng->shelf->bunchMinHeap->root->expiration <= time) {
+         while (curIng->shelf->bunchMinHeap->root != NULL) {
+            if (curIng->shelf->bunchMinHeap->root->expiration <= time) {
+               curIng->shelf->total -= curIng->shelf->bunchMinHeap->root->amount;
+               curIng->shelf->bunchMinHeap = deleteMinBunch(curIng->shelf->bunchMinHeap);
+               curIng->shelf->bunchMinHeap->size--;
+            } else {
+               break;
+            }
+         }
+         if (curIng->shelf->bunchMinHeap->size == 0 && curIng->shelf->usage == 0) {
+            // Removing entire shelf (we need the previous)
+
+            i = hash(curIng->shelf->name, WARE_SIZE);
+            curShe = state.warehouse->buckets[i];
+            preShe = NULL;
+            while (curShe != NULL) {
+               if (!strcmp(curShe->name, curIng->shelf->name)) {
+                  break;
+               }
+               preShe = curShe;
+               curShe = curShe->nextShelf;
+            }
+            if (preShe == NULL) {
+               // First shelf
+               state.warehouse->buckets[i] = curShe->nextShelf;
+            } else {
+               preShe->nextShelf = curShe->nextShelf;
+            }
+            free(curShe->bunchMinHeap);
+            free(curShe);
+            // since we removed a necessary ingredient, we can't bake
+            state.baking = 0;
+            recipe->minUnbakeable = 0;
+            return state;
+         }
+      }
+
+      if (curIng->shelf->total == 0) {
+         state.baking = 0;
+         recipe->minUnbakeable = 0;
+         return state;
+      }
+
+      recipe->minUnbakeable = fmin(recipe->minUnbakeable, curIng->shelf->total / curIng->amount + 1);
+
+      if (order->amount >= recipe->minUnbakeable) {
+         state.baking = 0;
+         return state;
+      }
+
+      // Enough curIng, check next ingredient
       curIng = curIng->nextIngredient;
    }
 
@@ -631,51 +631,64 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    curIng = recipe->ingredientList;
    int required, weight = 0;
    while (curIng != NULL) {
-      i = hash(curIng->shelf->name, WARE_SIZE);
-      curShe = state.warehouse->buckets[i];
-      preShe = NULL;
       weight += curIng->amount * order->amount;
 
       // this "while" should terminate only thorugh "break"
       // since it's guaranteed to have all the required ingredients
-      while (curShe != NULL) {
-         if (!strcmp(curIng->shelf->name, curShe->name)) {
-            // Removing used ingredients
-            required = curIng->amount * order->amount;
-            while (required != 0) {
-               if (curShe->bunchMinHeap->root->amount <= required) {
-                  required -= curShe->bunchMinHeap->root->amount;
-                  curShe->total -= curShe->bunchMinHeap->root->amount;
-                  curShe->bunchMinHeap = deleteMinBunch(curShe->bunchMinHeap);
-                  curShe->bunchMinHeap->size--;
-                  // curShe->bunchList can become NULL
-                  // but we don't want empty shelves
-                  if (curShe->bunchMinHeap->size == 0 && curShe->usage == 0) {
-                     // Removing entire shelf
-                     if (preShe == NULL) {
-                        // First shelf
-                        state.warehouse->buckets[i] = curShe->nextShelf;
-                     } else {
-                        // Any other shelf
-                        preShe->nextShelf = curShe->nextShelf;
-                     }
-                     free(curShe->bunchMinHeap);
-                     free(curShe);
+
+      required = curIng->amount * order->amount;
+
+      // Removing used ingredients
+      while (required != 0) {
+         if (curIng->shelf->bunchMinHeap->root->amount <= required) {
+            required -= curIng->shelf->bunchMinHeap->root->amount;
+            curIng->shelf->total -= curIng->shelf->bunchMinHeap->root->amount;
+            curIng->shelf->bunchMinHeap = deleteMinBunch(curIng->shelf->bunchMinHeap);
+            curIng->shelf->bunchMinHeap->size--;
+
+            // curShe->bunchList can become NULL but we don't want empty shelves
+            // if (curShe->bunchMinHeap->size == 0 && curShe->usage == 0) {
+            //    // Removing entire shelf
+            //    if (preShe == NULL) {
+            //       // First shelf
+            //       state.warehouse->buckets[i] = curShe->nextShelf;
+            //    } else {
+            //       // Any other shelf
+            //       preShe->nextShelf = curShe->nextShelf;
+            //    }
+            //    free(curShe->bunchMinHeap);
+            //    free(curShe);
+            //    break;
+            // }
+            if (curIng->shelf->bunchMinHeap->size == 0 && curIng->shelf->usage == 0) {
+
+               // Removing entire shelf (we need the previous)
+               i = hash(curIng->shelf->name, WARE_SIZE);
+               curShe = state.warehouse->buckets[i];
+               preShe = NULL;
+               while (curShe != NULL) {
+                  if (!strcmp(curShe->name, curIng->shelf->name)) {
                      break;
                   }
-               } else {
-                  curShe->bunchMinHeap->root->amount -= required;
-                  curShe->total -= required;
-                  // required = 0; useless
-                  break;
+                  preShe = curShe;
+                  curShe = curShe->nextShelf;
                }
+               if (preShe == NULL) {
+                  // First shelf
+                  state.warehouse->buckets[i] = curShe->nextShelf;
+               } else {
+                  preShe->nextShelf = curShe->nextShelf;
+               }
+               free(curShe->bunchMinHeap);
+               free(curShe);
             }
+         } else {
+            curIng->shelf->bunchMinHeap->root->amount -= required;
+            curIng->shelf->total -= required;
+            // required = 0; useless
             break;
          }
-         preShe = curShe;
-         curShe = curShe->nextShelf;
       }
-      ////
       curIng = curIng->nextIngredient;
    }
 
@@ -797,7 +810,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
 
          // creating new shelf with one bunch
          Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
-         newShelf->name = (char*)malloc(strlen(name) + 1);
+         newShelf->name = (char *)malloc(strlen(name) + 1);
          strcpy(newShelf->name, name);
          newShelf->total = amount;
          newShelf->nextShelf = NULL;
