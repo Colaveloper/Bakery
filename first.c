@@ -779,7 +779,8 @@ State newBatch(State state, Cookbook *cookbook, int time) {
 
    int expiration, amount;
    char name[MAX_LEN];
-
+   
+   // refilling warehouse (very efficient)
    while (scanf("%s %d %d", name, &amount, &expiration)) {
       int i = hash(name);
       // printf(" <%s|%d>", name, i);
@@ -835,18 +836,16 @@ State newBatch(State state, Cookbook *cookbook, int time) {
 
    printf("rifornito\n");
 
-   // Warehouse *warehouse = state.warehouse;
    // printf("\nWAREHOUSE RECEIVED NEW BATCH; NOW CHECKING FOR POSSIBLE BAKING");
-   // printWarehouse(warehouse);
+   // printWarehouse(state.warehouse);
 
-   int i;
    Order *prePen = NULL;
    Order *curPen = state.pendingOrders.head;
    Order *preRea = NULL, *curRea;
    Order *nexPen;
    Recipe *recipe;
 
-   // any recipe isn't unbakeable
+   // any recipe isn't unbakeable // TODO reduce this weight
    for (int i = 0; i < HASH_SIZE; i++) {
       recipe = cookbook->buckets[i];
       while (recipe != NULL) {
@@ -855,17 +854,10 @@ State newBatch(State state, Cookbook *cookbook, int time) {
       }
    }
 
+   // try baking all pending
    while (curPen != NULL) {
+      recipe = curPen->recipe;
       nexPen = curPen->nextOrder;
-
-      i = hash(curPen->recipe->name);
-      recipe = cookbook->buckets[i];
-      while (recipe != NULL) {
-         if (!strcmp(recipe->name, curPen->recipe->name)) {
-            break;
-         }
-         recipe = recipe->nextRecipe;
-      }
       // printf(" o:%d ", curPen->time);
       if (recipe->minUnbakeable <= curPen->amount) {
          // printf(" mu:%d<=am:%d, not even trying to bake %s\n", recipe->minUnbakeable, curPen->amount, recipe->name);

@@ -1,0 +1,691 @@
+desc: (none)
+cmd: ./first
+time_unit: i
+#-----------
+snapshot=0
+#-----------
+time=0
+mem_heap_B=0
+mem_heap_extra_B=0
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=1
+#-----------
+time=181704
+mem_heap_B=65536
+mem_heap_extra_B=8
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=2
+#-----------
+time=263589
+mem_heap_B=153816
+mem_heap_extra_B=1832
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=3
+#-----------
+time=309855
+mem_heap_B=168144
+mem_heap_extra_B=2848
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=4
+#-----------
+time=350460
+mem_heap_B=168752
+mem_heap_extra_B=3000
+mem_stacks_B=0
+heap_tree=detailed
+n6: 168752 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n0: 2344 in 4 places, all below massif's threshold (1.00%)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=5
+#-----------
+time=409352
+mem_heap_B=169680
+mem_heap_extra_B=3232
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=6
+#-----------
+time=486021
+mem_heap_B=170896
+mem_heap_extra_B=3536
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=7
+#-----------
+time=592440
+mem_heap_B=170960
+mem_heap_extra_B=3552
+mem_stacks_B=0
+heap_tree=detailed
+n7: 170960 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 2784 0x109BDD: insertBunch (first.c:230)
+  n1: 2784 0x10AC9E: newBatch (first.c:796)
+   n0: 2784 0x109417: main (first.c:1032)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+ n0: 1768 in 3 places, all below massif's threshold (1.00%)
+#-----------
+snapshot=8
+#-----------
+time=634816
+mem_heap_B=171184
+mem_heap_extra_B=3608
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=9
+#-----------
+time=703561
+mem_heap_B=171696
+mem_heap_extra_B=3736
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=10
+#-----------
+time=739516
+mem_heap_B=172208
+mem_heap_extra_B=3864
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=11
+#-----------
+time=802854
+mem_heap_B=173112
+mem_heap_extra_B=4104
+mem_stacks_B=0
+heap_tree=detailed
+n7: 173112 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 4224 0x109BDD: insertBunch (first.c:230)
+  n1: 4224 0x10AC9E: newBatch (first.c:796)
+   n0: 4224 0x109417: main (first.c:1032)
+ n0: 2480 in 4 places, all below massif's threshold (1.00%)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=12
+#-----------
+time=847732
+mem_heap_B=173744
+mem_heap_extra_B=4248
+mem_stacks_B=0
+heap_tree=detailed
+n7: 173744 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 4864 0x109BDD: insertBunch (first.c:230)
+  n1: 4864 0x10AC9E: newBatch (first.c:796)
+   n0: 4864 0x109417: main (first.c:1032)
+ n0: 2472 in 4 places, all below massif's threshold (1.00%)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=13
+#-----------
+time=897147
+mem_heap_B=174448
+mem_heap_extra_B=4424
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=14
+#-----------
+time=961574
+mem_heap_B=174456
+mem_heap_extra_B=4440
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=15
+#-----------
+time=986010
+mem_heap_B=172920
+mem_heap_extra_B=4072
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=16
+#-----------
+time=1561477
+mem_heap_B=172848
+mem_heap_extra_B=4024
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=17
+#-----------
+time=1620203
+mem_heap_B=172912
+mem_heap_extra_B=4040
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=18
+#-----------
+time=1678929
+mem_heap_B=172976
+mem_heap_extra_B=4056
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=19
+#-----------
+time=1708315
+mem_heap_B=173008
+mem_heap_extra_B=4064
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=20
+#-----------
+time=1766995
+mem_heap_B=173072
+mem_heap_extra_B=4080
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=21
+#-----------
+time=1825675
+mem_heap_B=173136
+mem_heap_extra_B=4096
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=22
+#-----------
+time=1884401
+mem_heap_B=173200
+mem_heap_extra_B=4112
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=23
+#-----------
+time=1958511
+mem_heap_B=173808
+mem_heap_extra_B=4264
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=24
+#-----------
+time=2019356
+mem_heap_B=174672
+mem_heap_extra_B=4480
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=25
+#-----------
+time=2055666
+mem_heap_B=175184
+mem_heap_extra_B=4608
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=26
+#-----------
+time=2111818
+mem_heap_B=175992
+mem_heap_extra_B=4824
+mem_stacks_B=0
+heap_tree=detailed
+n7: 175992 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 6688 0x109BDD: insertBunch (first.c:230)
+  n1: 6688 0x10AC9E: newBatch (first.c:796)
+   n0: 6688 0x109417: main (first.c:1032)
+ n0: 2896 in 5 places, all below massif's threshold (1.00%)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=27
+#-----------
+time=2191495
+mem_heap_B=176048
+mem_heap_extra_B=4824
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=28
+#-----------
+time=2270211
+mem_heap_B=175704
+mem_heap_extra_B=4768
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=29
+#-----------
+time=2317459
+mem_heap_B=175600
+mem_heap_extra_B=4712
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=30
+#-----------
+time=2401208
+mem_heap_B=175096
+mem_heap_extra_B=4616
+mem_stacks_B=0
+heap_tree=detailed
+n7: 175096 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 25056 0x109FC6: newRecipe (first.c:382)
+  n0: 25056 0x1092E1: main (first.c:1024)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 5600 0x109BDD: insertBunch (first.c:230)
+  n1: 5600 0x10AC9E: newBatch (first.c:796)
+   n0: 5600 0x109417: main (first.c:1032)
+ n0: 3088 in 5 places, all below massif's threshold (1.00%)
+ n1: 2088 0x109E91: newRecipe (first.c:368)
+  n0: 2088 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=31
+#-----------
+time=2467445
+mem_heap_B=186760
+mem_heap_extra_B=5968
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=32
+#-----------
+time=2533167
+mem_heap_B=194416
+mem_heap_extra_B=6752
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=33
+#-----------
+time=2591847
+mem_heap_B=194480
+mem_heap_extra_B=6768
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=34
+#-----------
+time=2659113
+mem_heap_B=195024
+mem_heap_extra_B=6904
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=35
+#-----------
+time=2712917
+mem_heap_B=195792
+mem_heap_extra_B=7096
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=36
+#-----------
+time=2755939
+mem_heap_B=196400
+mem_heap_extra_B=7248
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=37
+#-----------
+time=2809321
+mem_heap_B=197168
+mem_heap_extra_B=7440
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=38
+#-----------
+time=2866205
+mem_heap_B=197296
+mem_heap_extra_B=7472
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=39
+#-----------
+time=2931086
+mem_heap_B=197456
+mem_heap_extra_B=7512
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=40
+#-----------
+time=2989766
+mem_heap_B=197520
+mem_heap_extra_B=7528
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=41
+#-----------
+time=3021116
+mem_heap_B=197584
+mem_heap_extra_B=7544
+mem_stacks_B=0
+heap_tree=detailed
+n8: 197584 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 41184 0x109FC6: newRecipe (first.c:382)
+  n0: 41184 0x1092E1: main (first.c:1024)
+ n1: 8224 0x109BDD: insertBunch (first.c:230)
+  n1: 8224 0x10AC9E: newBatch (first.c:796)
+   n0: 8224 0x109417: main (first.c:1032)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 3600 0x109E91: newRecipe (first.c:368)
+  n0: 3600 0x1092E1: main (first.c:1024)
+ n0: 3024 in 6 places, all below massif's threshold (1.00%)
+ n1: 2288 0x10A007: newRecipe (first.c:387)
+  n0: 2288 0x1092E1: main (first.c:1024)
+#-----------
+snapshot=42
+#-----------
+time=3085872
+mem_heap_B=197744
+mem_heap_extra_B=7584
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=43
+#-----------
+time=3123252
+mem_heap_B=197904
+mem_heap_extra_B=7624
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=44
+#-----------
+time=3181978
+mem_heap_B=197968
+mem_heap_extra_B=7640
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=45
+#-----------
+time=3231243
+mem_heap_B=201000
+mem_heap_extra_B=7984
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=46
+#-----------
+time=3276445
+mem_heap_B=204648
+mem_heap_extra_B=8336
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=47
+#-----------
+time=3342723
+mem_heap_B=210384
+mem_heap_extra_B=8936
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=48
+#-----------
+time=3412683
+mem_heap_B=222472
+mem_heap_extra_B=10232
+mem_stacks_B=0
+heap_tree=detailed
+n9: 222472 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 60768 0x109FC6: newRecipe (first.c:382)
+  n0: 60768 0x1092E1: main (first.c:1024)
+ n1: 8256 0x109BDD: insertBunch (first.c:230)
+  n1: 8256 0x10AC9E: newBatch (first.c:796)
+   n0: 8256 0x109417: main (first.c:1032)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 5568 0x109E91: newRecipe (first.c:368)
+  n0: 5568 0x1092E1: main (first.c:1024)
+ n1: 3376 0x10A007: newRecipe (first.c:387)
+  n0: 3376 0x1092E1: main (first.c:1024)
+ n0: 2648 in 5 places, all below massif's threshold (1.00%)
+ n1: 2592 0x10A895: newOrder (first.c:697)
+  n0: 2592 0x1094CA: main (first.c:1036)
+#-----------
+snapshot=49
+#-----------
+time=3448476
+mem_heap_B=222976
+mem_heap_extra_B=10344
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=50
+#-----------
+time=3473182
+mem_heap_B=223328
+mem_heap_extra_B=10432
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=51
+#-----------
+time=3497990
+mem_heap_B=223680
+mem_heap_extra_B=10520
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=52
+#-----------
+time=3523035
+mem_heap_B=224032
+mem_heap_extra_B=10608
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=53
+#-----------
+time=3546057
+mem_heap_B=224364
+mem_heap_extra_B=10700
+mem_stacks_B=0
+heap_tree=peak
+n9: 224364 (heap allocation functions) malloc/new/new[], --alloc-fns, etc.
+ n0: 65536 0x10923D: main (first.c:1003)
+ n0: 65536 0x10924F: main (first.c:1004)
+ n1: 60768 0x109FC6: newRecipe (first.c:382)
+  n0: 60768 0x1092E1: main (first.c:1024)
+ n1: 10144 0x109BDD: insertBunch (first.c:230)
+  n1: 10144 0x10AC9E: newBatch (first.c:796)
+   n0: 10144 0x109417: main (first.c:1032)
+ n1: 8192 0x49BFBA3: _IO_file_doallocate (filedoalloc.c:101)
+  n2: 8192 0x49CECDF: _IO_doallocbuf (genops.c:347)
+   n1: 4096 0x49CDCDB: _IO_file_underflow@@GLIBC_2.2.5 (fileops.c:485)
+    n1: 4096 0x49CED95: _IO_default_uflow (genops.c:362)
+     n1: 4096 0x49A40CF: __vfscanf_internal (vfscanf-internal.c:628)
+      n1: 4096 0x49A3141: __isoc99_scanf (isoc99_scanf.c:30)
+       n0: 4096 0x10928D: main (first.c:1011)
+   n1: 4096 0x49CDF5F: _IO_file_overflow@@GLIBC_2.2.5 (fileops.c:744)
+    n1: 4096 0x49CC6D4: _IO_new_file_xsputn (fileops.c:1243)
+     n1: 4096 0x49CC6D4: _IO_file_xsputn@@GLIBC_2.2.5 (fileops.c:1196)
+      n1: 4096 0x49C1F1B: puts (ioputs.c:40)
+       n1: 4096 0x10A05A: printf (stdio2.h:112)
+        n1: 4096 0x10A05A: newRecipe (first.c:446)
+         n0: 4096 0x1092E1: main (first.c:1024)
+ n1: 5568 0x109E91: newRecipe (first.c:368)
+  n0: 5568 0x1092E1: main (first.c:1024)
+ n1: 3376 0x10A007: newRecipe (first.c:387)
+  n0: 3376 0x1092E1: main (first.c:1024)
+ n0: 2652 in 5 places, all below massif's threshold (1.00%)
+ n1: 2592 0x10A895: newOrder (first.c:697)
+  n0: 2592 0x1094CA: main (first.c:1036)
+#-----------
+snapshot=54
+#-----------
+time=3570515
+mem_heap_B=224704
+mem_heap_extra_B=10776
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=55
+#-----------
+time=3595245
+mem_heap_B=225056
+mem_heap_extra_B=10864
+mem_stacks_B=0
+heap_tree=empty
+#-----------
+snapshot=56
+#-----------
+time=3621162
+mem_heap_B=225440
+mem_heap_extra_B=10960
+mem_stacks_B=0
+heap_tree=empty
