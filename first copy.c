@@ -1,12 +1,11 @@
 #include <math.h>
-// #include <stdint.h> used only in prints
+#include <stdint.h> // TODO delete in final production, used only in prints
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define MAX_LEN 255
-#define WARE_SIZE 8192 / 2
-#define BOOK_SIZE 8192 * 2 // good
+#define MAX_LEN 255    // TODO understand if strcmp compares all 255 chars
+#define HASH_SIZE 8192 // TODO separate for the two hash-tables
 #define INFINITE 2147483647
 
 // expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
@@ -22,14 +21,14 @@ typedef struct BunchMinHeap {
    int size;
 } BunchMinHeap;
 typedef struct Shelf {
-   char *name;
+   int name;
    int total;
    BunchMinHeap *bunchMinHeap;
    struct Shelf *nextShelf;
    int usage;
 } Shelf;
 typedef struct Warehouse {
-   Shelf *buckets[WARE_SIZE]; // Array of lists of shelves
+   Shelf *buckets[HASH_SIZE]; // Array of lists of shelves
 } Warehouse;
 
 // ingredient, amount ∈ Ingredient ∈ *Recipe[] ∈ cookbook
@@ -39,14 +38,14 @@ typedef struct Ingredient {
    struct Ingredient *nextIngredient;
 } Ingredient;
 typedef struct Recipe {
-   char *name;
+   int name;
    int minUnbakeable;
    int usage;
    Ingredient *ingredientList;
    struct Recipe *nextRecipe;
 } Recipe;
 typedef struct Cookbook {
-   Recipe *buckets[BOOK_SIZE]; // Array of lists of recipes
+   Recipe *buckets[HASH_SIZE]; // Array of lists of recipes
 } Cookbook;
 
 // name, amount ∈ Order ∈ pendingOrders, readyOrders
@@ -79,27 +78,49 @@ typedef struct State {
 
 } State;
 
-int hash(char *str, int size) {
-   // TODO try hashing while taking the input
+typedef struct Pair {
+   int hash;
+   int ID;
+} Pair;
+
+Pair hash() {
    // using djb2
-   unsigned long hash = 5381;
-   int c;
-   while ((c = *str++)) {
-      hash = ((hash << 5) + hash) + c;
+   Pair pair = {5381, 1111};
+   char c;
+   while ((c = getchar()) != ' ') {
+      pair.hash = ((pair.hash << 5) + pair.hash) + c;
+      pair.ID = ((pair.ID << 7) + pair.ID) + c;
    }
-   return hash % size;
+   pair.hash = pair.hash % HASH_SIZE;
+   pair.ID = pair.ID % HASH_SIZE;
+   printf("<%d,%d>", pair.hash, pair.ID);
+   return pair;
+}
+
+Pair hashAlt() {
+   // using djb2
+   Pair pair = {5381, 1111};
+   char c;
+   while ((c = getchar()) != '\n') {
+      pair.hash = ((pair.hash << 5) + pair.hash) + c;
+      pair.ID = ((pair.ID << 7) + pair.ID) + c;
+   }
+   pair.hash = pair.hash % HASH_SIZE;
+   pair.ID = pair.ID % HASH_SIZE;
+   printf("<%d,%d>", pair.hash, pair.ID);
+   return pair;
 }
 
 void printCookbook(Cookbook *cookbook) {
    printf("\n");
    Recipe *curRec;
-   for (int i = 0; i < BOOK_SIZE; i++) {
+   for (int i = 0; i < HASH_SIZE; i++) {
       curRec = cookbook->buckets[i];
       while (curRec != NULL) {
-         printf("%10s\tmun:%d\tusg:%d ", curRec->name, curRec->minUnbakeable, curRec->usage);
+         printf("%d\tmun:%d\tusg:%d ", curRec->name, curRec->minUnbakeable, curRec->usage);
          Ingredient *curIng = curRec->ingredientList;
          while (curIng != NULL) {
-            printf("%10s:%*d\t", curIng->shelf->name, 5, curIng->amount);
+            printf("%d:%*d\t", curIng->shelf->name, 5, curIng->amount);
             curIng = curIng->nextIngredient;
          }
          curRec = curRec->nextRecipe;
@@ -128,13 +149,27 @@ void printWarehouse(Warehouse *warehouse) {
 
    printf("\n");
    Shelf *curShe;
-   for (int i = 0; i < WARE_SIZE; i++) {
+   for (int i = 0; i < HASH_SIZE; i++) {
       curShe = warehouse->buckets[i];
       while (curShe != NULL) {
-         printf("%s:\ttot:%*d\tusg:%d ", curShe->name, 5, curShe->total, curShe->usage);
+         printf("%d:\ttot:%*d\tusg:%d ", curShe->name, 5, curShe->total, curShe->usage);
          printf("\n");
          printBunchHeap(curShe->bunchMinHeap->root, 0);
          printf("\n");
+         curShe = curShe->nextShelf;
+      }
+   }
+}
+
+void printSimpleWarehouse(Warehouse *warehouse) {
+   Shelf *curShe;
+   for (int i = 0; i < HASH_SIZE; i++) {
+      curShe = warehouse->buckets[i];
+      while (curShe != NULL) {
+         if (curShe->total != 0) {
+            printf("'%d':\t%*d:\t", curShe->name, 5, curShe->total);
+            printf("\n");
+         }
          curShe = curShe->nextShelf;
       }
    }
@@ -144,7 +179,7 @@ void printOrderList(OrderList pendingOrders) {
    printf("\n");
    Order *cur = pendingOrders.head;
    while (cur != NULL) {
-      printf("at %*d\t%10s:\t%*d\t tot:%*d", 5, cur->time, cur->recipe->name, 5, cur->amount, 5, cur->weight);
+      printf("at %*d\t%d:\t%*d\t tot:%*d", 5, cur->time, cur->recipe->name, 5, cur->amount, 5, cur->weight);
       cur = cur->nextOrder;
       // printf("\n");
    }
@@ -296,32 +331,28 @@ BunchMinHeap *deleteMinBunch(BunchMinHeap *heap) {
 
 Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 
-   char name[MAX_LEN];
-   if (scanf("%s", name) == 0) {
-      printf("MUST HAVE A RECIPE TO ADD");
-      return cookbook;
+   if (getchar() != ' ') {
+      printf("BAAAD");
    }
 
-   int i = hash(name, BOOK_SIZE);
-   Recipe *pre = NULL, *cur = cookbook->buckets[i];
+   Pair i = hash();
+   Recipe *pre = NULL, *cur = cookbook->buckets[i.hash];
    Recipe *newRecipe;
 
    if (cur == NULL) {
 
       // the bucket was empty
       newRecipe = (Recipe *)malloc(sizeof(Recipe));
-      newRecipe->name = (char *)malloc(strlen(name) + 1);
-      strcpy(newRecipe->name, name);
+      newRecipe->name = i.ID;
       newRecipe->nextRecipe = NULL;
-      newRecipe->usage = 0;
-      cookbook->buckets[i] = newRecipe;
+      cookbook->buckets[i.hash] = newRecipe;
 
    } else {
 
       // searching for recipes with that name
       while (cur != NULL) {
 
-         if (!strcmp(cur->name, name)) {
+         if (cur->name == i.ID) {
 
             printf("ignorato\n");
 
@@ -340,29 +371,29 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 
       // creating at the end
       newRecipe = (Recipe *)malloc(sizeof(Recipe));
-      newRecipe->name = (char *)malloc(strlen(name) + 1);
-      strcpy(newRecipe->name, name);
+      newRecipe->name = i.ID;
       newRecipe->nextRecipe = NULL;
-      newRecipe->usage = 0;
-
       pre->nextRecipe = newRecipe;
    }
 
    // now reading the ingredients
    Ingredient *lastPair = NULL;
    Ingredient *newIng;
-   char ingredient[MAX_LEN];
+   char c;
    int amount;
    Shelf *preShe, *curShe;
 
-   while (scanf("%s %d", ingredient, &amount)) {
+   while ((c = getchar()) != '\n') {
+
+      Pair j = hash();
+      preShe = NULL;
+      curShe = warehouse->buckets[j.hash];
 
       newIng = (Ingredient *)malloc(sizeof(Ingredient));
+      if (scanf("%d", &amount) == 0) {
+         printf("BADBADBAD");
+      }
       newIng->amount = amount;
-
-      int j = hash(ingredient, WARE_SIZE);
-      preShe = NULL;
-      curShe = warehouse->buckets[j];
 
       // printf(" <curShe=%s> ", curShe->name);
 
@@ -372,13 +403,12 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
          // the bucket was empty
          // creating a new empty shelf
          curShe = (Shelf *)malloc(sizeof(Shelf));
-         curShe->name = (char *)malloc(strlen(ingredient) + 1);
-         strcpy(curShe->name, ingredient);
+         curShe->name = j.ID;
          curShe->nextShelf = NULL;
          curShe->total = 0;
          curShe->usage = 1;
          curShe->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
-         warehouse->buckets[j] = curShe;
+         warehouse->buckets[j.hash] = curShe;
 
       } else {
 
@@ -387,7 +417,7 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 
             // printf(" <%s,%s> ", curShe->name, ingredient);
 
-            if (!strcmp(curShe->name, ingredient)) {
+            if (curShe->name == j.ID) {
 
                // the ingredient already exists in warehouse
                curShe->usage++;
@@ -401,8 +431,7 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
          if (curShe == NULL) {
             // creating at the end
             curShe = (Shelf *)malloc(sizeof(Shelf));
-            curShe->name = (char *)malloc(strlen(ingredient) + 1);
-            strcpy(curShe->name, ingredient);
+            curShe->name = j.ID;
             curShe->nextShelf = NULL;
             curShe->nextShelf = NULL;
             curShe->total = 0;
@@ -410,7 +439,7 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
             curShe->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
 
             if (preShe == NULL) {
-               warehouse->buckets[j] = curShe;
+               warehouse->buckets[j.hash] = curShe;
             } else {
                preShe->nextShelf = curShe;
             }
@@ -442,19 +471,19 @@ Cookbook *newRecipe(Cookbook *cookbook, Warehouse *warehouse) {
 }
 
 Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
-   char name[MAX_LEN];
-   if (scanf("%s", name) == 0) {
-      printf("MUST NAME A RECIPE TO REMOVE");
+
+   if (getchar() != ' ') {
+      printf("BAAAD");
    }
 
-   int j = hash(name, BOOK_SIZE);
-   Recipe *preRec = NULL, *curRec = cookbook->buckets[j];
+   Pair j = hashAlt();
+   Recipe *preRec = NULL, *curRec = cookbook->buckets[j.hash];
 
    // the bucket can't be empty
    // searching for a recipe with that name
    while (curRec != NULL) {
 
-      if (!strcmp(curRec->name, name)) {
+      if (curRec->name == j.ID) {
          // recipe recovered
          break;
       }
@@ -482,28 +511,29 @@ Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
       delIng = curRec->ingredientList;
       delIng->shelf->usage--;
 
-      // removing unused empty shelves
-      if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
-         // search the previous shelf
-         int i = hash(delIng->shelf->name, WARE_SIZE);
-         Shelf *curShe = warehouse->buckets[i];
-         Shelf *preShe = NULL;
+      // removing unused empty shelves // TODO RESTORE
+      // if (delIng->shelf->usage == 0 && delIng->shelf->total == 0) {
 
-         while (curShe != delIng->shelf) {
-            preShe = curShe;
-            curShe = curShe->nextShelf;
-         }
+      //    // search the previous shelf
+      //    int i = hash(delIng->shelf->name);
+      //    Shelf *curShe = warehouse->buckets[i];
+      //    Shelf *preShe = NULL;
 
-         if (preShe == NULL) {
-            // first shelf
-            warehouse->buckets[i] = curShe->nextShelf;
-         } else {
-            // any other
-            preShe->nextShelf = curShe->nextShelf;
-         }
-         free(curShe->bunchMinHeap);
-         free(curShe);
-      }
+      //    while (curShe != delIng->shelf) {
+      //       preShe = curShe;
+      //       curShe = curShe->nextShelf;
+      //    }
+
+      //    if (preShe == NULL) {
+      //       // first shelf
+      //       warehouse->buckets[i] = curShe->nextShelf;
+      //    } else {
+      //       // any other
+      //       preShe->nextShelf = curShe->nextShelf;
+      //    }
+      //    free(curShe->bunchMinHeap);
+      //    free(curShe);
+      // }
 
       curRec->ingredientList = curRec->ingredientList->nextIngredient;
       free(delIng);
@@ -513,7 +543,7 @@ Cookbook *removeRecipe(Cookbook *cookbook, Warehouse *warehouse) {
    if (preRec == NULL) {
 
       // removing the first
-      cookbook->buckets[j] = curRec->nextRecipe;
+      cookbook->buckets[j.hash] = curRec->nextRecipe;
    } else {
 
       // removing any other
@@ -550,13 +580,13 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    // printOrderList(state.readyOrders);
    // printf(" %d", order->time);
 
-   int i;
+   Pair i;
 
    // printf(" mu:%d>am:%d, checking if baking is possible ", recipe->minUnbakeable, order->amount);
    Shelf *preShe, *curShe;
    Ingredient *curIng = recipe->ingredientList;
    while (curIng != NULL) {
-      i = hash(curIng->shelf->name, WARE_SIZE);
+      i = hash(curIng->shelf->name);
       curShe = state.warehouse->buckets[i];
       preShe = NULL;
       while (curShe != NULL) {
@@ -596,15 +626,17 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
             }
          }
 
+
          if (!strcmp(curIng->shelf->name, curShe->name)) {
 
-            recipe->minUnbakeable = fmin(recipe->minUnbakeable, curShe->total / curIng->amount + 1);
+            recipe->minUnbakeable = fmin(recipe->minUnbakeable, curShe->total/curIng->amount+1);
             // printf(" mu: %d ", recipe->minUnbakeable);
             if (order->amount < recipe->minUnbakeable) {
                break; // Enough curIng, check next ingredient
             }
             state.baking = 0;
             return state;
+            
          }
          preShe = curShe;
          curShe = curShe->nextShelf;
@@ -631,7 +663,7 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    curIng = recipe->ingredientList;
    int required, weight = 0;
    while (curIng != NULL) {
-      i = hash(curIng->shelf->name, WARE_SIZE);
+      i = hash(curIng->shelf->name);
       curShe = state.warehouse->buckets[i];
       preShe = NULL;
       weight += curIng->amount * order->amount;
@@ -684,104 +716,26 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
    return state;
 };
 
-State newOrder(Cookbook *cookbook, State state, int time) {
-
-   Order *newOrder = (Order *)malloc(sizeof(Order));
-   newOrder->nextOrder = NULL;
-   newOrder->time = time;
-   newOrder->weight = -1;
-
-   char name[MAX_LEN];
-   if (scanf("%s %d", name, &newOrder->amount) == 0) {
-      printf("EXPECTED ORDER NAME AND AMOUNT");
-      return state;
-   }
-
-   // searching for a recipe to connect
-
-   int i = hash(name, BOOK_SIZE);
-   Recipe *recipe = cookbook->buckets[i];
-
-   while (recipe != NULL) {
-      if (!strcmp(recipe->name, name)) {
-         break;
-      }
-      recipe = recipe->nextRecipe;
-   }
-   if (recipe == NULL) {
-
-      // recipe not found
-      state.baking = -1;
-   } else if (recipe->minUnbakeable <= newOrder->amount) {
-
-      // we couldn't bake smaller orders of the same recipe
-      // printf(" mu:%d<=am:%d, not even trying\n", recipe->minUnbakeable, newOrder->amount);
-      state.baking = 0;
-      recipe->usage++;
-      newOrder->recipe = recipe;
-   } else {
-
-      // let's try
-      recipe->usage++;
-      newOrder->recipe = recipe;
-      // printf("Receiving order of %s; ", newOrder->recipe->name);
-      state = tryBaking(newOrder, recipe, state, time);
-   }
-
-   switch (state.baking) {
-   case -1:
-      printf("rifiutato\n");
-      free(newOrder);
-      break;
-   case 0: // baking newOrder in the future
-      printf("accettato\n");
-      // printf("baking in the future\n");
-      if (recipe->minUnbakeable > newOrder->amount) {
-         recipe->minUnbakeable = newOrder->amount;
-         // printf(" mu reduced to %d\n", recipe->minUnbakeable);
-      }
-      state.pendingOrders = appendOrder(newOrder, state.pendingOrders);
-      break;
-   case 1: // baked immediately!
-      printf("accettato\n");
-      // printf("baked immediately\n");
-      if (state.readyOrders.tail == NULL) {
-         state.readyOrders.head = newOrder;
-         state.readyOrders.tail = newOrder;
-      } else {
-         state.readyOrders.tail->nextOrder = newOrder;
-         state.readyOrders.tail = newOrder;
-      }
-      break;
-   default:
-      printf("UNKNOWN BAKING CODE");
-      break;
-   }
-
-   // printf("\nPENDING ORDERS");
-   // printOrderList(state.pendingOrders);
-   // printf("\nREADY ORDERS");
-   // printOrderList(state.readyOrders);
-   // printCookbook(cookbook);
-
-   return state;
-}
-
 State newBatch(State state, Cookbook *cookbook, int time) {
 
    int expiration, amount;
-   char name[MAX_LEN];
+   char c;
 
+   if (getchar() != ' ') {
+      printf("BAAAD");
+   }
+   
    // refilling warehouse (very efficient)
-   while (scanf("%s %d %d", name, &amount, &expiration)) {
-      int i = hash(name, WARE_SIZE);
-      // printf(" <%s|%d>", name, i);
+   while ((c = getchar()) != '\n') {
+      Pair i = hash();
       Shelf *pre = NULL;
-      Shelf *cur = state.warehouse->buckets[i];
+      Shelf *cur = state.warehouse->buckets[i.hash];
+
+      scanf("%d %d", &amount, &expiration);
 
       // looking for an existing shelf with that name
       while (cur != NULL) {
-         if (!strcmp(cur->name, name)) {
+         if (cur->name = i.ID) {
             if (cur->bunchMinHeap == NULL) {
                cur->bunchMinHeap = (BunchMinHeap *)malloc(sizeof(BunchMinHeap));
             }
@@ -797,8 +751,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
 
          // creating new shelf with one bunch
          Shelf *newShelf = (Shelf *)malloc(sizeof(Shelf));
-         newShelf->name = (char*)malloc(strlen(name) + 1);
-         strcpy(newShelf->name, name);
+         newShelf->name = i.ID;
          newShelf->total = amount;
          newShelf->nextShelf = NULL;
 
@@ -815,15 +768,11 @@ State newBatch(State state, Cookbook *cookbook, int time) {
 
          heap->root = firstBunch;
 
-         if (state.warehouse->buckets[i] == NULL) {
-            state.warehouse->buckets[i] = newShelf;
+         if (state.warehouse->buckets[i.hash] == NULL) {
+            state.warehouse->buckets[i.hash] = newShelf;
          } else {
             pre->nextShelf = newShelf;
          }
-      }
-      char c = getchar();
-      if (c == '\n' || c == '\r' || c == EOF) {
-         break;
       }
    }
 
@@ -839,7 +788,7 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    Recipe *recipe;
 
    // any recipe isn't unbakeable // TODO reduce this weight
-   for (int i = 0; i < BOOK_SIZE; i++) {
+   for (int i = 0; i < HASH_SIZE; i++) {
       recipe = cookbook->buckets[i];
       while (recipe != NULL) {
          recipe->minUnbakeable = INFINITE;
@@ -925,6 +874,8 @@ State newBatch(State state, Cookbook *cookbook, int time) {
    return state;
 }
 
+
+
 State loadOrders(State state, int payloadLeft) {
    // printf("\n");
    // printf("\nWAREHOUSE");
@@ -994,10 +945,8 @@ int main() {
    char command[MAX_LEN];
    Cookbook *cookbook = (Cookbook *)malloc(sizeof(Cookbook));
    Warehouse *warehouse = (Warehouse *)malloc(sizeof(Warehouse));
-   for (int i = 0; i < BOOK_SIZE; i++) {
+   for (int i = 0; i < HASH_SIZE; i++) {
       cookbook->buckets[i] = NULL;
-   }
-   for (int i = 0; i < WARE_SIZE; i++) {
       warehouse->buckets[i] = NULL;
    }
    State state = {{NULL, NULL}, {NULL, NULL}, warehouse, 0};
@@ -1010,7 +959,7 @@ int main() {
    while (scanf("%s", command) > 0) {
 
       if (time && time % courierPeriod == 0) {
-         state = loadOrders(state, maxPayload);
+         // state = loadOrders(state, maxPayload);
       }
 
       if (!strcmp(command, "aggiungi_ricetta")) {
@@ -1023,11 +972,11 @@ int main() {
 
       } else if (!strcmp(command, "rifornimento")) {
          // printf("[newBatch] ");
-         state = newBatch(state, cookbook, time);
+         // state = newBatch(state, cookbook, time);
 
       } else if (!strcmp(command, "ordine")) {
          // printf("[newOrder] ");
-         state = newOrder(cookbook, state, time);
+         // state = newOrder(cookbook, state, time);
 
       } else {
          printf("ERROR: UNKNOWN COMMAND %s", command);
@@ -1055,12 +1004,12 @@ int main() {
       // printf("It's [%d]\n", time);
    }
    if (time && time % courierPeriod == 0) {
-      state = loadOrders(state, maxPayload);
+      // state = loadOrders(state, maxPayload);
    }
 
    // printf("\n");
-   // printf("\nCOOKBOOK");
-   // printCookbook(cookbook);
+   printf("\nCOOKBOOK");
+   printCookbook(cookbook);
    // printf("\nWAREHOUSE");
    // printWarehouse(state.warehouse);
    // printf("\nPENDING ORDERS");
