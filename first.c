@@ -5,7 +5,7 @@
 #include <string.h>
 
 #define MAX_LEN 255    // TODO understand if strcmp compares all 255 chars
-#define HASH_SIZE 8192 // TODO find optimal for the two hash-tables
+#define HASH_SIZE 8192 // TODO separate for the two hash-tables
 #define INFINITE 2147483647
 
 // expiration, amount ∈ Bunch ∈ Shelf ∈ warehouse
@@ -566,14 +566,16 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
       curShe = state.warehouse->buckets[i];
       preShe = NULL;
       while (curShe != NULL) {
-         if (curShe->total == 0) {
 
-            // completly missing an ingredient
+         // ingredient missing
+         if (curShe->total == 0) {
             state.baking = 0;
+            recipe->minUnbakeable = 0;
             return state;
          }
+
+         // clensing from expired
          if (curShe->bunchMinHeap->root->expiration <= time) {
-            // removing expired
             while (curShe->bunchMinHeap->root != NULL) {
                if (curShe->bunchMinHeap->root->expiration <= time) {
                   curShe->total -= curShe->bunchMinHeap->root->amount;
@@ -595,9 +597,12 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
                free(curShe);
                // if we removed a necessary ingredient, we can't bake
                state.baking = 0;
+               recipe->minUnbakeable = 0;
                return state;
             }
          }
+
+
          if (!strcmp(curIng->shelf->name, curShe->name)) {
             if (curIng->amount * order->amount <= curShe->total) {
                break; // Enough curIng, check next ingredient
@@ -609,10 +614,13 @@ State tryBaking(Order *order, Recipe *recipe, State state, int time) {
          preShe = curShe;
          curShe = curShe->nextShelf;
       }
+
+      // shelf missing
       if (curShe == NULL) {
          // printf("%s not present at all to bake %s\n", curIng->shelf->name, order->recipe->name);
          // printf(" state.baking==%d ", state.baking);
          state.baking = 0;
+         recipe->minUnbakeable = 0;
          return state;
       }
       curIng = curIng->nextIngredient;
@@ -745,7 +753,6 @@ State newOrder(Cookbook *cookbook, State state, int time) {
          state.readyOrders.head = newOrder;
          state.readyOrders.tail = newOrder;
       } else {
-         // newOrder has the least priority
          state.readyOrders.tail->nextOrder = newOrder;
          state.readyOrders.tail = newOrder;
       }
